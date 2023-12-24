@@ -1,1 +1,0 @@
-import{_ as a,o as e,c as t,R as o}from"./chunks/framework.GeoionXv.js";const b=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"about/index.md","filePath":"about/index.md"}'),r={name:"about/index.md"},i=o("",5),n=[i];function d(h,s,c,l,_,u){return e(),t("div",null,n)}const f=a(r,[["render",d]]);export{b as __pageData,f as default};

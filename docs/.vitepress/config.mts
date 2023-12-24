@@ -10,9 +10,8 @@ export default defineConfig({
         logo: "/logo.jpg",
 
         nav: [
-            { text: "Blog", link: "/blog/index" },
-            { text: "Else", link: "/else/index" },
-            { text: "About", link: "/about/index" },
+            { text: "博客", link: "/blog/index" },
+            { text: "其他", link: "/else/index" },
         ],
 
         search: {
@@ -31,7 +30,7 @@ export default defineConfig({
         sidebar: {
             blog: [
                 {
-                    text: "2023",
+                    text: "2024",
                     items: [
                         {
                             text: "Runtime API Examples",
@@ -40,7 +39,7 @@ export default defineConfig({
                     ],
                 },
                 {
-                    text: "2022",
+                    text: "2023",
                     items: [
                         {
                             text: "Markdown Examples",
@@ -53,14 +52,6 @@ export default defineConfig({
                 {
                     text: "",
                     items: [{ text: "Algorithm / 算法", link: "/else/index" }],
-                },
-            ],
-            about: [
-                {
-                    text: "About me / 关于我",
-                    items: [
-                        // { text: "About me / 关于我", link: "/about/index" },
-                    ],
                 },
             ],
         },

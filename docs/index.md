@@ -47,7 +47,7 @@
 
 工作之余也喜欢开源和算法 <br>
 开源项目：[Mpx Template Features](https://github.com/vitest-dev/mpx-template-features)<br>
-算法业余爱好者，[力扣](https://leetcode.cn/u/soon-8) 周赛 1800 分选手
+算法爱好者，[力扣](https://leetcode.cn/u/soon-8)周赛 1800 分选手
 
 编程之外，喜欢音乐、游戏（Apex）、阅读（大刘补全计划）
 <br>
@@ -58,6 +58,6 @@
 
 Find me on
 
-<a href="https://github.com/wangshunnn" target="_blank"><span op75 i-simple-icons-github /> GitHub</a><a href="https://www.twitter.com/wangshunnn" target="_blank"><span op75 i-ri-twitter-x-fill /> Twitter</a><a href="https://www.zhihu.com/people/wangshunnn" target="_blank"><span op75 i-simple-icons-zhihu /> 知乎</a>
+<a href="https://github.com/wangshunnn" target="_blank"><span op75 i-simple-icons-github /> GitHub</a>&nbsp;&nbsp;<a href="https://www.twitter.com/wangshunnn" target="_blank"><span op75 i-ri-twitter-x-fill /> Twitter</a>&nbsp;&nbsp;<a href="https://www.zhihu.com/people/wangshunnn" target="_blank"><span op75 i-simple-icons-zhihu /> 知乎</a>
 
 </div>
