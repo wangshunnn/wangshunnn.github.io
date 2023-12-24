@@ -1,29 +1,50 @@
 {
-  "hash": "757a1339",
-  "configHash": "b1fcac61",
+  "hash": "28631e05",
+  "configHash": "b7d01c7d",
   "lockfileHash": "51346b36",
-  "browserHash": "616eb893",
+  "browserHash": "0b78c18d",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/.pnpm/vue@3.3.13/node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "9f745009",
+      "fileHash": "42f45ac7",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/.pnpm/@vue+devtools-api@6.5.1/node_modules/@vue/devtools-api/lib/esm/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "6e609346",
+      "fileHash": "fde7c4d4",
+      "needsInterop": false
+    },
+    "vitepress > @vueuse/integrations/useFocusTrap": {
+      "src": "../../../../node_modules/.pnpm/@vueuse+integrations@10.7.0_focus-trap@7.5.4_vue@3.3.13/node_modules/@vueuse/integrations/useFocusTrap.mjs",
+      "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
+      "fileHash": "da80a4a1",
+      "needsInterop": false
+    },
+    "vitepress > mark.js/src/vanilla.js": {
+      "src": "../../../../node_modules/.pnpm/mark.js@8.11.1/node_modules/mark.js/src/vanilla.js",
+      "file": "vitepress___mark__js_src_vanilla__js.js",
+      "fileHash": "837a9916",
+      "needsInterop": false
+    },
+    "vitepress > minisearch": {
+      "src": "../../../../node_modules/.pnpm/minisearch@6.3.0/node_modules/minisearch/dist/es/index.js",
+      "file": "vitepress___minisearch.js",
+      "fileHash": "0c1de750",
       "needsInterop": false
     },
     "@theme/index": {
       "src": "../../../../node_modules/.pnpm/vitepress@1.0.0-rc.32_@algolia+client-search@4.22.0_search-insights@2.13.0/node_modules/vitepress/dist/client/theme-default/index.js",
       "file": "@theme_index.js",
-      "fileHash": "ff8d2cda",
+      "fileHash": "e3b5a0b2",
       "needsInterop": false
     }
   },
   "chunks": {
+    "chunk-QKN5PJPZ": {
+      "file": "chunk-QKN5PJPZ.js"
+    },
     "chunk-BGM7FK2X": {
       "file": "chunk-BGM7FK2X.js"
     }
