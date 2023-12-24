@@ -45,7 +45,7 @@
 小程序、PC 桌面端、Web 端工作经验 <br>
 技术栈：JS, TS, Vue, React, Node, Electron ...
 
-工作之余也喜欢开源和算法 <br>
+工作之余，喜欢开源和算法 <br>
 开源项目：[Mpx Template Features](https://github.com/vitest-dev/mpx-template-features)<br>
 算法爱好者，[力扣](https://leetcode.cn/u/soon-8)周赛 1800 分选手
 

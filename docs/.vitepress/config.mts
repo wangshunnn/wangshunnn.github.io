@@ -6,8 +6,8 @@ export default defineConfig({
     description: "My personal website",
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
-
-        logo: "/logo.jpg",
+        siteTitle: "",
+        logo: "/avatar-circle.png",
 
         nav: [
             { text: "博客", link: "/blog/index" },
@@ -16,15 +16,6 @@ export default defineConfig({
 
         search: {
             provider: "local",
-            /* provider: 'algolia',
-          options: {
-            appId: 'ZTF29HGJ69',
-            apiKey: '9c3ced6fed60d2670bb36ab7e8bed8bc',
-            indexName: 'vitest',
-            // searchParameters: {
-            //   facetFilters: ['tags:en'],
-            // },
-          }, */
         },
 
         sidebar: {
