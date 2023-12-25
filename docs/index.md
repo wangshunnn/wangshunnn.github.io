@@ -1,3 +1,8 @@
+---
+layout: ''
+sidebar: true
+---
+
 <style>
 .soon{
   a {

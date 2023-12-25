@@ -1,8 +1,14 @@
 ---
-outline: deep
+title: 博客测试5
+date: 2023-12-22
+lang: zh
+duration: 5min
+description: Runtime API Examples
 ---
 
 # Runtime API Examples
+
+[[toc]]
 
 This page demonstrates usage of some of the runtime APIs provided by VitePress.
 
@@ -18,12 +24,15 @@ const { theme, page, frontmatter } = useData()
 ## Results
 
 ### Theme Data
+
 <pre>{{ theme }}</pre>
 
 ### Page Data
+
 <pre>{{ page }}</pre>
 
 ### Page Frontmatter
+
 <pre>{{ frontmatter }}</pre>
 ```
 
@@ -36,12 +45,15 @@ const { site, theme, page, frontmatter } = useData()
 ## Results
 
 ### Theme Data
+
 <pre>{{ theme }}</pre>
 
 ### Page Data
+
 <pre>{{ page }}</pre>
 
 ### Page Frontmatter
+
 <pre>{{ frontmatter }}</pre>
 
 ## More

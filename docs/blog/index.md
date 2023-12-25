@@ -1,1 +1,6 @@
-# 博客时间轴
+---
+bloghome: true
+sidebar: false
+---
+
+<BlogHome />

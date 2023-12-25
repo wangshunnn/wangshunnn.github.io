@@ -1,40 +1,39 @@
 import { defineConfig } from "vitepress"
+import UnoCSS from "unocss/vite"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+    head: [["link", { rel: "icon", href: "/logo.png" }]],
+
     title: "Soon Wang",
+
     description: "My personal website",
+
+    // lastUpdated: true,
+    cleanUrls: true,
+
+    vite: {
+        plugins: [UnoCSS()],
+    },
+
     themeConfig: {
         // https://vitepress.dev/reference/default-theme-config
+
         siteTitle: "",
-        logo: "/avatar-circle.png",
+
+        logo: { src: "/logo.png", width: 24, height: 24 },
+
         nav: [
             { text: "博客", link: "/blog/index" },
             { text: "其他", link: "/else/index" },
         ],
+
         search: {
             provider: "local",
         },
+
         sidebar: {
             blog: [
-                {
-                    text: "2024",
-                    items: [
-                        {
-                            text: "Runtime API Examples",
-                            link: "/blog/api-examples",
-                        },
-                    ],
-                },
-                {
-                    text: "2023",
-                    items: [
-                        {
-                            text: "Markdown Examples",
-                            link: "/blog/markdown-examples",
-                        },
-                    ],
-                },
             ],
             else: [
                 {
@@ -43,15 +42,15 @@ export default defineConfig({
                 },
             ],
         },
+
         socialLinks: [
             { icon: "github", link: "https://github.com/wangshunnn" },
-            { icon: "twitter", link: "https://twitter.com/wangshunnn" },
+            { icon: "x", link: "https://twitter.com/wangshunnn" },
         ],
+
         footer: {
             message: "Released under the MIT License.",
-            copyright:
-                "Copyright © 2021-PRESENT Wang Shun <br/>" +
-                '<a target="_blank" href="https://beian.miit.gov.cn/#/Integrated/index"></a>',
+            copyright: "Copyright © 2019-present Shun Wang",
         },
     },
 })

@@ -1,3 +1,11 @@
+---
+title: 博客测试3
+date: 2022-11-2
+lang: zh
+duration: 9min
+description: 摘要测试1
+---
+
 # Markdown Extension Examples
 
 This page demonstrates some of the built-in markdown extensions provided by VitePress.
