@@ -4,15 +4,17 @@ import type { Blog } from '../blog.data'
 const props = defineProps<{ date: Blog['date'] }>()
 
 function getDateTime() {
-    return new Date(props.date.time).toISOString()
+  return new Date(props.date.time).toISOString()
 }
 </script>
 
 <template>
-    <dl>
-        <dt class="sr-only">Published on</dt>
-        <dd class="text-base leading-6 font-medium text-gray-500 dark:text-gray-300">
-            <time :datetime="getDateTime()">{{ date.string }}</time>
-        </dd>
-    </dl>
+  <dl>
+    <dt class="sr-only">Published on</dt>
+    <dd
+      class="font-medium text-base text-gray-500 leading-6 dark:text-gray-300"
+    >
+      <time :datetime="getDateTime()">{{ date.string }}</time>
+    </dd>
+  </dl>
 </template>
