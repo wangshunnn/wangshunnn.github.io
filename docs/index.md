@@ -3,6 +3,10 @@ layout: ''
 sidebar: false
 ---
 
+<script>
+import IconMeituan from '.vitepress/theme/components/icons/IconMeituan.vue'
+</script>
+
 <style>
 .soon{
   a {
