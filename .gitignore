@@ -2,3 +2,5 @@ node_modules
 docs/.vitepress/cache/**
 dist
 .cache
+.DS_Store
+*.local

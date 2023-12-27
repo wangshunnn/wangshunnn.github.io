@@ -9,6 +9,8 @@ export interface Blog {
   lang: string | undefined
   duration: string | undefined
   description: string | undefined
+  tag: string | undefined
+  place: string | undefined
   url: string
 }
 
@@ -24,6 +26,8 @@ export default createContentLoader('blog/*.md', {
         lang: frontmatter.lang,
         duration: frontmatter.duration,
         description: frontmatter.description,
+        tag: frontmatter.tag,
+        place: frontmatter.place,
         url
       }))
       .sort((a, b) => b.date.time - a.date.time)
@@ -32,7 +36,7 @@ export default createContentLoader('blog/*.md', {
 
 function formatDate(raw: string): Blog['date'] {
   const date = new Date(raw)
-  date.setUTCHours(12)
+  // date.setUTCHours(12)
   return {
     time: +date,
     string: date.toLocaleDateString('en-US', {

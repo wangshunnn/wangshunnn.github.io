@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
+  '@iconify/json':
+    specifier: ^2.2.161
+    version: 2.2.161
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.4.0
     version: 6.16.0(@typescript-eslint/parser@6.16.0)(eslint@8.56.0)(typescript@5.3.3)
@@ -820,6 +823,13 @@ packages:
 
   /@humanwhocodes/object-schema@2.0.1:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
+    dev: true
+
+  /@iconify/json@2.2.161:
+    resolution: {integrity: sha512-yxkCLeZdzHFjfhH1BRmyMU5DEUnbTsiuSpgcd/DxKM8eMzUab/CbfxAVSqiNIrSeXhe4RUsws767wfTKhblTSw==}
+    dependencies:
+      '@iconify/types': 2.0.0
+      pathe: 1.1.1
     dev: true
 
   /@iconify/types@2.0.0:

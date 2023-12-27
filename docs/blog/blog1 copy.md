@@ -4,6 +4,8 @@ date: 2023-1-14
 lang: zh
 duration: 5min
 description: 摘要测试1
+tag: 随笔
+place: BeiJing
 ---
 
 # Runtime API Examples

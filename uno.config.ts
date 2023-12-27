@@ -43,10 +43,11 @@ export default defineConfig({
   ],
   rules: [
     [
-      /^slide-enter-(\d+)$/,
-      ([_, n]) => ({
-        '--enter-stage': n
-      })
+      'transition-transform-op',
+      {
+        transition:
+          'transform 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0.1s !important;'
+      }
     ]
   ],
   transformers: [transformerDirectives()],
