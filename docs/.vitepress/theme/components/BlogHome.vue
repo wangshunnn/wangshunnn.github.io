@@ -39,12 +39,13 @@ function getGroupName(p: Blog) {
           text-6em
           color-transparent
           absolute
-          left--3rem
-          top-3rem
+          top-1.5rem
           font-bold
           text-stroke-2
           text-stroke-hex-bbb
           op40
+          right-0
+          md:left--3rem
           >{{ getGroupName(route) }}</span
         >
       </div>
@@ -69,14 +70,15 @@ function getGroupName(p: Blog) {
                 absolute
                 rounded
                 my-auto
-                bg-zinc:15
+                bg-zinc:50
                 text-xs
-                ml--13
-                px-1.1
+                ml--12
+                mt-0
+                px-1.5
                 py-0.5
-                text-zinc5
                 hidden
                 md:block
+                op70
               >
                 <!-- <span class="i-mdi:tag"> </span> -->
                 {{ route.tag }}

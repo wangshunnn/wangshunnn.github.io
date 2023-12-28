@@ -4,7 +4,7 @@ import UnoCSS from 'unocss/vite'
 const ogUrl = 'https://wangshunnn.github.io/'
 const ogImage = '' //`${ogUrl}og.png#1`
 const title = 'Soon Wang'
-const description = 'My personal website'
+const description = 'Welcome to my personal website'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -45,7 +45,8 @@ export default defineConfig({
 
     nav: [
       { text: '博客', link: '/blog/index' },
-      { text: '其他', link: '/else/index' }
+      { text: '项目', link: '/project/index' },
+      { text: '更多', link: '/more/index' }
     ],
 
     search: {
@@ -53,11 +54,18 @@ export default defineConfig({
     },
 
     sidebar: {
-      blog: [],
-      else: [
+      more: [
         {
-          text: '',
-          items: [{ text: '算法', link: '/else/index' }]
+          text: '算法',
+          items: []
+        },
+        {
+          text: '阅读',
+          items: []
+        },
+        {
+          text: '旅游',
+          items: []
         }
       ]
     },

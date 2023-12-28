@@ -4,7 +4,7 @@ sidebar: false
 ---
 
 <script>
-import IconMeituan from '.vitepress/theme/components/icons/IconMeituan.vue'
+import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 </script>
 
 <style>

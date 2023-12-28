@@ -1,9 +1,11 @@
 ---
-title: 测试标题测试标题测试标题
-date: 2023-1-14
+title: Mpx Template Features
+date: 2023-12-28
 lang: zh
-duration: 5min
-description: 摘要测试1
+duration: 15min
+description: 摘要测试1，摘要测试1，摘要测试1
+tag: Mpx
+place: BeiJing
 ---
 
 # Runtime API Examples
