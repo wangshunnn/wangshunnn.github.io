@@ -1,6 +1,5 @@
 ---
-layout: ''
-sidebar: false
+aside: false
 ---
 
 <script>
@@ -32,12 +31,12 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 你好，我是王顺，一名前端研发工程师
 
 <span >2023.8</span>
-<span left-16 absolute >-</span >
-<span left-21 absolute >至今</span >
-<span left-50 absolute >[<IconDidi w4.5 h4.5 inline-block align-sub op75 pt-0.2 /> 滴滴打车](https://www.didiglobal.com/)</span ><br>
+<span left-17 absolute >~</span >
+<span left-23 absolute >至今</span >
+<span left-50 absolute >[<IconDidi w4.5 h4.5 inline-block align-sub op75 pt-0.2 /> 滴滴](https://www.didiglobal.com/)</span ><br>
 <span >2021.1</span>
-<span left-16 absolute >-</span >
-<span left-21 absolute >2023.7</span >
+<span left-17 absolute >~</span >
+<span left-23 absolute >2023.7</span >
 <span left-50 absolute >[<IconMeituan w4.5 h4.5 inline-block align-sub op75 pb-0.2 /> 美团](https://www.meituan.com/)</span><br>
 
 小程序、PC 桌面端、Web 端工作经验 <br>
@@ -47,7 +46,7 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 开源项目：[<span i-simple-icons-visualstudiocode w4 h4 pb-5 op75 /> Mpx Template Features](https://github.com/vitest-dev/mpx-template-features)<br>
 算法爱好者，[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />力扣](https://leetcode.cn/u/soon-8) 1800 分选手
 
-编程之外，喜欢音乐、游戏（Apex）、阅读（大刘补全计划）
+编程之外，喜欢音乐、动漫、游戏、阅读 ...
 
 <br>
 
