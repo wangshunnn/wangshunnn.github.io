@@ -22,7 +22,8 @@ module.exports = {
   ignorePatterns: [
     '!docs/.vitepress',
     // "!docs/.vitepress/theme/**/*",
-    'docs/.vitepress/cache'
-    // "!.build/config.mts",
+    '**/node_modules',
+    '**/dist',
+    '**/cache'
   ]
 }
