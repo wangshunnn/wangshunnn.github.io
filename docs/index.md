@@ -43,7 +43,7 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 技术栈：JS, TS, Vue, React, Node, Electron ...
 
 工作之余，喜欢开源和算法 <br>
-开源项目：[<span i-simple-icons-visualstudiocode w4 h4 pb-5 op75 /> Mpx Template Features](https://github.com/vitest-dev/mpx-template-features)<br>
+开源项目：[<span i-simple-icons-visualstudiocode w4 h4 pb-5 op75 /> Mpx Template Features](https://github.com/wangshunnn/mpx-template-features)<br>
 算法爱好者，[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />力扣](https://leetcode.cn/u/soon-8) 1800 分选手
 
 编程之外，喜欢音乐、动漫、游戏、阅读 ...
