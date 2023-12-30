@@ -29,7 +29,7 @@ export default defineConfig({
     ['meta', { name: 'twitter:url', content: ogUrl }]
   ],
 
-  lastUpdated: true,
+  lastUpdated: false,
   cleanUrls: true,
 
   vite: {
@@ -51,6 +51,13 @@ export default defineConfig({
 
     search: {
       provider: 'local'
+    },
+
+    lastUpdated: {
+      text: 'Updated at',
+      formatOptions: {
+        dateStyle: 'short',
+      }
     },
 
     sidebar: {

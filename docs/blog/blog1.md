@@ -1,17 +1,19 @@
 ---
-title: Mpx Template Features
-date: 2023-12-28
+title: 我的年度总结 2023
+date: 2023-12-31
 lang: zh
-duration: 15min
-description: 摘要测试1，摘要测试1，摘要测试1
-tag: Mpx
+duration: 15 min
+description: 总结是为了更好的出发
+tag:
 place: BeiJing
 ---
 
-# Runtime API Examples
+# 我的年度总结 2023
 
-[[toc]]
+最近终于下定决心要搭建个人博客了，恰逢新年将至，所以刚好就写一篇年度总结吧，也算是个人博客搭建后的第一篇博文。
 
-This page demonstrates usage of some of the runtime APIs provided by VitePress.
+## 关于博客
 
-The main `useData()` API can be used to access site, theme, and page data for the current page. It works in both `.md` and `.vue` files:
+## 回首 2023
+
+## 展望 2024

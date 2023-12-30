@@ -20,14 +20,14 @@ function getGroupName(p: Blog) {
 </script>
 
 <template>
-  <ul class="!pl-0">
-    <template v-if="!blog.length">
+  <ul class="!pl-0 md:!pl-10">
+    <div v-if="!blog.length">
       <div py-2 text-center>{ nothing here yet }</div>
-    </template>
+    </div>
 
     <span i-simple-icons-meituan w5 h5></span>
 
-    <template v-for="(route, idx) in blog" :key="route.url">
+    <div v-for="(route, idx) in blog" :key="route.url">
       <div
         v-if="!isSameGroup(route, blog[idx - 1])"
         select-none
@@ -41,11 +41,11 @@ function getGroupName(p: Blog) {
           absolute
           top-1.5rem
           font-bold
+          op40
+          md:left--1rem
           text-stroke-2
           text-stroke-hex-bbb
-          op40
-          right-0
-          md:left--3rem
+          italic
           >{{ getGroupName(route) }}</span
         >
       </div>
@@ -57,31 +57,32 @@ function getGroupName(p: Blog) {
           block
           mt-10
           mb-10
-          op70
+          op85
           transition-transform-op
-          hover="font-bold scale-101 op100"
+          hover="scale-101 op100"
         >
           <li class="!no-underline" flex="~ col md:row gap-2 md:items-center">
             <div class="text-lg leading-1.2em title" flex="~ gap-2 wrap">
-              <span
-                v-if="route.tag"
-                align-middle
-                flex-none
-                absolute
-                rounded
-                my-auto
-                bg-zinc:50
-                text-xs
-                ml--12
-                mt-0
-                px-1.5
-                py-0.5
-                hidden
-                md:block
-                op70
-              >
-                <!-- <span class="i-mdi:tag"> </span> -->
-                {{ route.tag }}
+              <span absolute w30 ml--34>
+                <span
+                  v-if="route.tag"
+                  align-middle
+                  flex-none
+                  absolute
+                  rounded
+                  my-auto
+                  bg-zinc:50
+                  text-xs
+                  mt-0
+                  right-0
+                  px-1.5
+                  py-0.5
+                  hidden
+                  md:block
+                  op70
+                >
+                  {{ route.tag }}
+                </span>
               </span>
               <span align-middle>{{ route.title }}</span>
             </div>
@@ -120,6 +121,6 @@ function getGroupName(p: Blog) {
           </div>
         </a>
       </div>
-    </template>
+    </div>
   </ul>
 </template>

@@ -48,6 +48,12 @@ export default defineConfig({
         transition:
           'transform 0.2s ease-in-out 0s, opacity 0.2s ease-in-out 0.1s !important;'
       }
+    ],
+    [
+      'text-shadow-6',
+      {
+        'text-shadow': '15px 10px 10px gray'
+      }
     ]
   ],
   transformers: [transformerDirectives()],

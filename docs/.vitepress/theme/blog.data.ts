@@ -41,7 +41,7 @@ function formatDate(raw: string): Blog['date'] {
     time: +date,
     string: date.toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric'
     })
   }
