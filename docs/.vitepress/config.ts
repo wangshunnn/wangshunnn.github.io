@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
 
 const ogUrl = 'https://wangshunnn.github.io/'
-const ogImage = '' //`${ogUrl}og.png#1`
+const ogImage = `${ogUrl}logo-origin.jpg#1`
 const title = 'Soon Wang'
 const description = 'Welcome to my personal website'
 

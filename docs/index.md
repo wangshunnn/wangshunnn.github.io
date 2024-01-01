@@ -40,13 +40,12 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 <span left-50 absolute >[<IconMeituan w4.5 h4.5 inline-block align-sub op75 pb-0.2 /> 美团](https://www.meituan.com/)</span><br>
 
 小程序、PC 桌面端、Web 端工作经验 <br>
-技术栈：JS, TS, Vue, React, Node, Electron ...
+技术栈：JS, TS, Vue, React, Node, Electron
 
-工作之余，喜欢开源和算法 <br>
 开源项目：[<span i-simple-icons-visualstudiocode w4 h4 pb-5 op75 /> Mpx Template Features](https://github.com/wangshunnn/mpx-template-features)<br>
 算法爱好者，[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />力扣](https://leetcode.cn/u/soon-8) 1800 分选手
 
-编程之外，喜欢音乐、动漫、游戏、阅读 ...
+编程之外，喜欢音乐、动漫、游戏、阅读 ..
 
 <br>
 
