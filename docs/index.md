@@ -33,7 +33,7 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 <span >2023.8</span>
 <span left-17 absolute >~</span >
 <span left-23 absolute >至今</span >
-<span left-50 absolute >[<IconDidi w4.5 h4.5 inline-block align-sub op75 pt-0.2 /> 滴滴](https://www.didiglobal.com/)</span ><br>
+<span left-50 absolute >[<span i-arcticons-didi-food role="img" aria-hidden="true" /> 滴滴](https://www.didiglobal.com/)</span ><br>
 <span >2021.1</span>
 <span left-17 absolute >~</span >
 <span left-23 absolute >2023.7</span >
