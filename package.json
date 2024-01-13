@@ -1,13 +1,26 @@
 {
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "format": "prettier . --write",
+    "format": "prettier --write --cache .",
+    "format-check": "prettier --check --cache .",
     "lint": "eslint . --ext .js,.mjs,.ts,.mts,.vue",
+    "preinstall": "npx only-allow pnpm",
     "postinstall": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,mjs,ts,mts,vue}": "pnpm lint --fix"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10",
+    "pnpm": ">=8.10.2"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.161",
@@ -23,11 +36,5 @@
     "vitepress": "1.0.0-rc.32",
     "vue": "^3.3.13",
     "vue-eslint-parser": "^9.3.2"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,mjs,ts,mts,,vue}": "pnpm lint --fix"
   }
 }
