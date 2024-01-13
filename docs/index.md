@@ -10,13 +10,14 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 .soon{
   a {
       color: inherit;
-      font-weight: 450;
+      font-weight: inherit;
       text-decoration: none;
       padding-bottom: 1.5px;
       border-bottom: 1.5px solid rgba(125,125,125,.3);
       transition: border 0.3s ease-in-out;
   }
   a:hover {
+      font-weight: 450;
       color: inherit;
       border-bottom: 1.5px solid rgba(125,125,125,1);
       transition: border .3s ease-in-out;
@@ -33,7 +34,7 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 <span >2023.8</span>
 <span left-17 absolute >~</span >
 <span left-23 absolute >至今</span >
-<span left-50 absolute >[<span i-arcticons-didi-food role="img" aria-hidden="true" /> 滴滴](https://www.didiglobal.com/)</span ><br>
+<span left-50 absolute >[<span i-arcticons-didi-food role="img" aria-hidden="true" w4.5 h4.5 /> 滴滴](https://www.didiglobal.com/)</span ><br>
 <span >2021.1</span>
 <span left-17 absolute >~</span >
 <span left-23 absolute >2023.7</span >
