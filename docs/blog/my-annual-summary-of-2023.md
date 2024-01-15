@@ -2,10 +2,10 @@
 title: 我的年度总结 2023
 date: 2023-12-31
 lang: zh
-duration: 15 min
+duration: 5 min
 description: 总结是为了更好的出发
-tag:
-place: BeiJing
+tag: WIP
+place: Beijing
 ---
 
 # 我的年度总结 2023

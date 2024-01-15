@@ -1,6 +1,6 @@
 ---
 title: 测试标题
-date: 2023-11-6
+# date: 2023-11-6
 lang: zh
 duration: 5 min
 description: 简要描述

@@ -86,37 +86,38 @@ function getGroupName(p: Blog) {
               </span>
               <span align-middle>{{ route.title }}</span>
             </div>
-
-            <div flex="~ gap-2 items-center">
-              <span text-sm op60 ws-nowrap>
-                <span class="i-lets-icons:date-range-light"></span>
-                {{ route.date.string }}
-              </span>
-              <span v-if="route.duration" text-sm op50 ws-nowrap>
-                <span class="i-icon-park-outline:tea-drink"></span>
-                {{ route.duration }}
-              </span>
-              <span v-if="route.place" text-sm op50 ws-nowrap md:hidden>
-                <span class="i-ic:outline-place"></span>
-                {{ route.place }}
-              </span>
-            </div>
           </li>
 
-          <div op60 text-sm hidden mt-2 flex="~ gap-2 items-center">
-            <span v-if="route.place" hidden md:block>
+          <div mt-1.5 flex="~ gap-2 items-center">
+            <span text-sm op60 ws-nowrap>
+              <span class="i-lets-icons:date-range-light"></span>
+              {{ route.date.string }}
+            </span>
+            <span v-if="route.duration" text-sm op50 ws-nowrap>
+              <span class="i-icon-park-outline:tea-drink"></span>
+              {{ route.duration }}
+            </span>
+            <span v-if="route.place" text-sm op50 ws-nowrap>
               <span class="i-ic:outline-place"></span>
-              <span> {{ route.place }}</span></span
-            >
-            <span v-if="route.tag">
-              <span rounded my-auto bg-zinc:50 text-xs py-1 px-1.2 md:hidden>
-                <span class="i-mdi:tag"></span>
-                {{ route.tag }}
-              </span>
+              {{ route.place }}
             </span>
           </div>
 
-          <div v-if="route.description" op60 text-sm mt-2 md:block>
+          <div
+            v-if="route.tag"
+            op60
+            text-sm
+            hidden
+            mt-1.5
+            flex="~ gap-2 items-center"
+            md:hidden
+          >
+            <span rounded my-auto bg-zinc:50 text-xs px-1.5 py-0.5>
+              {{ route.tag }}
+            </span>
+          </div>
+
+          <div v-if="route.description" op60 text-sm mt-1.5 md:block>
             {{ route.description }}
           </div>
         </a>
