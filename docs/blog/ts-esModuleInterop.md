@@ -3,14 +3,14 @@ title: TypeScript esModuleInterop 原理&实践
 date: 2024-1-15
 lang: zh
 duration: 13 min
-description: TypeScript 转译器如何处理 ES module 与 CommonJS 模块之间的交互问题？
+description: TypeScript 转译器如何处理 ESM 与 CommonJS 模块之间的交互问题？
 # tag: TS
 place: Beijing
 ---
 
 # TS esModuleInterop 原理&实践
 
-## 问题背景：ES module 和 CommonJS 模块的互操作难题
+## 问题背景：ES Modules 和 CommonJS 模块的互操作难题
 
 当我们在 `TypeScript` 文件中导入 `CommonJS` 模块时，也许会遇到一些令人的困惑结果。
 
@@ -26,7 +26,7 @@ module.exports = {
 exports.b = 4
 ```
 
-然后，我们在 `index.ts` 中分别尝试通过 `ES module` 不同的导入规范来导入 `lib.cjs.js` 模块。
+然后，我们在 `index.ts` 中分别尝试通过 `ESM`（`ES Modules`） 不同的导入规范来导入 `lib.cjs.js` 模块。
 
 ```ts
 // index.ts
@@ -63,7 +63,7 @@ console.log(a) // ✅ work
 }
 ```
 
-根据官方解释，这个选项是用来处理 `ES module` 和 `CommonJS` 模块之间的交互问题，开启该选项后 `tsc` 会产生额外代码来帮助我们“更轻松”地导入 `CommonJS` 模块。让我们动手实践看下启用前后的区别。
+根据官方解释，这个选项是用来处理 `ESM` 和 `CommonJS` 模块之间的交互问题，开启该选项后 `tsc` 会产生额外代码来帮助我们“更轻松”地导入 `CommonJS` 模块。让我们动手实践看下启用前后的区别。
 
 ### esModuleInterop 工作原理
 
@@ -195,7 +195,7 @@ console.log(lib_cjs_js_2.a)
    var lib = __importDefault(require('./lib.cjs.js')).default
    ```
 
-   这里新增了一个 `__importDefault` 方法来包裹原来的导出，起作用是为 `CommonJS` 模块的导出添加了 `default` 默认导出，抹平了和 `ES module` 的差异，这样结果就符合预期了，降低了开发者的心智负担。
+   这里新增了一个 `__importDefault` 方法来包裹原来的导出，起作用是为 `CommonJS` 模块的导出添加了 `default` 默认导出，抹平了和 `ESM` 的差异，这样结果就符合预期了，降低了开发者的心智负担。
 
 3. 命名导入（Named import）
 
@@ -432,7 +432,7 @@ console.log(import_lib_cjs2.a)
 
 ## 结语
 
-由于 `ES module` 和 `CommonJS` 模块存在模块规范上的差异，在 `ES module` 中导入 `CommonJS` 模块时容易产生歧义，可见有统一规范的重要性。如今全面拥抱 ESM 已是大势所趋，相信未来 JSer/TSer 的开发体验也会越来越好。
+由于 `ESM` 和 `CommonJS` 模块存在模块规范上的差异，在 `ESM` 中导入 `CommonJS` 模块时容易产生歧义，可见有统一规范的重要性。如今全面拥抱 ESM 已是大势所趋，相信未来 JSer/TSer 的开发体验也会越来越好。
 
 ## 思考题
 
