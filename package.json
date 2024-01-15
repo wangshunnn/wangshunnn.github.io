@@ -18,9 +18,9 @@
     "*.{js,mjs,ts,mts,vue}": "pnpm lint --fix"
   },
   "engines": {
-    "node": ">=20.11.0",
-    "npm": ">=10.2.4",
-    "pnpm": ">=8.14.1"
+    "node": ">=20",
+    "npm": ">=10",
+    "pnpm": ">=8"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.161",
