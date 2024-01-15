@@ -67,7 +67,7 @@ console.log(a) // ✅ work
 
 ### esModuleInterop 工作原理
 
-#### { esModuleInterop: false }
+### 设置 `{ esModuleInterop: false }`
 
 关闭 `esModuleInterop` 选项，`tsc` 转译后代码如下所示：
 
@@ -111,7 +111,7 @@ console.log(lib_cjs_js_2.a) // ✅ work
 
 针对第二种导入方式，由于 `./lib.cjs.js` 其实并没有提供 `default` 导出，因此 `require('./lib.cjs.js').default` 的结果会是 `undefined`，这也解释了开头的示例中为什么会失败。
 
-#### { esModuleInterop: true }
+#### 设置 `{ esModuleInterop: true }`
 
 开启 `esModuleInterop` 选项，`tsc` 转译后代码如下所示：
 
