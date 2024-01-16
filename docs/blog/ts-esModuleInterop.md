@@ -41,12 +41,12 @@ console.log(a)
 
 当我们通过 `tsc` 转译代码后，其运行结果也许会出乎意料。如果你对结果没有十足把握，不妨先动手试试。
 
-如果你直接使用 `tsc index.ts` 转译代码然后执行 `index.js`，其运行结果如下所示，你是否会感到疑惑呢 🤔
+如果你直接使用 `tsc index.ts` 转译代码然后执行 `index.js`，其运行结果如下所示，你是否会感到疑惑？🤔
 
 ```ts
-console.log(lib_1.a) // ✅ work
-console.log(lib_2.a) // ❌ fail
-console.log(a) // ✅ work
+console.log(lib_1.a)  // ✅ work
+console.log(lib_2.a)  // ❌ fail
+console.log(a)        // ✅ work
 ```
 
 ## tsc 是如何处理的？
@@ -67,7 +67,7 @@ console.log(a) // ✅ work
 
 ### esModuleInterop 工作原理
 
-### 设置 `{ esModuleInterop: false }`
+#### 设置 `{ esModuleInterop: false }`
 
 关闭 `esModuleInterop` 选项，`tsc` 转译后代码如下所示：
 
@@ -77,9 +77,9 @@ Object.defineProperty(exports, '__esModule', { value: true })
 var lib_1 = require('./lib.cjs.js')
 var lib_cjs_js_1 = require('./lib.cjs.js')
 var lib_cjs_js_2 = require('./lib.cjs.js')
-console.log(lib_1.a) // ✅ work
+console.log(lib_1.a)                // ✅ work
 console.log(lib_cjs_js_1.default.a) // ❌ fail
-console.log(lib_cjs_js_2.a) // ✅ work
+console.log(lib_cjs_js_2.a)         // ✅ work
 ```
 
 可以发现三种不同的导入方式对应的转换规则如下：
@@ -100,6 +100,8 @@ console.log(lib_cjs_js_2.a) // ✅ work
    var lib = require('./lib.cjs.js').default
    ```
 
+   针对第默认导入方式，由于 `./lib.cjs.js` 其实并没有提供 `default` 导出，因此 `require('./lib.cjs.js').default` 的结果会是 `undefined`，这也解释了开头的示例中为什么会失败。
+
 3. 命名导入（Named import）
 
    ```js
@@ -108,8 +110,6 @@ console.log(lib_cjs_js_2.a) // ✅ work
    var lib = require('./lib.cjs.js')
    var { a } = lib
    ```
-
-针对第二种导入方式，由于 `./lib.cjs.js` 其实并没有提供 `default` 导出，因此 `require('./lib.cjs.js').default` 的结果会是 `undefined`，这也解释了开头的示例中为什么会失败。
 
 #### 设置 `{ esModuleInterop: true }`
 
@@ -210,7 +210,7 @@ console.log(lib_cjs_js_2.a)
 
 ## 其他转译器和构建工具
 
-前面分析了 `tsc` 的处理方案，那其他转译器和构建工具又是怎么处理的呢？
+前面分析了 `tsc` 的处理方案，那其他转译器和构建工具又是怎么处理的？
 
 ### Babel
 
@@ -436,7 +436,7 @@ console.log(import_lib_cjs2.a)
 
 ## 思考题
 
-如果一个 `CommonJS` 模块本身就导出了 `default` 属性，那么在 `ts` 中导入该模块后，开启和关闭 `esModulesInterop` 对于最终结果又有什么影响呢？（是否又有了新的困惑？）
+如果一个 `CommonJS` 模块本身就导出了 `default` 属性，那么在 `ts` 中导入该模块后，开启和关闭 `esModulesInterop` 对于最终结果又有什么影响？（是否又有了新的困惑？）
 
 ```js
 // lib.cjs.js
