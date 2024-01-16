@@ -2,7 +2,7 @@
 title: TypeScript esModuleInterop 原理&实践
 date: 2024-1-15
 lang: zh
-duration: 13 min
+duration: 10 min
 description: TypeScript 转译器如何处理 ESM 与 CommonJS 模块之间的交互问题？
 # tag: TS
 place: Beijing
