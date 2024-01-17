@@ -100,7 +100,7 @@ console.log(lib_cjs_js_2.a)         // ✅ work
    var lib = require('./lib.cjs.js').default
    ```
 
-   针对第默认导入方式，由于 `./lib.cjs.js` 其实并没有提供 `default` 导出，因此 `require('./lib.cjs.js').default` 的结果会是 `undefined`，这也解释了开头的示例中为什么会失败。
+   对于默认导入方式，由于 `./lib.cjs.js` 其实并没有提供 `default` 导出，因此 `require('./lib.cjs.js').default` 的结果会是 `undefined`，这也解释了开头的示例中为什么会失败。
 
 3. 命名导入（Named import）
 
