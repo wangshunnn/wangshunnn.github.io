@@ -185,7 +185,7 @@ console.log(lib_cjs_js_2.a)
    var lib = __importStar(require('./lib.cjs.js'))
    ```
 
-   这里新增了一个 `__importStar` 方法来包裹原来的导出，其作用就是将原有导出对象的所有可枚举属性添加代理到新的导入对象中。
+   这里新增了一个 `__importStar` 方法来包裹原来的导出，其作用就是将原有导出对象的所有可枚举属性代理到新的导入对象中。
 
 2. 默认导入（Default import）
 
@@ -195,7 +195,7 @@ console.log(lib_cjs_js_2.a)
    var lib = __importDefault(require('./lib.cjs.js')).default
    ```
 
-   这里新增了一个 `__importDefault` 方法来包裹原来的导出，起作用是为 `CommonJS` 模块的导出添加了 `default` 默认导出，抹平了和 `ESM` 的差异，这样结果就符合预期了，降低了开发者的心智负担。
+   这里新增了一个 `__importDefault` 方法来包裹原来的导出，其作用是为 `CommonJS` 模块的导出添加了 `default` 默认导出，抹平了和 `ESM` 的差异，这样结果就符合预期了，降低了开发者的心智负担。
 
 3. 命名导入（Named import）
 
