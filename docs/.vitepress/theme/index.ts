@@ -4,7 +4,8 @@ import BlogHome from './components/BlogHome.vue'
 import IconMeituan from './components/icons/IconMeituan.vue'
 import IconDidi from './components/icons/IconDidi.vue'
 
-import 'virtual:uno.css'
+import './rainbow.css'
+import 'uno.css'
 
 export default {
   extends: DefaultTheme,

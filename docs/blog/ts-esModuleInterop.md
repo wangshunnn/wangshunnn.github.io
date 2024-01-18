@@ -51,7 +51,7 @@ console.log(a)        // ✅ work
 
 ## tsc 是如何处理的？
 
-<!-- > 插一段题外话，这里将 tsc 写作转译器（`transpiler`），或者 [`source-to-source compiler (S2S compiler)`](https://en.wikipedia.org/wiki/Source-to-source_compiler)，是因为 TS 到 JS 的转换是相似抽象级别语言之间的转换，而非传统的高级语言到低级语言的编译（`compiler`）。 -->
+<!-- > 插一段题外话，这里将 tsc 写作转译器（`transpiler`），或者 [source-to-source compiler (S2S compiler)](https://en.wikipedia.org/wiki/Source-to-source_compiler)，是因为 TS 到 JS 的转换是相似抽象级别语言之间的转换，而非传统的高级语言到低级语言的编译（`compiler`）。 -->
 
 当我们通过 `tsc --init` 初始化生成 `tsconfig.json` 配置文件时，会发现有一个默认开启的配置选项 `esModuleInterop`。_（环境：node v18 & typescript@5.3.3 ）_
 
@@ -216,7 +216,7 @@ console.log(lib_cjs_js_2.a)
 
 > 实验环境：@babel/cli: 7.23.4, @babelcore: 7.23.7, @babel/plugin-transform-modules-commonjs: @7.23.3
 
-[`babel`](https://swc.rs/) 的插件 [`@babel/plugin-transform-modules-commonjs`](https://www.babeljs.cn/docs/babel-plugin-transform-modules-commonjs) 从 `v7.14.0` 版本开始支持了名为 [`importinterop`](https://babeljs.io/docs/babel-plugin-transform-modules-commonjs#importinterop) 的编译选项，对应 `tsconfig` 的 `esModuleInterop`，并且提供了三个控制更为精细的可选值。
+[babe](https://swc.rs/) 的插件 [@babel/plugin-transform-modules-commonjs](https://www.babeljs.cn/docs/babel-plugin-transform-modules-commonjs) 从 `v7.14.0` 版本开始支持了名为 [importinterop](https://babeljs.io/docs/babel-plugin-transform-modules-commonjs#importinterop) 的编译选项，对应 `tsconfig` 的 `esModuleInterop`，并且提供了三个控制更为精细的可选值。
 
 ```json
 // .babelrc
@@ -272,7 +272,7 @@ console.log(_libCjs.a)
 
 > 实验环境： @swc/cli: v0.1.63, @swc/core: v1.3.103
 
-[swc](https://swc.rs/) 提供了名为 [`noInterop`](https://www.swc.net.cn/docs/configuration/modules#nointerop) 的编译选项（默认为 false），对应 `tsconfig` 的 `esModuleInterop`，但选项值相反。
+[swc](https://swc.rs/) 提供了名为 [noIntero](https://www.swc.net.cn/docs/configuration/modules#nointerop) 的编译选项（默认为 false），对应 `tsconfig` 的 `esModuleInterop`，但选项值相反。
 
 ```json
 // .swcrc
@@ -351,7 +351,7 @@ console.log(_libcjs.a)
 
 > 实验环境：tsup: v8.0.1
 
-[`tsup`](https://tsup.egoist.dev/) 是一款基于 [`esbuild`](https://github.com/evanw/esbuild) 的开箱即用的 TS 编译构建工具，通过默认配置转译后的代码如下所示，其结果和 `{ esModuleInterop: false }` 效果类似。
+[tsup](https://tsup.egoist.dev/) 是一款基于 [esbuild](https://github.com/evanw/esbuild) 的开箱即用的 TS 编译构建工具，通过默认配置转译后的代码如下所示，其结果和 `{ esModuleInterop: false }` 效果类似。
 
 ```shell
 tsup index.ts --format cjs

@@ -25,7 +25,7 @@ import IconMeituan from './.vitepress/theme/components/icons/IconMeituan.vue'
 }
 </style>
 
-# Soon Wang
+<H1 color-rainbow>Soon Wang</H1>
 
 <br>
 <div class='soon'>

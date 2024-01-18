@@ -54,6 +54,19 @@ export default defineConfig({
       {
         'text-shadow': '15px 10px 10px gray'
       }
+    ],
+    [
+      'color-rainbow',
+      {
+        color: 'var(--rainbow-color)'
+      }
+    ],
+    [
+      'bg-rainbow',
+      {
+        background: 'var(--rainbow-background)',
+        'background-clip': 'text'
+      }
     ]
   ],
   transformers: [transformerDirectives()],
