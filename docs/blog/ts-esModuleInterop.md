@@ -216,7 +216,7 @@ console.log(lib_cjs_js_2.a)
 
 > 实验环境：@babel/cli: 7.23.4, @babelcore: 7.23.7, @babel/plugin-transform-modules-commonjs: @7.23.3
 
-[babe](https://swc.rs/) 的插件 [@babel/plugin-transform-modules-commonjs](https://www.babeljs.cn/docs/babel-plugin-transform-modules-commonjs) 从 `v7.14.0` 版本开始支持了名为 [importinterop](https://babeljs.io/docs/babel-plugin-transform-modules-commonjs#importinterop) 的编译选项，对应 `tsconfig` 的 `esModuleInterop`，并且提供了三个控制更为精细的可选值。
+[Babel](https://swc.rs/) 的插件 [@babel/plugin-transform-modules-commonjs](https://www.babeljs.cn/docs/babel-plugin-transform-modules-commonjs) 从 `v7.14.0` 版本开始支持了名为 [importinterop](https://babeljs.io/docs/babel-plugin-transform-modules-commonjs#importinterop) 的编译选项，对应 `tsconfig` 的 `esModuleInterop`，并且提供了三个控制更为精细的可选值。
 
 ```json
 // .babelrc
