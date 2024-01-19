@@ -62,10 +62,12 @@ export default defineConfig({
       }
     ],
     [
-      'bg-rainbow',
+      'text-rainbow',
       {
         background: 'var(--rainbow-background)',
-        'background-clip': 'text'
+        'background-clip': 'text',
+        '-webkit-background-clip': 'text',
+        '-webkit-text-fill-color': 'transparent'
       }
     ]
   ],

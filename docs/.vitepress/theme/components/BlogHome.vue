@@ -84,7 +84,7 @@ function getGroupName(p: Blog) {
                   {{ route.tag }}
                 </span>
               </span>
-              <span align-middle>{{ route.title }}</span>
+              <span align-middle text-rainbow>{{ route.title }}</span>
             </div>
           </li>
 
