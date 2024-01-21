@@ -11,7 +11,7 @@ import './styles/overrides.css'
 import 'uno.css'
 
 export default {
-  extends: DefaultTheme,
+  ...DefaultTheme,
   Layout: () => {
     return h(CustomLayout)
   },
