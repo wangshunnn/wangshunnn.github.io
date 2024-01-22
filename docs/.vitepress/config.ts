@@ -60,6 +60,8 @@ export default defineConfig({
       }
     },
 
+    outline: 'deep',
+
     sidebar: {
       more: [
         {
