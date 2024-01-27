@@ -55,3 +55,8 @@ Find me on
 <a href="https://github.com/wangshunnn" target="_blank"><span op75 i-simple-icons-github /> GitHub</a>&nbsp;&nbsp;<a href="https://www.twitter.com/wangshunnn" target="_blank"><span op75 i-ri-twitter-x-fill /> Twitter</a>&nbsp;&nbsp;<a href="https://www.zhihu.com/people/wangshunnn" target="_blank"><span op75 i-simple-icons-zhihu /> 知乎</a>
 
 </div>
+
+<div class="busuanzi" hidden>
+  <span id="busuanzi_value_site_pv" />
+  <span id="busuanzi_value_site_uv" />
+</div>

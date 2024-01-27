@@ -27,6 +27,7 @@
     "@types/dom-view-transitions": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.16.0",
+    "busuanzi.pure.js": "^1.0.3",
     "eslint": "^8.56.0",
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",

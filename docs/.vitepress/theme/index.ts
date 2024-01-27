@@ -1,10 +1,10 @@
 import { h } from 'vue'
-import type { Theme } from 'vitepress'
+import { type Theme, inBrowser } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+import busuanzi from 'busuanzi.pure.js'
 import CustomLayout from './components/CustomLayout.vue'
 import BlogHome from './components/BlogHome.vue'
 import IconMeituan from './components/icons/IconMeituan.vue'
-// import IconDidi from './components/icons/IconDidi.vue'
 
 import './styles/rainbow.css'
 import './styles/overrides.css'
@@ -15,9 +15,13 @@ export default {
   Layout: () => {
     return h(CustomLayout)
   },
-  enhanceApp({ app }) {
+  enhanceApp({ app, router }) {
     app.component('BlogHome', BlogHome)
     app.component('IconMeituan', IconMeituan)
-    // app.component('IconDidi', IconDidi)
+    if (inBrowser) {
+      router.onAfterRouteChanged = () => {
+        busuanzi.fetch()
+      }
+    }
   }
 } satisfies Theme
