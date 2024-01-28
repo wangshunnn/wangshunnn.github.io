@@ -8,14 +8,15 @@
     "format": "prettier --write --cache .",
     "format-check": "prettier --check --cache .",
     "lint": "eslint . --ext .js,.mjs,.ts,.mts,.vue",
+    "lint:fix": "npm run lint -- --fix",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "simple-git-hooks"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "npm run lint-staged"
   },
   "lint-staged": {
-    "*.{js,mjs,ts,mts,vue}": "pnpm lint --fix"
+    "*.{js,mjs,ts,mts,vue}": "npm run lint:fix"
   },
   "engines": {
     "node": ">=20",
