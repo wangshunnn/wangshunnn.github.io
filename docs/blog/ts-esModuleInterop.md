@@ -4,7 +4,7 @@ date: 2024-1-15
 lang: zh
 duration: 10 min
 description: TypeScript 转译器如何处理 ESM 与 CommonJS 模块之间的交互问题？
-# tag: TS
+tag: TypeScript
 place: Beijing
 ---
 

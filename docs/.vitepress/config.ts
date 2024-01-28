@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
+import zhihuSVG from './theme/components/icons/zhihu.svg'
 
 const ogUrl = 'https://wangshunnn.github.io/'
 const ogImage = `${ogUrl}logo-origin.jpg`
@@ -12,7 +13,6 @@ export default defineConfig({
   description,
 
   head: [
-    // ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
     [
       'link',
       { rel: 'icon', href: '/logo.png', type: 'image/png', sizes: '16x16' }
@@ -36,17 +36,16 @@ export default defineConfig({
     plugins: [UnoCSS()]
   },
 
+  // https://vitepress.dev/reference/default-theme-config
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-
     siteTitle: '',
 
     logo: { src: '/logo.png', width: 24, height: 24 },
 
     nav: [
-      { text: '博客', link: '/blog/index' },
-      { text: '项目', link: '/project/index' },
-      { text: '更多', link: '/more/index' }
+      // { text: '博客', link: '/blog/index' },
+      // { text: '项目', link: '/project/index' },
+      { text: '关于', link: '/about/index' }
     ],
 
     search: {
@@ -81,7 +80,11 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wangshunnn' },
-      { icon: 'x', link: 'https://twitter.com/wangshunnn' }
+      { icon: 'x', link: 'https://twitter.com/wangshunnn' },
+      {
+        icon: { svg: zhihuSVG },
+        link: 'https://www.zhihu.com/people/wangshunnn'
+      }
     ],
 
     footer: {
