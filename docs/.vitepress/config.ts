@@ -89,7 +89,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2023-PRESENT Soon Wang'
+      copyright: `Copyright © 2023-${new Date().getFullYear()} Soon Wang`
     }
   }
 })

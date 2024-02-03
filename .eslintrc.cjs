@@ -1,4 +1,4 @@
-/**@type {import('eslint').Linter.Config} */
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
   extends: ['plugin:@typescript-eslint/recommended'],
@@ -13,7 +13,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint'],
   rules: {
-    '@typescript-eslint/no-explicit-any': 2 ,
+    '@typescript-eslint/no-explicit-any': 2,
     '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/no-non-null-assertion': 2,
     semi: [2, 'never'],
@@ -23,5 +23,5 @@ module.exports = {
   env: {
     browser: true,
     node: true
-  }
+  },
 }
