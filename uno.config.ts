@@ -69,6 +69,12 @@ export default defineConfig({
         '-webkit-background-clip': 'text',
         '-webkit-text-fill-color': 'transparent'
       }
+    ],
+    [
+      'font-fantasy',
+      {
+        'font-family': 'fantasy'
+      }
     ]
   ],
   transformers: [transformerDirectives()],

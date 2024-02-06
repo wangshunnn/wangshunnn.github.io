@@ -1,5 +1,5 @@
 ---
-title: 我的年度总结 2023
+title: 2023年度总结
 date: 2023-12-31
 lang: zh
 duration: 5 min

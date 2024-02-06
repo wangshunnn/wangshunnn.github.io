@@ -26,13 +26,13 @@ function getGroupName(p: Blog) {
     </div>
 
     <div v-for="(route, idx) in blog" :key="route.url">
-      <div v-if="!isSameGroup(route, blog[idx - 1])" select-none relative h15 pointer-events-none>
-        <span text-6em color-transparent absolute top-1.5rem font-bold op40 md:left--1rem text-stroke-2
-          text-stroke-hex-bbb italic>{{ getGroupName(route) }}</span>
+      <div v-if="!isSameGroup(route, blog[idx - 1])" select-none relative h10 pointer-events-none>
+        <span text-6em color-transparent absolute md:top-1.5rem font-bold op30 right-0 text-stroke-2 text-stroke-hex-bbb
+          italic font-fantasy>{{ getGroupName(route) }}</span>
       </div>
 
       <div>
-        <a :href="route.url" class="item !color-inherit !no-underline" font-normal block mt-10 mb-10 op85
+        <a :href="route.url" class="item !color-inherit !no-underline" font-normal block mt-0 mb-8 op85
           transition-transform-op hover="scale-101 op100">
           <li class="!no-underline" flex="~ col md:row gap-2 md:items-center">
             <div class="text-lg leading-1.2em title" flex="~ gap-2 wrap">
@@ -53,15 +53,15 @@ function getGroupName(p: Blog) {
               <span class="i-ic:outline-place"></span>
               {{ route.place }}
             </span>
-            <span v-if="route.tag" text-sm op50 ws-nowrap hidden md:block>
-              <div class="i-mdi:tag-multiple-outline"></div>
+            <span v-if="route.tag" text-sm op50 ws-nowrap hidden md:block bg-zinc:50 text-xs pl-1.5 pr-2 py-0.4 rounded-full>
+              <span class="i-mdi:tag-multiple-outline" />
               {{ route.tag }}
             </span>
           </div>
 
           <div v-if="route.tag" op60 text-sm mt-1.5 flex="~ gap-2 items-center" md:hidden>
-            <span rounded my-auto bg-zinc:50 text-xs px-1.5 py-0.5>
-              <div class="i-mdi:tag-multiple-outline"></div>
+            <span rounded my-auto bg-zinc:50 text-xs pl-1.5 pr-2 py-0.4 rounded-full>
+              <span class="i-mdi:tag-multiple-outline" />
               {{ route.tag }}
             </span>
           </div>
