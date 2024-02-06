@@ -27,13 +27,13 @@ function getGroupName(p: Blog) {
 
     <div v-for="(route, idx) in blog" :key="route.url">
       <div v-if="!isSameGroup(route, blog[idx - 1])" select-none relative h10 pointer-events-none>
-        <span text-5rem md:text-6em color-transparent absolute md:top-1.5rem font-bold op30 right-0 text-stroke-2 text-stroke-hex-bbb
-          italic font-mono md:font-fantasy>{{ getGroupName(route) }}</span>
+        <span text-5rem md:text-6em color-transparent absolute top--0.8rem md:top-1.5rem font-bold op20 md:op30 right-1rem
+          text-stroke-2 text-stroke-hex-bbb font-mono>{{ getGroupName(route) }}</span>
       </div>
 
       <div>
-        <a :href="route.url" class="item !color-inherit !no-underline" font-normal block mb-8 op85
-          transition-transform-op hover="scale-101 op100">
+        <a :href="route.url" class="item !color-inherit !no-underline" font-normal block mb-8 op85 transition-transform-op
+          hover="scale-101 op100">
           <li class="!no-underline" flex="~ col md:row gap-2 md:items-center">
             <div class="text-lg leading-1.2em title" flex="~ gap-2 wrap">
               <span align-middle text-rainbow>{{ route.title }}</span>
@@ -53,7 +53,8 @@ function getGroupName(p: Blog) {
               <span class="i-ic:outline-place"></span>
               {{ route.place }}
             </span>
-            <span v-if="route.tag" text-sm op50 ws-nowrap hidden md:block bg-zinc:50 text-xs pl-1.5 pr-2 py-0.4 rounded-full>
+            <span v-if="route.tag" text-sm op50 ws-nowrap hidden md:block bg-zinc:50 text-xs pl-1.5 pr-2 py-0.4
+              rounded-full>
               <span class="i-mdi:tag-multiple-outline" />
               {{ route.tag }}
             </span>

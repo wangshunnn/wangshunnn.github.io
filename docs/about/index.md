@@ -1,5 +1,5 @@
 ---
-title: 个人介绍
+title: About
 aside: false
 ---
 
