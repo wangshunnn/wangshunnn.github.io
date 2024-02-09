@@ -44,7 +44,6 @@ export default defineConfig({
 
     nav: [
       { text: 'Blog', activeMatch: '^/($|blog/)', link: '/index' },
-      // { text: '项目', link: '/project/index' },
       { text: 'About', activeMatch: '^/about/', link: '/about/index' }
     ],
 
