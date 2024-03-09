@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
 import zhihuSVG from './theme/components/icons/zhihu.svg'
+import { algoliaTranslations } from './const'
 
 const ogUrl = 'https://wangshunnn.github.io/'
 const ogImage = `${ogUrl}logo-origin.jpg`
@@ -48,7 +49,14 @@ export default defineConfig({
     ],
 
     search: {
-      provider: 'local'
+      provider: 'algolia',
+      options: {
+        appId: 'K3MSC93R2T',
+        apiKey: 'a28a755619f9dd70f9b9ba1879854748',
+        indexName: 'wangshunnnio',
+        placeholder: '搜索文档',
+        translations: algoliaTranslations
+      }
     },
 
     lastUpdated: {
