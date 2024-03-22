@@ -1,3 +1,5 @@
 dist
 *.html
 pnpm-lock.yaml
+*.md
+*.vue

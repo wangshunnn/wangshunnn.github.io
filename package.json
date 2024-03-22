@@ -5,18 +5,18 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
+    "format:check": "prettier --check --cache .",
     "format": "prettier --write --cache .",
-    "format-check": "prettier --check --cache .",
     "lint": "eslint . --ext .js,.mjs,.ts,.mts,.vue",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "pnpm lint --fix",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "simple-git-hooks"
   },
   "simple-git-hooks": {
-    "pre-commit": "npm run lint-staged"
+    "pre-commit": "pnpm lint-staged && pnpm format"
   },
   "lint-staged": {
-    "*.{js,mjs,ts,mts,vue}": "npm run lint:fix"
+    "*.{js,mjs,ts,mts,vue}": "pnpm lint:fix"
   },
   "engines": {
     "node": ">=20",
