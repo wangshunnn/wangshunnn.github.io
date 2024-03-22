@@ -408,8 +408,16 @@
 :root {
   --rainbow-color: #00a98e;
   --rainbow-color-next: #009ff7;
-  --rainbow-background: linear-gradient(120deg, var(--rainbow-color) 30%, var(--rainbow-color-next));
-  --rainbow-background-image: linear-gradient(-45deg, var(--rainbow-color) 30%, var(--rainbow-color-next));
+  --rainbow-background: linear-gradient(
+    120deg,
+    var(--rainbow-color) 30%,
+    var(--rainbow-color-next)
+  );
+  --rainbow-background-image: linear-gradient(
+    -45deg,
+    var(--rainbow-color) 30%,
+    var(--rainbow-color-next)
+  );
   animation: rainbow 12s linear infinite;
 }
 
