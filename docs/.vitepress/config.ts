@@ -44,8 +44,8 @@ export default defineConfig({
     logo: { src: '/logo.png', width: 24, height: 24 },
 
     nav: [
-      { text: 'Blog', activeMatch: '^/($|blog/)', link: '/index' },
-      { text: 'About', activeMatch: '^/about/', link: '/about/index' }
+      { text: '博客', activeMatch: '^/($|blog/)', link: '/index' },
+      { text: '关于', activeMatch: '^/about/', link: '/about/index' }
     ],
 
     search: {
