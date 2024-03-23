@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
 import zhihuSVG from './theme/components/icons/zhihu.svg'
-import { algoliaTranslations } from './const'
+import { algoliaTranslations, i18n } from './const'
 
 const ogUrl = 'https://wangshunnn.github.io/'
 const ogImage = `${ogUrl}logo-origin.jpg`
@@ -54,7 +54,7 @@ export default defineConfig({
         appId: 'K3MSC93R2T',
         apiKey: 'a28a755619f9dd70f9b9ba1879854748',
         indexName: 'wangshunnnio',
-        placeholder: '搜索文档',
+        placeholder: '搜索博客',
         translations: algoliaTranslations
       }
     },
@@ -97,6 +97,16 @@ export default defineConfig({
     footer: {
       message: 'Released under the MIT License.',
       copyright: `Copyright © 2023-${new Date().getFullYear()} Soon Wang`
+    },
+
+    // i18n
+    sidebarMenuLabel: i18n.menu,
+    outlineTitle: i18n.toc,
+    returnToTopLabel: i18n.returnToTop,
+    darkModeSwitchLabel: i18n.appearance,
+    docFooter: {
+      prev: i18n.previous,
+      next: i18n.next
     }
   }
 })
