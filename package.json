@@ -24,20 +24,20 @@
     "pnpm": ">=8"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.161",
+    "@iconify/json": "^2.2.195",
     "@types/dom-view-transitions": "^1.0.4",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.16.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "busuanzi.pure.js": "^1.0.3",
-    "eslint": "^8.56.0",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.1.1",
-    "simple-git-hooks": "^2.9.0",
-    "typescript": "^5.3.3",
-    "unocss": "^0.58.0",
-    "vite": "^5.0.10",
-    "vitepress": "1.0.0-rc.32",
-    "vue": "^3.3.13",
-    "vue-eslint-parser": "^9.3.2"
+    "eslint": "^8.57.0",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "simple-git-hooks": "^2.11.0",
+    "typescript": "^5.4.3",
+    "unocss": "^0.58.6",
+    "vite": "^5.2.3",
+    "vitepress": "1.0.1",
+    "vue": "^3.4.21",
+    "vue-eslint-parser": "^9.4.2"
   }
 }
