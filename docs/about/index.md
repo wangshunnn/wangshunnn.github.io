@@ -6,17 +6,17 @@ aside: false
 <style>
 .soon{
   a {
-      color: inherit;
-      font-weight: inherit;
-      text-decoration: none;
+      color: inherit !important;
+      font-weight: inherit !important;
+      text-decoration: none !important;
       padding-bottom: 1.5px;
       border-bottom: 1.5px solid rgba(125,125,125,.3);
-      transition: border 0.3s ease-in-out;
+      transition: border 0.3s ease-in-out !important;
   }
   a:hover {
-      color: inherit;
+      color: inherit !important;
       border-bottom: 1.5px solid rgba(125,125,125,1);
-      transition: border .3s ease-in-out;
+      transition: border .3s ease-in-out !important;
   }
 }
 </style>
