@@ -18,6 +18,9 @@ aside: false
       border-bottom: 1.5px solid rgba(125,125,125,1);
       transition: border .3s ease-in-out !important;
   }
+  hr{
+    width: 13% !important
+  }
 }
 </style>
 
@@ -38,9 +41,10 @@ aside: false
 Web 端、PC 桌面端、小程序工作经验 <br>
 技术栈：JS, TS, Vue, React, Node, Electron
 
-开源项目：[<span i-simple-icons-visualstudiocode w4 h4 pb-5 op75 /> Mpx Template Features](https://github.com/wangshunnn/mpx-template-features)<br>
-算法爱好者，[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />力扣](https://leetcode.cn/u/soon-8) 1800+ 分选手
+<!-- 热爱开源，热爱生活<br> -->
+编程之外，喜欢音乐、动漫、FPS 游戏 ..
 
-编程之外，喜欢音乐、动漫、游戏、阅读 ..
+--- 
 
+[<span i-simple-icons-github w4 h4 pb-5 op75 />](https://github.com/wangshunnn/)&nbsp;&nbsp;[<span i-simple-icons-zhihu w4 h4 pb-5 op75 />](https://www.zhihu.com/people/wangshunnn)&nbsp;&nbsp;[<span i-simple-icons-x w4 h4 pb-5 op75 />](https://twitter.com/wangshunnn)&nbsp;&nbsp;[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />](https://leetcode.cn/u/soon-8) 
 </div>
