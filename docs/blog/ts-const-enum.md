@@ -8,7 +8,7 @@ tag: TypeScript
 place: Beijing
 ---
 
-# TS 番外篇2｜小心 TS 中的 const enum 常量枚举”陷阱“ & 工程实践
+# TS 番外篇1｜小心 TS 中的 const enum 常量枚举”陷阱“ & 工程实践
 
 > **✨ AI 摘要**
 > 
