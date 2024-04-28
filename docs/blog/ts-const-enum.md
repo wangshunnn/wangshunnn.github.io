@@ -1,14 +1,14 @@
 ---
-title: TS 番外篇1｜小心 TS 中的 const enum 常量枚举”陷阱“ & 工程实践
+title: TS 番外篇1｜小心 const enum 常量枚举“陷阱” & 工程实践
 date: 2024-4-27
 lang: zh
-duration: 10 min
+duration: 13 min
 description: const enum 使用时可能遇到的“陷阱”，以及在不同编译器中的工程实践
 tag: TypeScript
 place: Beijing
 ---
 
-# TS 番外篇1｜小心 TS 中的 const enum 常量枚举”陷阱“ & 工程实践
+# TS 番外篇1｜小心 const enum 常量枚举“陷阱” & 工程实践
 
 > **✨ AI 摘要**
 > 
@@ -19,9 +19,9 @@ place: Beijing
 
 Ps：枚举“老司机”可以跳过这 part，直接跳进“陷阱”～
 
-### 1. 枚举 `Enum`
+### 枚举 `Enum`
 
-[枚举（Enum）](https://www.typescriptlang.org/docs/handbook/enums.html) 可以说是 `TypeScript` 中相当特别的特性之一，它结合了类型系统的优点和数据结构的实用性，为开发者提供了一个表达固定集合值的高效方式。
+[枚举 Enum](https://www.typescriptlang.org/docs/handbook/enums.html) 可以说是 `TypeScript` 中相当特别的特性之一，它结合了类型系统的优点和数据结构的实用性，为开发者提供了一个表达固定集合值的高效方式。
 
 - 作为一种 **“类型”**，枚举能够定义一组命名的常量，增强了代码的可读性和可维护性，防止将无效或不相关的值赋给变量，从而提高代码的健壮性。
 - 作为一种 **“数据结构”**，枚举允许将一组相关的值组织在一起，每个成员可以有一个关联的值。而且数字枚举还支持反向映射，即可以通过枚举的值找到对应的名称，这为某些特定的使用场景如序列化和反序列化提供了便利。
@@ -57,7 +57,7 @@ console.log(MyEnums.Blue);
 
 特别地，编译后 `MyEnums["No"] = 0，MyEnums[0] = “No”`，不仅能 `key` 映射 `value`，也能从 `value` 映射 `key`，这就是数字枚举支持反向映射的原理。
 
-### 2. 常量枚举 `const enum`
+### 常量枚举 `const enum`
 
 常量枚举 `const enum` 与普通的 `enum` 的主要区别在于它们在 TS 编译到 JS 时的行为不同。正常来说它会在编译时不会生成对象，而是被完全**内联**，这意味着在生成的 JS 代码中，枚举的使用处会直接被替换为具体的字面量值。
 
@@ -286,7 +286,7 @@ babel 在 [v7.15.0](https://babeljs.io/blog/2021/07/26/7.15.0#new-typescript-fea
 
 #### `optimizeConstEnums` 优化选项
 
-plugin 和 preset 7.15.0 新增了优化选项 `optimizeConstEnums`（默认关闭），开启后针对**当前文件内部使用**的 `const enum` 会在编译时进行内联替换，和默认（关闭 `isolatedModules` 选项）的 `tsc` 输出表现一致。😟  🙂
+plugin 和 preset 7.15.0 新增了优化选项 `optimizeConstEnums`（默认关闭），开启后针对**当前文件内部使用**的 `const enum` 会在编译时进行内联替换，和默认（关闭 `isolatedModules` 选项）的 `tsc` 输出表现一致。
 
 ```jsx
 // Input
