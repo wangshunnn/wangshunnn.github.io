@@ -111,7 +111,7 @@ TS 编译选项 [isolatedModules](https://www.typescriptlang.org/zh/tsconfig/#is
 
 `const enum` 的内联特性依赖于 TS 编译器能够查看到整个项目的类型信息，从而确定这些枚举在哪里被使用，并将它们替换为具体的值。当 `isolatedModules` 开启时，编译器只能看到单个文件，没有足够的信息来确认是否所有对 `const enum` 的使用都是安全的，即不需要保留枚举对象，所以 TS 选择将 `const enum` 当作普通的 `enum` 处理，以确保在不同文件间的引用不会因为缺失实际的枚举对象而导致运行时错误。实际上，不仅是 `export const enum`，单文件中的 `const enum` 也会降级为 `enum`，说一句“粗暴”应该不过分吧。
 
-开启 `preserveConstEnums` 后的编译结果如下所示（[TS-playground](https://www.typescriptlang.org/play/?isolatedModules=true#code/KYOwrgtgBAsgngUXBAzlA3gKClAcgeygF4oAGAGmygE1gVKcAlYAE2KgHIAnVjhqAEIAbMMHYcARiOAdMAX0wBjfCBT4hwAHRD8AcwAU8JJBQBtUgF0AlEpVqN2vYcTIUm2ihvLV6rToNGrprMLF52vo4BLiaawqI2tqoALlCgkLBwAMJ2ScaoGFQE7BRUHvwh4jwsfFRxYiSS0rIK3vZ+TvDZyXluBGE+Dv7OXSi5QR79bZHDOT3BrJMRQ52zQXU2QA)）：
+开启 `isolatedModules` 后的编译结果如下所示（[TS-playground](https://www.typescriptlang.org/play/?isolatedModules=true#code/KYOwrgtgBAsgngUXBAzlA3gKClAcgeygF4oAGAGmygE1gVKcAlYAE2KgHIAnVjhqAEIAbMMHYcARiOAdMAX0wBjfCBT4hwAHRD8AcwAU8JJBQBtUgF0AlEpVqN2vYcTIUm2ihvLV6rToNGrprMLF52vo4BLiaawqI2tqoALlCgkLBwAMJ2ScaoGFQE7BRUHvwh4jwsfFRxYiSS0rIK3vZ+TvDZyXluBGE+Dv7OXSi5QR79bZHDOT3BrJMRQ52zQXU2QA)）：
 
 ```tsx
 // ts
