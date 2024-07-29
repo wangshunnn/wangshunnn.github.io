@@ -5,7 +5,7 @@ lang: zh
 duration: 10 min
 description: TypeScript 转译器如何处理 ESM 与 CommonJS 模块之间的交互问题？
 tag: TypeScript
-place: Beijing
+place: 北京
 ---
 
 # TS esModuleInterop 原理&实践

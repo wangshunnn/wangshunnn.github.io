@@ -5,7 +5,7 @@ lang: zh
 duration: 5 min
 description: 总结是为了更好的出发
 tag: WIP
-place: Beijing
+place: 北京
 ---
 
 # 我的年度总结 2023

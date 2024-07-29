@@ -5,7 +5,7 @@ lang: zh
 duration: 13 min
 description: const enum 使用时可能遇到的“陷阱”，以及在不同编译器中的工程实践
 tag: TypeScript
-place: Beijing
+place: 北京
 ---
 
 # TS 番外篇1｜小心 const enum 常量枚举“陷阱” & 工程实践

@@ -5,7 +5,7 @@ lang: zh
 duration: 15 min
 description: vue-tsc 如何在 vue 文件中实现 ts 类型检查？
 tag: TypeScript, Vue
-place: Beijing
+place: 北京
 ---
 
 # vue-tsc 源码解析
