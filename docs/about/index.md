@@ -46,5 +46,5 @@ Web 端、PC 桌面端、小程序工作经验 <br>
 
 --- 
 
-[<span i-simple-icons-github w4 h4 pb-5 op75 />](https://github.com/wangshunnn/)&nbsp;&nbsp;[<span i-simple-icons-zhihu w4 h4 pb-5 op75 />](https://www.zhihu.com/people/wangshunnn)&nbsp;&nbsp;[<span i-simple-icons-x w4 h4 pb-5 op75 />](https://twitter.com/wangshunnn)&nbsp;&nbsp;[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />](https://leetcode.cn/u/soon-8) 
+[<span i-simple-icons-github w4 h4 pb-5 op75 />](https://github.com/wangshunnn/)&nbsp;&nbsp;[<span i-simple-icons-juejin w4 h4 pb-5 op80 />](https://juejin.cn/user/2129123907471864/posts)&nbsp;&nbsp;[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />](https://leetcode.cn/u/soon-8)&nbsp;&nbsp;[<span i-simple-icons-zhihu w4 h4 pb-5 op70 />](https://www.zhihu.com/people/wangshunnn)&nbsp;&nbsp;[<span i-simple-icons-x w4 h4 pb-5 op75 />](https://twitter.com/wangshunnn)
 </div>
