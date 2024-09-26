@@ -2,7 +2,7 @@
 title: Vue2 模板编译三部曲（二）｜优化器 Optimizer
 date: 2024-9-26
 lang: zh
-duration: 8 min
+duration: 7 min
 description: 源码解析 Vue2 模板编译的优化器部分的实现原理
 tag: Vue
 place: 北京
@@ -61,6 +61,8 @@ export function optimize(
   markStaticRoots(root, false)
 }
 ```
+
+入口方法很简洁，正如前面整体流程中的介绍，其主要包含两个方法 `markStatic` 和 `markStaticRoots`。
 
 ### markStatic 标记静态节点
 
