@@ -299,8 +299,6 @@ export function parse(template: string, options: CompilerOptions): ASTElement {
 
 ![parseHTML 解析过程中触发对应的 hooks 钩子函数示意图](/vue2-template-compiler-part1-architecture-parser/vue2-parseHTML-hooks-demo.png)
 
-parseHTML 解析过程中触发对应的 hooks 钩子函数示意图
-
 可见 `parseHTML` 的解析顺序是从左往右顺序进行的，相当于从左往右遍历，遍历到对应位置就触发对应的 `hooks`。
 
 `parse` 方法其实就是通过 `parseHTML` 对应的 `hooks` 和参数来创建对应的 `AST` 节点，最终形成我们需要的 `AST` 树。我们先不用关心 `parseHTML` 具体怎么遍历解析的，这部分我们下文会专门分析，我们可以先看看 `parse` 方法怎么在 `hooks` 中创建 `AST` 的。
@@ -617,8 +615,6 @@ export function parseHTML(html: string, options: HTMLParserOptions) {
 `parseHTML` 的解析逻辑流程图如下所示：
 
 ![parseHTML 解析逻辑流程图](/vue2-template-compiler-part1-architecture-parser/vue2-parseHTML.png)
-
-parseHTML 解析逻辑流程图
 
 1. **初始化**
     - 创建一个空的栈 `stack` 用于存储解析过程中遇到的标签。
