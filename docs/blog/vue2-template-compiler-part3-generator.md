@@ -162,7 +162,7 @@ else if (el.if && !el.ifProcessed) {
 } 
 ```
 
-此时，`el` 是改节点的 `AST`，如下：
+此时，`el` 是当前节点的 `AST`，如下：
 
 ```json
 {
