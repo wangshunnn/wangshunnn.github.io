@@ -52,7 +52,7 @@ with(this) {
 
 ### generate 入口方法
 
-```ts
+```ts{14,19}
 export function generate(
   ast: ASTElement | void,
   options: CompilerOptions
@@ -316,7 +316,7 @@ return `(isShow)
 
 #### genTernaryExp
 
-```ts
+```ts{6}
 function genTernaryExp(el: ASTElement) {
   return altGen
     ? altGen(el, state)
@@ -378,7 +378,7 @@ export function genFor(
 
 转换为 `AST` 节点如下：
 
-```json
+```json{11-14}
 {
   "type": 1,
   "tag": "div",
@@ -419,7 +419,7 @@ _l((object), function(value,name,index){
 
 `genChildren` 方法在 `genElement` 方法中被调用来生成子节点代码，简化后源码如下：
 
-```ts
+```ts{19}
 export function genChildren(
   el: ASTElement, // 当前的 AST 元素
   state: CodegenState,
@@ -447,7 +447,7 @@ export function genChildren(
 
 #### genNode
 
-```ts
+```ts{4,8,12}
 function genNode(node: ASTNode, state: CodegenState): string {
   // 如果 node 是 ASTElement 元素节点，则递归调用 genElement 生成元素节点代码
   if (node.type === 1) {
@@ -478,7 +478,7 @@ export function genComment(comment: ASTText): string {
 
 静态节点处理比较特殊，所以单独拎出来。对于在上一章中介绍的优化器（`Optimizer`）中标记为静态根节点（`staticRoot: true`）的 `AST` 节点，会经过 `genStatic` 方法处理。
 
-```ts
+```ts{4}
 export function genElement(el: ASTElement, state: CodegenState): string {
 	// ..
   if (el.staticRoot && !el.staticProcessed) {
@@ -490,7 +490,7 @@ export function genElement(el: ASTElement, state: CodegenState): string {
 
 #### genStatic
 
-```ts
+```ts{11,15}
 // 将静态子树提升到外部
 function genStatic(el: ASTElement, state: CodegenState): string {
   // 将 el.staticProcessed 设置为 true，递归 genElement 时，不再进入 genStatic 函数

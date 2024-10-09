@@ -44,7 +44,7 @@ place: 北京
 
 ### optimize 入口方法
 
-```ts
+```ts{12,14}
 export function optimize(
   root: ASTElement | null | undefined,
   options: CompilerOptions,

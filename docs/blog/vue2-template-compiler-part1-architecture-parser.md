@@ -62,9 +62,8 @@ Vue 渲染机制流程
 
 模板编译相关的代码放在 `src/compiler` 文件夹下，其中 `index.ts` 入口文件如下所示。从代码逻辑可以清晰地看见前面所说三个阶段。
 
-```ts
+```ts{14,18,22}
 // src/compiler/index.ts*
-
 import { parse } from './parser/index'
 import { optimize } from './optimizer'
 import { generate } from './codegen/index'

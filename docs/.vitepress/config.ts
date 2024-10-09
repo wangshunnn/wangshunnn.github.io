@@ -33,6 +33,11 @@ export default defineConfig({
   lastUpdated: false,
   cleanUrls: true,
 
+  markdown: {
+    // theme: { light: 'github-light', dark: 'github-dark' }
+    // lineNumbers: true
+  },
+
   vite: {
     plugins: [UnoCSS()]
   },
