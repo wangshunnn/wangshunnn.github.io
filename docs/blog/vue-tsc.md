@@ -12,7 +12,7 @@ place: 北京
 
 ## 一、介绍
 
-[vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) 是基于开源IDE插件 [Volar](https://github.com/vuejs/language-tools) 开发的针对 Vue 3 类型检查的 CLI 工具，相当于是支持 vue 文件的 tsc。其功能和用法如下：
+[vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) 是基于开源 IDE 插件 [Volar](https://github.com/vuejs/language-tools) 开发的针对 Vue 3 类型检查的 CLI 工具，相当于是支持 vue 文件的 tsc。其功能和用法如下：
 
 1. 类型检查:
 
@@ -20,7 +20,7 @@ place: 北京
 vue-tsc --noEmit
 ```
 
-1. 生成类型声明文件:
+2. 生成类型声明文件:
 
 ```bash
 vue-tsc --declaration --emitDeclarationOnly
@@ -570,7 +570,7 @@ export function computedVueSfc(
 ##### 2.3.1 getDefaultVueLanguagePlugins
 
 - _language-tools/packages/language-core/lib/plugins.ts_
-- 追溯参数 plugins 的来源，是在 [**createVueLanguagePlugin**](https://www.notion.so/vue-tsc-d81cdb30b2ac416aaeb6f899c6b74d6a?pvs=21) 中通过 `getDefaultVueLanguagePlugins` 获取得到，代码如下。
+- 追溯参数 plugins 的来源，是在 `createVueLanguagePlugin` 中通过 `getDefaultVueLanguagePlugins` 获取得到，代码如下。
   1. 生成 9 个默认 plugin: `useMdFilePlugin`, `useHtmlFilePlugin`, `useVueFilePlugin` 等等。默认的插件源码都放在 _/plugins_ 目录下。
   2. 还可以通过 vue-tsc 传入额外的插件配置 `vueCompilerOptions.plugins`
   3. 根据传入的插件上下文 `pluginContext` 实例化最终的插件实例数组。
