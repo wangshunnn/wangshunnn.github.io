@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
-import zhihuSVG from './theme/components/icons/zhihu.svg'
+// import zhihuSVG from './theme/components/icons/zhihu.svg'
 import { algoliaTranslations, i18n } from './const'
 
 const ogUrl = 'https://wangshunnn.github.io/'
@@ -92,11 +92,11 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wangshunnn' },
-      { icon: 'x', link: 'https://twitter.com/wangshunnn' },
-      {
-        icon: { svg: zhihuSVG },
-        link: 'https://www.zhihu.com/people/wangshunnn'
-      }
+      { icon: 'x', link: 'https://twitter.com/wangshunnn' }
+      // {
+      //   icon: { svg: zhihuSVG },
+      //   link: 'https://www.zhihu.com/people/wangshunnn'
+      // }
     ],
 
     footer: {
