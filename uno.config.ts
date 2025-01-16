@@ -75,6 +75,12 @@ export default defineConfig({
       {
         'font-family': 'fantasy'
       }
+    ],
+    [
+      'font-monospace',
+      {
+        'font-family': 'monospace'
+      }
     ]
   ],
   transformers: [transformerDirectives()],

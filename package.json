@@ -1,7 +1,7 @@
 {
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -22,23 +22,30 @@
   "engines": {
     "node": ">=20",
     "npm": ">=10",
-    "pnpm": ">=8"
+    "pnpm": ">=9"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.195",
-    "@types/dom-view-transitions": "^1.0.4",
+    "@iconify/json": "^2.2.295",
+    "@types/dom-view-transitions": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "busuanzi.pure.js": "^1.0.3",
-    "eslint": "^8.57.0",
-    "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5",
-    "simple-git-hooks": "^2.11.0",
-    "typescript": "^5.4.3",
-    "unocss": "^0.58.6",
-    "vite": "^5.2.3",
-    "vitepress": "1.0.1",
-    "vue": "^3.4.21",
-    "vue-eslint-parser": "^9.4.2"
+    "eslint": "^8.57.1",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "^5.7.3",
+    "unocss": "^0.58.9",
+    "vite": "^5.4.11",
+    "vitepress": "^1.5.0",
+    "vue": "^3.5.13",
+    "vue-eslint-parser": "^9.4.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "$typescript",
+      "vite": "$vite",
+      "vitepress": "$vitepress"
+    }
   }
 }

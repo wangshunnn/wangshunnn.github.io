@@ -92,7 +92,8 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wangshunnn' },
-      { icon: 'x', link: 'https://twitter.com/wangshunnn' }
+      { icon: 'x', link: 'https://twitter.com/wangshunnn' },
+      { icon: 'bluesky', link: 'https://bsky.app/profile/soonwang.bsky.social' }
       // {
       //   icon: { svg: zhihuSVG },
       //   link: 'https://www.zhihu.com/people/wangshunnn'
