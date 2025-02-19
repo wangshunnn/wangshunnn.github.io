@@ -4,17 +4,6 @@ import { nextTick, provide } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 
-interface MyDocument extends Document {
-  startViewTransition(updateCallback: () => Promise<void> | void): ViewTransition
-}
-
-interface ViewTransition {
-  finished: Promise<void>
-  ready: Promise<void>
-  updateCallbackDone: Promise<void>
-  skipTransition(): void
-}
-
 const { isDark } = useData()
 
 function enableTransitions() {
@@ -40,7 +29,7 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
     )}px at ${x}px ${y}px)`,
   ]
 
-  await (document as MyDocument).startViewTransition(async () => {
+  await (document as Document).startViewTransition(async () => {
     isDark.value = !isDark.value
     await nextTick()
   }).ready
