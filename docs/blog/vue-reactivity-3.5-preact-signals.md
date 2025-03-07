@@ -57,7 +57,7 @@ Preact 官方文档 Signals 介绍
 
 Preact 信号 API 用法如下：
 
-```tsx
+```ts twoslash
 import { signal, computed, effect } from "@preact/signals-core";
 
 const count = signal(1);
@@ -75,7 +75,7 @@ count.value = 20;
 
 这里 `signal` 用法和 Vue 里的 [`ref`](https://vuejs.org/api/reactivity-core.html#ref) 特别相似，其实严格来说和 [`shallowRef`](https://vuejs.org/api/reactivity-advanced.html#shallowref) 更为贴近，因为同样都是只有对 `.value` 的访问是响应式的，如果 value 是个对象并不会深层递归地转为响应式对象。
 
-```tsx
+```ts
 import { shallowRef } from 'vue'
 
 const signal = (initialValue) => shallowRef(initialValue)
@@ -112,7 +112,7 @@ Preact Signals 双向链表结构示意图
 
 下面是读取信号时进行依赖收集的源码，我们可以配合上图理解，窥一斑而知全豹。
 
-```tsx
+```ts
 function addDependency(signal: Signal): Node | undefined {
 	if (evalContext === undefined) {
 		return undefined;
@@ -177,7 +177,7 @@ function addDependency(signal: Signal): Node | undefined {
 
 每次读取 `computed` 就会执行如下代码中的 `this._refresh()` 方法：
 
-```tsx {5}
+```ts {5}
 Object.defineProperty(Computed.prototype, "value", {
 	get(this: Computed) {
 		// ..
@@ -194,7 +194,7 @@ Object.defineProperty(Computed.prototype, "value", {
 1. 如果自上次运行以来，没有任何信号的值发生改变，直接返回缓存。
     - 这是通过比较“全局版本号”来实现的，如果 `globalVersion` 没变化，说明没有任何信号改变，不需要重新计算，直接返回即可，
     
-    ```tsx {3}
+    ```ts {3}
     Computed.prototype._refresh = function () {
     	// ..
     	if (this._globalVersion === globalVersion) {
@@ -207,7 +207,7 @@ Object.defineProperty(Computed.prototype, "value", {
 2. 当前 `computed` 依赖的信号没有变化，则直接返回缓存。
     - 代码使用 `flag` 标志位来表示当前状态，如果当前 `computed` 处于跟踪中 `TRACKING`，但没有过期 `OUTDATED`，说明 `computed` 自身依赖的那些信号都没有改变，所以不需要重新计算，直接返回即可。
     
-    ```tsx {3}
+    ```ts {3}
     Computed.prototype._refresh = function () {
     	// ..
     	if ((this._flags & (OUTDATED | TRACKING)) === TRACKING) {
@@ -219,7 +219,7 @@ Object.defineProperty(Computed.prototype, "value", {
     
 3. 按依赖顺序遍历检查他们的版本号。只要有一个依赖的版本号改变就需要重新计算 `computed`。如果版本号都没变化，即使依赖顺序改变，也会直接退出并返回缓存的值。
     
-    ```tsx {4}
+    ```ts {4}
     Computed.prototype._refresh = function () {
     	// ..
     	this._flags |= RUNNING;
@@ -257,7 +257,7 @@ Object.defineProperty(Computed.prototype, "value", {
     
 4. 前面的缓存条件如果都没命中，那就得重新计算了。当然还留了最后一手，只有当重新计算后的值与之前缓存的值不同时，才会更新缓存返回新值，并且增加计算信号的版本号。
     
-    ```tsx
+    ```ts
     Computed.prototype._refresh = function () {
     	// ..
     	try {
@@ -288,7 +288,7 @@ Object.defineProperty(Computed.prototype, "value", {
     
     `computed` 订阅方法实现如下：
     
-    ```tsx
+    ```ts
     // 作为 computed signal 被订阅时执行
     Computed.prototype._subscribe = function (node) {
     	// this._targets 为 undefined 说明之前没有被订阅过，所以本次是首次被订阅
@@ -314,7 +314,7 @@ Object.defineProperty(Computed.prototype, "value", {
     
     `computed` 取消订阅方法实现如下：
     
-    ```tsx
+    ```ts
     Computed.prototype._unsubscribe = function (node) {
     	// 仅当 computed signal 仍有订阅者时执行取消订阅操作
     	if (this._targets !== undefined) {

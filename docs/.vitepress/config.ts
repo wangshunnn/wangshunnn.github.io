@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
 // import zhihuSVG from './theme/components/icons/zhihu.svg'
 import { algoliaTranslations, i18n } from './const'
+import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 
 const ogUrl = 'https://wangshunnn.github.io/'
 const ogImage = `${ogUrl}logo-origin.jpg`
@@ -34,8 +35,9 @@ export default defineConfig({
   cleanUrls: true,
 
   markdown: {
-    // theme: { light: 'github-light', dark: 'github-dark' }
-    // lineNumbers: true
+    theme: { light: 'github-light', dark: 'github-dark' },
+    // @ts-expect-error ignore
+    codeTransformers: [transformerTwoslash()]
   },
 
   vite: {

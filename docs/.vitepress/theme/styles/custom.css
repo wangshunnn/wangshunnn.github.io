@@ -26,11 +26,11 @@
 }
 
 .vp-doc {
-    a {
-        text-decoration: none;
-        color: var(--vt-c-brand);
-    }
-    a:hover {
-        color: var(--vt-c-brand-highlight);
-    }
+  a {
+    text-decoration: none;
+    color: var(--vt-c-brand);
+  }
+  a:hover {
+    color: var(--vt-c-brand-highlight);
+  }
 }
