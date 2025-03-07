@@ -6,6 +6,7 @@ import CustomLayout from './components/CustomLayout.vue'
 import BlogHome from './components/BlogHome.vue'
 import IconMeituan from './components/icons/IconMeituan.vue'
 
+import './styles/custom.css'
 import './styles/rainbow.css'
 import './styles/overrides.css'
 import 'uno.css'

@@ -1,0 +1,36 @@
+:root {
+  --vt-c-green: #42b883;
+  --vt-c-text-code: #476582;
+  --vt-c-green-light: #42d392;
+  --vt-c-green-lighter: #35eb9a;
+  --vt-c-green-dark: #33a06f;
+  --vt-c-green-darker: #155f3e;
+  --vt-c-text-2: rgba(60, 60, 60, 0.7);
+  --vt-c-text-3: rgba(60, 60, 60, 0.33);
+  --vt-c-divider: rgba(60, 60, 60, 0.29);
+  --vt-c-divider-light: rgba(60, 60, 60, 0.12);
+  --vt-c-brand-highlight: var(--vt-c-brand-dark);
+  --vt-c-brand: var(--vt-c-green);
+  --vt-c-brand-light: var(--vt-c-green-light);
+  --vt-c-brand-dark: var(--vt-c-green-dark);
+  --vp-c-brand-1: var(--vt-c-brand);
+}
+
+.dark {
+  --vt-c-text-code: #aac8e4;
+  --vt-c-text-2: rgba(235, 235, 235, 0.6);
+  --vt-c-text-3: rgba(235, 235, 235, 0.38);
+  --vt-c-divider: rgba(84, 84, 84, 0.65);
+  --vt-c-divider-light: rgba(84, 84, 84, 0.48);
+  --vt-c-brand-highlight: var(--vt-c-brand-light);
+}
+
+.vp-doc {
+    a {
+        text-decoration: none;
+        color: var(--vt-c-brand);
+    }
+    a:hover {
+        color: var(--vt-c-brand-highlight);
+    }
+}

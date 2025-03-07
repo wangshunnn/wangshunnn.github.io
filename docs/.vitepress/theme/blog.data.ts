@@ -36,11 +36,10 @@ export default createContentLoader('blog/*.md', {
 
 function formatDate(raw: string): Blog['date'] {
   const date = new Date(raw)
-  // date.setUTCHours(12)
   return {
     time: +date,
     string: date.toLocaleDateString('en-US', {
-      year: 'numeric',
+      // year: 'numeric',
       month: 'short',
       day: 'numeric'
     })

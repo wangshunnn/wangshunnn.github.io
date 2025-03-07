@@ -62,6 +62,10 @@ export default defineConfig({
         placeholder: '搜索博客',
         translations: algoliaTranslations
       }
+      // provider: 'local',
+      // options: {
+      //   translations: localSearchTranslations
+      // }
     },
 
     lastUpdated: {
