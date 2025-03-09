@@ -26,7 +26,7 @@ Signals（信号）可谓是当下前端框架和响应式编程界的“潮流�
 
 考虑到不同框架中关于信号实现各有不同，TC39 提出了关于框架无关的 Signals 标准化实现的提案，目前已经进入 Stage1 阶段，或许在未来我们能在不同前端框架中看见基于统一 Signals 标准的响应式实现。更多提案细节以及历史背景请移步 [tc39/proposal-signals](https://github.com/tc39/proposal-signals)。
 
-关于 Signals（信号）这一抽象概念的解释，个人认为 Preact 官方文档中的定义特别合适（如下图所示）：*“[Signals are reactive primitives for managing application state.](https://preactjs.com/guide/v10/signals)”。*官网翻译是，信号是用于管理应用程序状态的响应原始概念。个人更倾向将 “primitives” 一词翻译为”原语“，即响应式中的基础组件、最小单元。
+关于 Signals（信号）这一抽象概念的解释，个人认为 Preact 官方文档中的定义特别合适（如下图所示）：“[*Signals are reactive primitives for managing application state.*](https://preactjs.com/guide/v10/signals)”。官网翻译是，信号是用于管理应用程序状态的响应原始概念。个人更倾向将 “primitives” 一词翻译为”原语“，即响应式中的基础组件、最小单元。
 
 ![Preact 官方文档 Signals 介绍](/vue-reactivity-3.5-preact-signals/preact-signals-introduce.png)
 
@@ -96,7 +96,7 @@ Preact Signals 遵循以下设计原则：
 
 ### 双向链表（doubly-linked list）
 
-在 Vue3.5 之前，`Sub`（订阅者） 和 `Dep`（依赖项） 关系是多对多，并且两者是直接关联的。而在 Preact Signals 源码中使用了双向链表结构来处理 `signal`（依赖项）和 `computed/effect`（订阅者）之间的联系。依赖和订阅者之间不再直接关联，而是通过中间节点来关联。
+在 Vue3.5 之前，`Sub`（订阅者） 和 `Dep`（依赖项） 关系是多对多的网状关系，并且两者是直接关联的。而在 Preact Signals 源码中使用了双向链表结构来处理 `signal`（依赖项）和 `computed/effect`（订阅者）之间的联系。依赖和订阅者之间不再直接关联，而是通过中间节点来关联，相当于针对“发布-订阅”模式的一种“中介化”变体升级。
 
 单从源码来理解这个双向链表其实比较抽象，受一篇 [Vue3.5 公众号文章](https://mp.weixin.qq.com/s/_KQyb9cQv-r-tR2gTT0ZCQ) 中“坐标系”启发，我绘制了如下的 Preact Signals 双向链表的原理图。
 
