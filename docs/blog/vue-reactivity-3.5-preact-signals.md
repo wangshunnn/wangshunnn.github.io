@@ -28,17 +28,19 @@ Signals（信号）可谓是当下前端框架和响应式编程界的“潮流�
 
 关于 Signals（信号）这一抽象概念的解释，个人认为 Preact 官方文档中的定义特别合适（如下图所示）：“[*Signals are reactive primitives for managing application state.*](https://preactjs.com/guide/v10/signals)”。官网翻译是，信号是用于管理应用程序状态的响应原始概念。个人更倾向将 “primitives” 一词翻译为”原语“，即响应式中的基础组件、最小单元。
 
-![Preact 官方文档 Signals 介绍](/vue-reactivity-3.5-preact-signals/preact-signals-introduce.png)
-
-Preact 官方文档 Signals 介绍
+<figure>
+	<img src="/vue-reactivity-3.5-preact-signals/preact-signals-introduce.png" alt="Preact 官方文档 Signals 介绍" />
+	<figcaption>Preact 官方文档 Signals 介绍</figcaption>
+</figure>
 
 ## 框架对比 Benchmark
 
 下图是当前各个信号框架的 [性能对比示意图](https://github.com/transitive-bullshit/js-reactivity-benchmark)，不看图都不知道原来这么多 Signals 框架，可谓百家争鸣。
 
-![前端 Signals 框架性能对比](/vue-reactivity-3.5-preact-signals/benchmark.png)
-
-前端 Signals 框架性能对比
+<figure>
+	<img src="/vue-reactivity-3.5-preact-signals/benchmark.png" alt="前端 Signals 框架性能对比" />
+	<figcaption>前端 Signals 框架性能对比</figcaption>
+</figure>
 
 ## 1. Preact Signals
 
@@ -106,9 +108,10 @@ Preact Signals 遵循以下设计原则：
     - 先进行依赖收集，此阶段会在横向的依赖项链表队尾新增一个节点 `node4`，然后修改订阅者 `computed2` 的 `_sources` 属性指向新的队尾 `node4`。
     - 随后，`node4._source` 指向的 `signal2` 开始更新订阅链表，将 `node4` 添加到纵向链表的队首，修改 `signal2` 的 `_targets` 属性指向新的队首 `node4` 。
 
-![Preact Signals 双向链表结构示意图](/vue-reactivity-3.5-preact-signals/preact-signals-doubly-linked-list.png)
-
-Preact Signals 双向链表结构示意图
+<figure>
+	<img src="/vue-reactivity-3.5-preact-signals/preact-signals-doubly-linked-list.png" alt="Preact Signals 双向链表结构示意图" />
+	<figcaption>Preact Signals 双向链表结构示意图</figcaption>
+</figure>
 
 下面是读取信号时进行依赖收集的源码，我们可以配合上图理解，窥一斑而知全豹。
 
