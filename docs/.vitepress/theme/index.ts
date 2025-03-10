@@ -24,7 +24,7 @@ export default {
     app.component('BlogHome', BlogHome)
     app.component('IconMeituan', IconMeituan)
     if (inBrowser) {
-      router.onAfterRouteChanged = () => {
+      router.onAfterRouteChange = () => {
         busuanzi.fetch()
       }
     }

@@ -20,7 +20,7 @@ function getGroupName(p: Blog) {
 </script>
 
 <template>
-  <ul class="!pl-0 md:!pl-10">
+  <ul class="!pl-0 md:!pl-10 slide-enter-content">
     <div v-if="!blog.length">
       <div py-2 text-center>{ coming soon }</div>
     </div>
