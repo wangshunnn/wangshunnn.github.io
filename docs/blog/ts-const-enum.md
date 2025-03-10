@@ -109,7 +109,7 @@ TS 编译选项 [isolatedModules](https://www.typescriptlang.org/zh/tsconfig/#is
 
 因为编译 ts 文件时会“忽视”类型相关代码，比如全局声明文件 `global.d.ts` 以及引用的 `mport type` 在编译时都会被“擦除”，所以编译也更快，性能更好，但随之而来的缺点是因为缺少类型推断，导致编译结果也会出现差异甚至出现运行时错误。那我们怎么能够模拟 `file-by-file` 编译器并及时检查代码呢？这时候就是 `isolatedModules` 选项出现的意义了，它能让我们编写的 TS 代码能够更安全地被此类编译器编译，及时发现潜在问题。
 
-历史发展来看，后起的支持 TS 的编译器，比如 [babel](https://babeljs.io/), [esbuild](https://esbuild.github.io/) 等等，也都是遵循 `isolatedModules` 模式，或者往和 `isolatedModules` 对齐的反向发展的。
+历史发展来看，后起的支持 TS 的编译器，比如 [babel](https://babeljs.io/), [esbuild](https://esbuild.github.io/) 等等，也都是遵循 `isolatedModules` 模式，或者往和 `isolatedModules` 对齐的方向发展的。
 
 `const enum` 的内联特性依赖于 TS 编译器能够查看到整个项目的类型信息，从而确定这些枚举在哪里被使用，并将它们替换为具体的值。当 `isolatedModules` 开启时，编译器只能看到单个文件，没有足够的信息来确认是否所有对 `const enum` 的使用都是安全的，即不需要保留枚举对象，所以 TS 选择将 `const enum` 当作普通的 `enum` 处理，以确保在不同文件间的引用不会因为缺失实际的枚举对象而导致运行时错误。实际上，不仅是 `export const enum`，单文件中的 `const enum` 也会降级为 `enum`，说一句“粗暴”应该不过分吧。
 
