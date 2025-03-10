@@ -2,7 +2,7 @@
 title: Vue2 模板编译三部曲（三）｜生成器 Generator
 date: 2024-9-30
 lang: zh
-duration: 10 min
+duration: 15 min
 description: 源码解析 Vue2 模板编译的生成器部分的实现原理
 tag: Vue
 place: 北京

@@ -2,7 +2,7 @@
 title: Vue2 模板编译三部曲（二）｜优化器 Optimizer
 date: 2024-9-26
 lang: zh
-duration: 7 min
+duration: 10 min
 description: 源码解析 Vue2 模板编译的优化器部分的实现原理
 tag: Vue
 place: 北京

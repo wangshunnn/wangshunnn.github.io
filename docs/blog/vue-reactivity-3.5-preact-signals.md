@@ -2,7 +2,7 @@
 title: Vue Signals 进化论（v3.5）：Preact 重构启示录
 date: 2025-3-7
 lang: zh
-duration: 13 min
+duration: 15 min
 description: Vue 3.5 响应式重构的背后是 Preact Signals 带来的基因突变
 tag: Vue, Signals
 place: 北京

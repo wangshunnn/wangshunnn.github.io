@@ -2,7 +2,7 @@
 title: Vue2 模板编译三部曲（一）｜架构设计 & 解析器 Parser
 date: 2024-7-29
 lang: zh
-duration: 15 min
+duration: 18 min
 description: 源码解析 Vue2 模板编译的架构设计和解析器部分的实现原理
 tag: Vue
 place: 西安
