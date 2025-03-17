@@ -42,10 +42,10 @@ Signals（信号）可谓是当下前端框架和响应式编程界的“潮流�
 	<figcaption>前端 Signals 框架性能对比</figcaption>
 </figure>
 
-响应式框架可以大致分为两类：lazy（惰性）和 eager（即时性）。
+响应式框架可以大致分为两类：**Lazy**（惰性）和 **Eager**（即时性）。
 
-- lazy（惰性）：结果被访问时计算，延迟执行，按需的思想，减少冗余计算。
-- eager（即时性）：数据变化时立即计算，实时响应，但可能会出现频繁计算问题。
+- Lazy（惰性）：结果被访问时计算，延迟执行，按需的思想，减少冗余计算。
+- Eager（即时性）：数据变化时立即计算，实时响应，但可能会出现频繁计算问题。
 
 比如 MobX 属于即时性，而下文介绍的 Preact Signals 和 Vue 都属于惰性。
 
@@ -172,6 +172,20 @@ function addDependency(signal: Signal): Node | undefined {
 3. **精准依赖追踪**
     - 每个 `Signal` 信号维护自己的订阅者链表，更新时直接遍历链表通知订阅者，避免了传统响应式系统中"依赖收集-触发更新"的完整树遍历过程。
 
+### 相等性问题（equality check problem）
+
+@reactivity 作者曾在[博客](https://milomg.dev/2022-12-01/reactivity)中指出，惰性响应式框架主要面对的一大挑战就是“相等性问题”。
+
+举例如下，如果 A 改变，B 会重新计算，但 B 结果不变，所以 C 不应该再重新计算。如何高效的处理重复计算问题，这就是相等性问题。
+
+```ts
+const A = signal(3);
+const B = computed(() => A.value * 0); // always 0
+const C = computed(() => B.value + 1);
+```
+
+面对这个问题，不同框架有不同的实现方案，比如 @reactively 采用[图着色理论](https://milomg.dev/2022-12-01/reactivity)，Preact Signals 则是采用“版本计数”。
+
 ### 版本计数
 
 这里的“版本”指的是源码实现中引入了一些称之为 `version`（版本）的数字类型变量：
@@ -187,7 +201,7 @@ function addDependency(signal: Signal): Node | undefined {
 
 最简单暴力的惰性求值方法就是每次读取 `computed` 就重新计算一次，但这样十分低效，我们需要一个高效的缓存机制。
 
-每次读取 `computed` 就会执行如下代码中的 `this._refresh()` 方法：
+`computed` 的 `get` 方法如下：
 
 ```ts {5}
 Object.defineProperty(Computed.prototype, "value", {
@@ -201,10 +215,10 @@ Object.defineProperty(Computed.prototype, "value", {
 });
 ```
 
-缓存逻辑主要集中在这个方法里面，缓存手段可以总结为如下四招：
+缓存逻辑主要集中在 `this._refresh()` 方法里面，可以总结为四招：
 
 1. 如果自上次运行以来，没有任何信号的值发生改变，直接返回缓存。
-    - 这是通过比较“全局版本号”来实现的，如果 `globalVersion` 没变化，说明没有任何信号改变，不需要重新计算，直接返回即可，
+    - 这是通过比较“全局版本号”来实现的，如果 `globalVersion` 没变化，说明没有任何信号改变，不需要重新计算。
     
     ```ts {3}
     Computed.prototype._refresh = function () {
@@ -217,7 +231,7 @@ Object.defineProperty(Computed.prototype, "value", {
     ```
     
 2. 当前 `computed` 依赖的信号没有变化，则直接返回缓存。
-    - 代码使用 `flag` 标志位来表示当前状态，如果当前 `computed` 处于跟踪中 `TRACKING`，但没有过期 `OUTDATED`，说明 `computed` 自身依赖的那些信号都没有改变，所以不需要重新计算，直接返回即可。
+    - 代码使用 `flag` 标志位来表示当前状态，如果当前 `computed` 处于跟踪中 `TRACKING`，但没有过期 `OUTDATED`，说明 `computed` 自身依赖的那些信号都没有改变，所以不需要重新计算。
     
     ```ts {3}
     Computed.prototype._refresh = function () {
@@ -229,7 +243,7 @@ Object.defineProperty(Computed.prototype, "value", {
     }
     ```
     
-3. 按依赖顺序遍历检查他们的版本号。只要有一个依赖的版本号改变就需要重新计算 `computed`。如果版本号都没变化，即使依赖顺序改变，也会直接退出并返回缓存的值。
+3. 按依赖顺序遍历检查他们的版本号。只要有一个依赖的版本号改变就需要重新计算 `computed`。如果版本号都没变化，即使依赖顺序改变，也不需要重新计算。
     
     ```ts {4}
     Computed.prototype._refresh = function () {
@@ -267,7 +281,7 @@ Object.defineProperty(Computed.prototype, "value", {
     }
     ```
     
-4. 前面的缓存条件如果都没命中，那就得重新计算了。当然还留了最后一手，只有当重新计算后的值与之前缓存的值不同时，才会更新缓存返回新值，并且增加计算信号的版本号。
+4. 前面的缓存条件如果都没命中，那就得重新计算了。当然还留了最后一手，只有当重新计算后的值与之前缓存值不同时，才会更新缓存返回新值，并且增加计算信号的版本号。
     
     ```ts
     Computed.prototype._refresh = function () {
@@ -360,74 +374,142 @@ Object.defineProperty(Computed.prototype, "value", {
 
 Vue 3.5 响应式重构受启发于 Preact Signals（[PR](https://github.com/vuejs/core/pull/10397)）：
 
-- 改为双向链表结构，新增中间节点 link，类似 Preact Signals 中的 Node 节点。
+- 改为双向链表结构，新增中间节点 `link`，类似 Preact Signals 中的 `node` 节点。
 - 增加版本计数
 - `computed` 惰性订阅/自动取消订阅
 
-可以说这三个主要优化都吸取了 Preact Signals 的精华，正如前文所说，在 Vue3.5 之前，`Sub`（订阅者） 和 `Dep`（依赖项） 关系是多对多，并且两者是直接关联的。而重构之后依赖和订阅者之间不再直接关联，而是通过中间节点来关联。重构后源码其实和前文分析的 Preact Signals 源码大查不查，这里就不一一列举，感兴趣地同学可以自行探索。
+可以说这三个主要优化都吸取了 Preact Signals 的精华，正如前文所说，在 Vue3.5 之前，`Sub`（订阅者） 和 `Dep`（依赖项） 关系是多对多，并且两者是直接关联的。而重构之后依赖和订阅者之间不再直接关联，而是通过中间节点来关联。
 
-### 相等性问题（**equality check problem**）
+### Vue 中的相等性问题
 
-@reactivity 作者曾在[博客](https://milomg.dev/2022-12-01/reactivity)中分析指出惰性响应式框架主要面对的一大挑战就是“相等性问题”。以 Vue 为例：
+前面我们分析了 Preact Signals 利用版本计数来解决相等性问题，Vue 又是如何处理的呢？
 
-```ts
-const { ref, computed } from 'vue'
+```html
+<template>
+    <div class="hello">
+        <h1>{{ A }} {{ B }} {{ C }}</h1>
+    </div>
+</template>
 
+<script setup>
+import { ref, computed } from "vue"
 const A = ref(3);
 const B = computed(() => A.value * 0); // always 0
 const C = computed(() => B.value + 1); // C 会计算多少次?
 
 setTimeout(() => A.value++, 1000)
+<script/>
 ```
 
-**Vue 2**
+#### Vue 2
 
-Vue 2 中 A 变化后，B 和 C 都会重新计算，尽管 B 和 C 的值都没发生改变，存在相等性问题。
+Vue 2 中 A 变化后，C 也会重新计算，尽管 B 的值都没发生改变。
 
-```ts
-get value() {
-  if (watcher) {
-	  // dirty 脏标记判断是否重新计算
-    if (watcher.dirty) {
-      watcher.evaluate()
-    }
-    if (Dep.target) {
-      watcher.depend()
-    }
-    return watcher.value
-  } else {
-    return getter()
-  }
+Vue 2 中依赖收集完成后 B 和 C 都会是 A 的订阅者，他们其实并非形成严格的链式关系，A 改变后在派发更新阶段会遍历订阅者列表依次派发，而非从 A 到 B 再从 B 到 C 的链式派发。
+
+```ts {7,16,32}
+export default class Dep {
+	notify(info?: DebuggerEventExtraInfo) {
+	const subs = this.subs.filter(s => s) as DepTarget[]
+	for (let i = 0, l = subs.length; i < l; i++) {
+		const sub = subs[i]
+		// 派发更新
+		sub.update()
+	}
+	}
 }
+
+export default class Watcher implements DepTarget {
+	update() {
+	if (this.lazy) {
+		// 给 computed 打上脏标记
+		this.dirty = true
+	} else if (this.sync) {
+		this.run()
+	} else {
+		queueWatcher(this)
+	}
+	}
+}
+
+export function computed(..) {
+	const watcher = new Watcher(currentInstance, getter, noop, { lazy: true })
+	const ref = {
+		get value() {
+			if (watcher) {
+				// 访问结果时根据 dirty 脏标记判断是否重新计算
+			if (watcher.dirty) {
+				watcher.evaluate()
+			}
+			if (Dep.target) {
+				watcher.depend()
+			}
+			return watcher.value
+			} else {
+			return getter()
+			}
+		}
+	}
+	// ..
+	return ref
+}
+
 ```
 
-**Vue 3.4**
+#### Vue 3.4
 
 从 Vue 3.4 开始，A 变化后，B 会重新计算，但 C 不会再重新计算。
 
-```ts
+Vue 3.4 针对响应式做了比较大的重构（[PR](https://github.com/vuejs/core/pull/5912)），脏标记不再是简单布尔值，而是引入了更精细化的状态枚举值 `DirtyLevels`，`computed` 自身脏了并且结果变化后才会继续向下游订阅者派发更新。
+
+```ts {7,9,11}
 export class ComputedRefImpl<T> {
+	// ..
 	get value() {
     const self = toRaw(this)
     trackRefValue(self)
+    // 更精细的脏值检查 effect.dirty
     if (!self._cacheable || self.effect.dirty) {
 	    // Object.is 相等性检查
       if (hasChanged(self._value, (self._value = self.effect.run()!))) {
-	      // 只有变化才会继续派发更新
+	      // 如果结果变化会派发更新（携带特定脏标记）
         triggerRefValue(self, DirtyLevels.ComputedValueDirty)
       }
     }
     return self._value
   }
 }
+
+export class ReactiveEffect<T = any> {
+	// ..
+	public get dirty() {
+    if (this._dirtyLevel === DirtyLevels.ComputedValueMaybeDirty) {
+      this._dirtyLevel = DirtyLevels.NotDirty
+      this._queryings++
+      pauseTracking()
+      for (const dep of this.deps) {
+        if (dep.computed) {
+          triggerComputed(dep.computed)
+          if (this._dirtyLevel >= DirtyLevels.ComputedValueDirty) {
+            break
+          }
+        }
+      }
+      resetTracking()
+      this._queryings--
+    }
+    return this._dirtyLevel >= DirtyLevels.ComputedValueDirty
+  }
+}
 ```
 
-**Vue 3.5**
+#### Vue 3.5
 
-Vue 3.5 采用类似 Preact Signals 版本计数来解决相等性问题。
+Vue 3.5 采用 Preact Signals 版本计数方案来解决相等性问题。
 
-```ts
+```ts {7}
 export class ComputedRefImpl<T = any> implements Subscriber {
+	// ..
 	get value(): T {
     const link = this.dep.track()
     // refreshComputed 和 Preact Signals 中的 Computed.prototype._refresh 方法类似
