@@ -239,11 +239,9 @@ Object.defineProperty(Computed.prototype, "value", {
 	
    	- 当 `signal` set 后，会触发链式的派发通知，打上“过期”标记表示下次读取结果**可能**需要重新计算，但如果当前 `computed` 没有"过期"，则**肯定不用**重复计算。
 	
-	```ts {14,26}
+	```ts {12,24}
 	Object.defineProperty(Signal.prototype, "value", {
-		get(this: Signal) {
-			// ..
-		},
+		// get() ..
 		set(this: Signal, value) {
 			if (value !== this._value) {
 				this._value = value;
