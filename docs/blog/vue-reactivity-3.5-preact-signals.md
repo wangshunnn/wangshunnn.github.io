@@ -18,7 +18,7 @@ place: 北京
 
 ## 序言
 
-Signals 主题浩瀚，非鄙人可书。我将以 Vue 的响应式演进为轴心，探索前端 Signals 发展潮流。旨在学习探索 Signals 技术和 Vue 响应式原理。
+Signals 主题浩瀚，本系列将沿着 Vue 响应式的演进脉络，探索前端 Signals 发展潮流。旨在学习探索 Signals 技术和 Vue 响应式原理。
 
 ## Signals 概念
 
@@ -124,7 +124,18 @@ Preact Signals 遵循以下设计原则：
 
 下面是读取信号时进行依赖收集的源码，我们可以配合上图理解，窥一斑而知全豹。
 
-```ts
+```ts {3,12}
+Object.defineProperty(Signal.prototype, "value", {
+	get(this: Signal) {
+		const node = addDependency(this);
+		if (node !== undefined) {
+			node._version = this._version;
+		}
+		return this._value;
+	},
+	// set() ..
+}
+
 function addDependency(signal: Signal): Node | undefined {
 	if (evalContext === undefined) {
 		return undefined;
@@ -195,11 +206,7 @@ const C = computed(() => B.value + 1);
 - `Signal._version`：每个信号实例内部维护的一个内部版本号，主要用于和自身历史版本对比
 - `Node._version`：每个中间节点实例内部维护的一个内部版本号，主要用于和自身历史版本对比
 
-“版本计数”设计的最大获益者当属 `computed`，借此实现高效的惰性缓存（Lazy & Cached）特性，大大提升性能。
-
-### Computed 缓存之道
-
-最简单暴力的惰性求值方法就是每次读取 `computed` 就重新计算一次，但这样十分低效，我们需要一个高效的缓存机制。
+“版本计数”设计的最大获益者当属 `computed`，凭借 “版本计数” 结合 “标记位” 实现了高效的惰性缓存（Lazy & Cached）特性，解决相等性问题，大大提升性能。
 
 `computed` 的 `get` 方法如下：
 
@@ -216,22 +223,58 @@ Object.defineProperty(Computed.prototype, "value", {
 ```
 
 缓存逻辑主要集中在 `this._refresh()` 方法里面，可以总结为四招：
+    
+1. 当前 `computed` 没有“过期”，即自身依赖的信号都没有变化过，则直接返回缓存。
+    - 如下所示，Preact 中的 `computed/effect` 额外使用一个 `_flags` 标记位来存储自身运行状态。“过期” 是指当前 `computed` 被标记为 `OUTDATED`，类似 Vue 中的 `dirty` 脏标记。
 
-1. 如果自上次运行以来，没有任何信号的值发生改变，直接返回缓存。
-    - 这是通过比较“全局版本号”来实现的，如果 `globalVersion` 没变化，说明没有任何信号改变，不需要重新计算。
-    
-    ```ts {3}
-    Computed.prototype._refresh = function () {
-    	// ..
-    	if (this._globalVersion === globalVersion) {
-    		return true;
-    	}
-    	// ..
-    }
-    ```
-    
-2. 当前 `computed` 依赖的信号没有变化，则直接返回缓存。
-    - 代码使用 `flag` 标志位来表示当前状态，如果当前 `computed` 处于跟踪中 `TRACKING`，但没有过期 `OUTDATED`，说明 `computed` 自身依赖的那些信号都没有改变，所以不需要重新计算。
+	```ts
+	// Flags for Computed and Effect.
+	const RUNNING = 1 << 0;
+	const NOTIFIED = 1 << 1;
+	const OUTDATED = 1 << 2;
+	const DISPOSED = 1 << 3;
+	const HAS_ERROR = 1 << 4;
+	const TRACKING = 1 << 5;
+	```
+	
+   	- 当 `signal` set 后，会触发链式的派发通知，打上“过期”标记表示下次读取结果**可能**需要重新计算，但如果当前 `computed` 没有"过期"，则**肯定不用**重复计算。
+	
+	```ts {14,26}
+	Object.defineProperty(Signal.prototype, "value", {
+		get(this: Signal) {
+			// ..
+		},
+		set(this: Signal, value) {
+			if (value !== this._value) {
+				this._value = value;
+				this._version++;
+				globalVersion++;
+				startBatch();
+				try {
+					// signal 向下游订阅者链式派发通知
+					for (let node = this._targets;node !== undefined;node = node._nextTarget) {
+						node._target._notify();
+					}
+				} finally {
+					endBatch();
+				}
+			}
+		},
+	});
+
+	Computed.prototype._notify = function () {
+		if (!(this._flags & NOTIFIED)) {
+			// 脏标记
+			this._flags |= OUTDATED | NOTIFIED;
+			// computed signal 继续向下游订阅者链式派发通知
+			for (let node = this._targets;node !== undefined;node = node._nextTarget) {
+				node._target._notify();
+			}
+		}
+	};
+	```
+
+    - 回到下面源码中，如果当前 `computed` 是 `TRACKING` 状态，并且没有过期 `OUTDATED`，说明 `computed` 自身依赖的那些信号都没有改变，所以不需要重新计算。
     
     ```ts {3}
     Computed.prototype._refresh = function () {
@@ -239,13 +282,29 @@ Object.defineProperty(Computed.prototype, "value", {
     	if ((this._flags & (OUTDATED | TRACKING)) === TRACKING) {
     		return true;
     	}
+		this._flags &= ~OUTDATED;
+    	// ..
+    }
+    ```
+
+2. 如果自上次运行以来，没有任何信号的值发生改变，直接返回缓存。
+    - 这是通过比较“全局版本号”来实现的，如果 `globalVersion` 没变化，说明没有任何信号改变，不需要重新计算。
+    
+    ```ts {3}
+    Computed.prototype._refresh = function () {
+    	// ..
+		// 任意 signal 变化都会 globalVersion++
+    	if (this._globalVersion === globalVersion) {
+    		return true;
+    	}
+		this._globalVersion = globalVersion;
     	// ..
     }
     ```
     
 3. 按依赖顺序遍历检查他们的版本号。只要有一个依赖的版本号改变就需要重新计算 `computed`。如果版本号都没变化，即使依赖顺序改变，也不需要重新计算。
     
-    ```ts {4}
+    ```ts {4,11}
     Computed.prototype._refresh = function () {
     	// ..
     	this._flags |= RUNNING;
@@ -283,11 +342,10 @@ Object.defineProperty(Computed.prototype, "value", {
     
 4. 前面的缓存条件如果都没命中，那就得重新计算了。当然还留了最后一手，只有当重新计算后的值与之前缓存值不同时，才会更新缓存返回新值，并且增加计算信号的版本号。
     
-    ```ts
+    ```ts {4,7}
     Computed.prototype._refresh = function () {
     	// ..
     	try {
-    		// ..
     		const value = this._fn();
     		if (
     			this._flags & HAS_ERROR ||
@@ -308,13 +366,13 @@ Object.defineProperty(Computed.prototype, "value", {
     ```
     
 
-### Computed 惰性订阅之道
+### Computed 按需订阅
 
 1. **惰性订阅**
     
     `computed` 订阅方法实现如下：
     
-    ```ts
+    ```ts {4,13}
     // 作为 computed signal 被订阅时执行
     Computed.prototype._subscribe = function (node) {
     	// this._targets 为 undefined 说明之前没有被订阅过，所以本次是首次被订阅
@@ -340,7 +398,7 @@ Object.defineProperty(Computed.prototype, "value", {
     
     `computed` 取消订阅方法实现如下：
     
-    ```ts
+    ```ts {10,18}
     Computed.prototype._unsubscribe = function (node) {
     	// 仅当 computed signal 仍有订阅者时执行取消订阅操作
     	if (this._targets !== undefined) {
@@ -378,7 +436,7 @@ Vue 3.5 响应式重构受启发于 Preact Signals（[PR](https://github.com/vue
 - 增加版本计数
 - `computed` 惰性订阅/自动取消订阅
 
-可以说这三个主要优化都吸取了 Preact Signals 的精华，正如前文所说，在 Vue3.5 之前，`Sub`（订阅者） 和 `Dep`（依赖项） 关系是多对多，并且两者是直接关联的。而重构之后依赖和订阅者之间不再直接关联，而是通过中间节点来关联。
+可以说这三个主要优化都吸取了 Preact Signals 的精华，正如前文所说，在 Vue3.5 之前，`Sub`（订阅者） 和 `Dep`（依赖项） 关系是多对多，并且两者是直接关联的。而重构之后依赖和订阅者之间不再直接关联，而是通过中间节点来关联。源码也基本是异曲同工。
 
 ### Vue 中的相等性问题
 
@@ -438,15 +496,15 @@ export function computed(..) {
 		get value() {
 			if (watcher) {
 				// 访问结果时根据 dirty 脏标记判断是否重新计算
-			if (watcher.dirty) {
-				watcher.evaluate()
-			}
-			if (Dep.target) {
-				watcher.depend()
-			}
-			return watcher.value
+				if (watcher.dirty) {
+					watcher.evaluate()
+				}
+				if (Dep.target) {
+					watcher.depend()
+				}
+				return watcher.value
 			} else {
-			return getter()
+				return getter()
 			}
 		}
 	}
@@ -462,7 +520,7 @@ export function computed(..) {
 
 Vue 3.4 针对响应式做了比较大的重构（[PR](https://github.com/vuejs/core/pull/5912)），脏标记不再是简单布尔值，而是引入了更精细化的状态枚举值 `DirtyLevels`，`computed` 自身脏了并且结果变化后才会继续向下游订阅者派发更新。
 
-```ts {7,9,11}
+```ts {7,9,11,20}
 export class ComputedRefImpl<T> {
 	// ..
 	get value() {
@@ -472,7 +530,7 @@ export class ComputedRefImpl<T> {
     if (!self._cacheable || self.effect.dirty) {
 	    // Object.is 相等性检查
       if (hasChanged(self._value, (self._value = self.effect.run()!))) {
-	      // 如果结果变化会派发更新（携带特定脏标记）
+		// 如果结果变化会派发更新（携带特定脏标记）
         triggerRefValue(self, DirtyLevels.ComputedValueDirty)
       }
     }
@@ -483,23 +541,23 @@ export class ComputedRefImpl<T> {
 export class ReactiveEffect<T = any> {
 	// ..
 	public get dirty() {
-    if (this._dirtyLevel === DirtyLevels.ComputedValueMaybeDirty) {
-      this._dirtyLevel = DirtyLevels.NotDirty
-      this._queryings++
-      pauseTracking()
-      for (const dep of this.deps) {
-        if (dep.computed) {
-          triggerComputed(dep.computed)
-          if (this._dirtyLevel >= DirtyLevels.ComputedValueDirty) {
-            break
-          }
-        }
-      }
-      resetTracking()
-      this._queryings--
-    }
-    return this._dirtyLevel >= DirtyLevels.ComputedValueDirty
-  }
+		if (this._dirtyLevel === DirtyLevels.ComputedValueMaybeDirty) {
+			this._dirtyLevel = DirtyLevels.NotDirty
+			this._queryings++
+			pauseTracking()
+			for (const dep of this.deps) {
+				if (dep.computed) {
+				triggerComputed(dep.computed)
+				if (this._dirtyLevel >= DirtyLevels.ComputedValueDirty) {
+					break
+				}
+				}
+			}
+			resetTracking()
+			this._queryings--
+		}
+    	return this._dirtyLevel >= DirtyLevels.ComputedValueDirty
+  	}
 }
 ```
 
