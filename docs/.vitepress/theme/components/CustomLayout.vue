@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { nextTick, onUnmounted, provide } from 'vue'
+import { nextTick, provide } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import slideObeserver from './slideObserver'
 
 const { isDark } = useData()
 
@@ -44,10 +43,10 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
   )
 })
 
-slideObeserver.run()
-onUnmounted(()=>{
-  slideObeserver.stop()
-})
+// slideObeserver.run()
+// onUnmounted(()=>{
+//   slideObeserver.stop()
+// })
 
 </script>
 
