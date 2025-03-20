@@ -2,7 +2,7 @@
 title: Vue Signals 进化论（v3.5）：Preact 重构启示录
 date: 2025-3-7
 lang: zh
-duration: 15 min
+duration: 17 min
 description: Vue 3.5 响应式重构的背后是 Preact Signals 带来的基因突变
 tag: Vue, Signals
 place: 北京
@@ -367,7 +367,6 @@ Object.defineProperty(Computed.prototype, "value", {
 #### 举例演示
 
 为了更直观的理解，我们可以结合一个例子和示意图来演示“版本计数”的过程。
-这个图对应的代码如下所示：
 
 ```ts
 const A = signal(0)
@@ -376,7 +375,9 @@ const C = computed(() => B.value * 0) // always 0
 const D = computed(() => B.value + C.value)
 const E = computed(() => C.value + 1)
 
+console.log('before:', D.value, E.value)
 A.value++
+console.log('after:', D.value, E.value)
 ```
 
 上述代码对应的演示图如下所示，其中节点代表 `signal` 信号, 边代表 `node` 节点。看着是不是像一个带加权的有向无环图（[DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph)）。
@@ -386,7 +387,7 @@ A.value++
 	<figcaption>版本计数流程模拟演示图</figcaption>
 </figure>
 
-上图中括号内的数字表示当前节点的版本号，左侧是首次初始化读取所有信号后的状态，中间是 `A.value++` 执行后其他节点还没更新的中间状态，右侧是更新完成后的状态。右侧图中 `B` 和 `D` 两个 `computed signal` 的值和版本号都发生了变化，C 其实也触发了重新计算，但因为结果值都是 0 没有变化，所以版本号没有更新，`D`、`C` 和 `E`、`C` 关联的 node 节点版本号也不会变化，节点 E 则完全不会重新计算和更新。
+上图中括号内的数字表示当前节点的版本号，左侧是首次初始化并读取所有信号后的状态，中间是后续 `A.value++` 执行后其他节点还没更新的中间状态，右侧是更新完成后的状态。右侧图中 `B` 和 `D` 两个 `computed signal` 的值和版本号都发生了变化，`C` 其实也触发了重新计算，但因为结果值都是 0 没有变化，所以版本号没有更新，`D`、`C` 和 `E`、`C` 关联的 `node` 节点版本号也不会变化，节点 `E` 则完全不会重新计算和更新。
 
 ### Computed 按需订阅
 
