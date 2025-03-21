@@ -203,9 +203,9 @@ const C = computed(() => B.value + 1);
 这里的“版本”指的是源码实现中引入了一些称之为 `version`（版本）的数字类型变量：
 
 - `globalVersion`：全局维护的一个版本号
-- `Computed._globalVersion`：每个 `computed` 信号实例内部维护的一个全局版本号“副本”，主要用于和全局版本号进行同步/对比
-- `Signal._version/Computed._version`：每个信号实例内部维护的一个内部版本号
-- `Node._version`：每个中间节点实例内部维护的一个内部版本号
+- `computed._globalVersion`：每个 `computed` 信号实例内部维护的一个全局版本号“副本”，主要用于和全局版本号进行同步/对比
+- `signal._version/computed._version`：每个信号实例内部维护的一个内部版本号
+- `node._version`：每个中间节点实例内部维护的一个内部版本号
 
 “版本计数”设计的最大获益者当属 `computed`，凭借 “版本计数” 结合 “标记位” 实现了高效的惰性缓存（Lazy & Cached）特性，解决相等性问题，大大提升性能。
 
