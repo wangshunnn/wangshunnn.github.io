@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
 // import zhihuSVG from './theme/components/icons/zhihu.svg'
-import { algoliaTranslations, i18n } from './const'
+import { i18n, localSearchTranslations } from './const'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 
 const ogUrl = 'https://wangshunnn.github.io/'
@@ -56,18 +56,18 @@ export default defineConfig({
     ],
 
     search: {
-      provider: 'algolia',
-      options: {
-        appId: 'K3MSC93R2T',
-        apiKey: 'a28a755619f9dd70f9b9ba1879854748',
-        indexName: 'wangshunnnio',
-        placeholder: '搜索博客',
-        translations: algoliaTranslations
-      }
-      // provider: 'local',
+      // provider: 'algolia',
       // options: {
-      //   translations: localSearchTranslations
+      //   appId: 'K3MSC93R2T',
+      //   apiKey: 'a28a755619f9dd70f9b9ba1879854748',
+      //   indexName: 'wangshunnnio',
+      //   placeholder: '搜索博客',
+      //   translations: algoliaTranslations
       // }
+      provider: 'local',
+      options: {
+        translations: localSearchTranslations
+      }
     },
 
     lastUpdated: {

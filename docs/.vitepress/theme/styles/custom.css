@@ -42,6 +42,17 @@
   }
 }
 
+/*
+  导航栏取消固定
+*/
+/* .VPNav {
+  position: relative !important;
+}
+.VPLocalNav {
+  top: 0;
+} */
+/* } */
+
 /* 
  页面内容渐入动画 
  refer: https://github.com/antfu/antfu.me/blob/b9f54c9421ae94e37d4cd598c20e02c4f3ed8db4/src/styles/main.css#L87
