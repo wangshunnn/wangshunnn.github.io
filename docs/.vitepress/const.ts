@@ -71,8 +71,8 @@ export const algoliaTranslations = {
 
 export const localSearchTranslations = {
   button: {
-    buttonText: '搜索文档',
-    buttonAriaLabel: '搜索文档'
+    buttonText: '搜索',
+    buttonAriaLabel: '搜索'
   },
   modal: {
     displayDetails: '显示详细列表',
