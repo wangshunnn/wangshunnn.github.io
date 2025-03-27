@@ -43,15 +43,29 @@
 }
 
 /*
-  导航栏取消固定
+  导航栏粘附效果
 */
-/* .VPNav {
-  position: relative !important;
+@media (min-width: 960px) {
+  .VPNav {
+    position: sticky !important;
+  }
+  .nav-hidden {
+    transform: translate3d(0, calc(-100% - 2px), 0);
+  }
+  .VPContent {
+    padding-top: 0 !important;
+    transition: transform 0.2s ease !important;
+  }
+  .local-nav-hidden {
+    top: 0 !important;
+  }
 }
-.VPLocalNav {
-  top: 0;
-} */
-/* } */
+
+@media (min-width: 1280px) {
+  .VPNav {
+    transition: transform 0.2s ease !important;
+  }
+}
 
 /* 
  页面内容渐入动画 

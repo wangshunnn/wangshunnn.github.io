@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, provide } from 'vue'
+import { nextTick, onMounted, onUnmounted, provide } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 
@@ -47,6 +47,36 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
 // onUnmounted(()=>{
 //   slideObeserver.stop()
 // })
+
+let nav: Element | null
+let localNav: Element | null
+let prevScrollY = window.scrollY
+const handleScroll = function () {
+  let currentScrollY = window.scrollY
+  if (currentScrollY > prevScrollY) {
+    nav?.classList?.add('nav-hidden')
+    localNav?.classList?.add('local-nav-hidden')
+  } else {
+    nav?.classList?.remove('nav-hidden')
+    localNav?.classList?.remove('local-nav-hidden')
+
+  }
+  prevScrollY = currentScrollY
+}
+
+const shouldListen = window.innerWidth >= 960
+
+onMounted(() => {
+  if (shouldListen) {
+    nav = document.querySelector('.VPNav')
+    localNav = document.querySelector('.VPLocalNav')
+    window.addEventListener('scroll', handleScroll)
+  }
+})
+
+onUnmounted(() => {
+  shouldListen && window.removeEventListener('scroll', handleScroll)
+})
 
 </script>
 
