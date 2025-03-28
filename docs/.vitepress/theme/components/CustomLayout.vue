@@ -50,7 +50,7 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
 
 let nav: Element | null
 let localNav: Element | null
-let prevScrollY = window.scrollY
+let prevScrollY = 0
 const handleScroll = function () {
   let currentScrollY = window.scrollY
   if (currentScrollY > prevScrollY) {
@@ -64,18 +64,18 @@ const handleScroll = function () {
   prevScrollY = currentScrollY
 }
 
-const shouldListen = window.innerWidth >= 960
+const shouldListen = typeof window !== 'undefined' && window.innerWidth >= 960
 
 onMounted(() => {
   if (shouldListen) {
     nav = document.querySelector('.VPNav')
     localNav = document.querySelector('.VPLocalNav')
-    window.addEventListener('scroll', handleScroll)
+    window?.addEventListener('scroll', handleScroll)
   }
 })
 
 onUnmounted(() => {
-  shouldListen && window.removeEventListener('scroll', handleScroll)
+  shouldListen && window?.removeEventListener('scroll', handleScroll)
 })
 
 </script>
