@@ -98,15 +98,15 @@ const signal = (initialValue) => shallowRef(initialValue)
 Preact Signals 遵循以下设计原则：
 
 1. **依赖跟踪（`Tracking`）**：自动跟踪使用的信号（普通或 `computed` 信号），即使依赖关系可能会动态更改。不像 React hooks 那样手动指定依赖数组。
-2. **缓存（`Memoization/Caching`）**：`computed` 信号只会在它的依赖项可能已经改变时才重新计算。
-3. **惰性/延迟执行（`Lazy`）：**`computed` 信号只会按需计算。如果没有使用这个 `computed` 信号，那么永远不会执行，避免性能浪费。
+2. **惰性/延迟执行（`Lazy`）：**`computed` 信号只会按需计算。如果没有使用这个 `computed` 信号，那么永远不会执行，避免性能浪费。
+3. **缓存（`Memoization/Caching`）**：`computed` 信号只会在它的依赖项可能已经改变时才重新计算。
 4. **主动性/立即执行（`Eager`）**：当 `effect` 的依赖链中的某些内容发生变化时，它应该尽快运行。
 
 这几条设计原则几乎适用于所有信号框架，犹如阿西莫夫的 [机器人三定律](https://en.wikipedia.org/wiki/Three_Laws_of_Robotics)，是构建响应式系统的“道”。
 
 ### 双向链表（doubly-linked list）
 
-响应式框架的“依赖跟踪”一般可以分为“依赖收集”和“派发更新”两个阶段，在“依赖收集”阶段需要维护管理“依赖项”和“订阅者”，大多数框架包括早期的 Preact 都选择使用 [Set](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set) 集合，因为 `add` 和 `remove` 都是 O(1)，而且按序插入并且自带去重，看起来很 nice。但是 Preact 最终选择 [linked list](https://en.wikipedia.org/wiki/Linked_list) 链表结构，主要考虑两点因素：一个是 `Set` 的创建开销相对昂贵，尤其一个 `computed signal` 至少需要两个 `Set`（依赖项集合、订阅者集合）；另一个是少数情况涉及依赖项顺序变动的场景，`Set` 需要先移除再添加或者清空重建，存在内存抖动，而链表可以在中间位置 O(1) 插入。
+响应式框架的“依赖跟踪”一般可以分为“依赖收集”和“派发更新”两个阶段，在“依赖收集”阶段需要维护管理“依赖项”和“订阅者”，大多数框架包括早期的 Preact 都选择使用 [Set](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set) 集合，因为 `add` 和 `remove` 都是 O(1)，而且按序插入并且自带去重，看起来很 nice。但是 Preact 最终选择 [linked list](https://en.wikipedia.org/wiki/Linked_list) 链表结构，主要考虑两点因素：一个是 `Set` 的创建开销相对昂贵，尤其一个 `computed signal` 至少需要两个 `Set`（依赖项集合、订阅者集合）；另一个是少数情况涉及依赖项顺序变动的场景，`Set` 需要先移除再添加或者清空重建，存在内存抖动，而链表可以在中间任意位置 O(1) 插入和删除。
 
 在 Vue3.5 之前，`Sub`（订阅者） 和 `Dep`（依赖项） 关系是多对多的网状关系，并且两者是直接关联的。而在 Preact Signals 源码中使用了双向链表结构来处理 `signal`（依赖项）和 `computed/effect`（订阅者）之间的联系。依赖和订阅者之间不再直接关联，而是通过中间节点来关联，相当于针对“发布-订阅”模式的一种“中介化”变体升级。
 
