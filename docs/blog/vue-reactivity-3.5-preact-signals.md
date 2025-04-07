@@ -371,7 +371,7 @@ Object.defineProperty(Computed.prototype, "value", {
 ```ts
 const A = signal(0)
 const B = computed(() => A.value + 1)
-const C = computed(() => B.value * 0) // always 0
+const C = computed(() => A.value * 0) // always 0
 const D = computed(() => B.value + C.value)
 const E = computed(() => C.value + 1)
 
