@@ -570,10 +570,10 @@ export class ReactiveEffect<T = any> {
 			pauseTracking()
 			for (const dep of this.deps) {
 				if (dep.computed) {
-				triggerComputed(dep.computed)
-				if (this._dirtyLevel >= DirtyLevels.ComputedValueDirty) {
-					break
-				}
+					triggerComputed(dep.computed)
+					if (this._dirtyLevel >= DirtyLevels.ComputedValueDirty) {
+						break
+					}
 				}
 			}
 			resetTracking()
