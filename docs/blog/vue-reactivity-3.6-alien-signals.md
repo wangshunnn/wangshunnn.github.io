@@ -102,7 +102,7 @@ A.value++
 
 **小结**
 
-这里虽然有 `push`，但是 `push` 的信息相对简单粗暴，复杂场景下几乎都需要 `pull` 阶段进行版本计数判断，甚至还会涉及依赖项的深度递归，其中的运算复杂度还是比较重的。所以我们可以说 Preact Signals 本质还是一个偏 `Pull-based Model`。
+这里虽然有 `push`，但是 `push` 的信息相对简单粗暴，被通知过的节点需要在 `pull` 阶段进行向上递归的“版本计数”对比之后才能真正判断是否需要重新计算。所以我们可以说 Preact Signals 本质还是一个偏 `Pull-based Model`。
 
 ## Alien Signals
 
@@ -119,7 +119,7 @@ Alien Signals 延续使用 Preact Signals（Vue 3.5）中的双向链表结构�
 
 *Push or Pull？时间还是空间？To be or not to be？这是个问题！*
 
-从源码来看，Alien Signals 严格说应该是 [pull-push-pull](https://github.com/stackblitz/alien-signals/pull/19) 实现，具体来说：
+从源码来看，Alien Signals 严格说应该是 [push-pull-push](https://github.com/stackblitz/alien-signals/pull/19) 实现，具体来说：
 
 - `Push` 推送：`signal` 变更后将 `Dirty/PendingComputed` 脏标志推送给下游订阅者。
 - `Pull` 拉取：`computed` 被读取时，向上游依赖项进行 `pull` 拉取，检查是否需要重计算。
@@ -159,7 +159,7 @@ export const enum SubscriberFlags {
 	Dirty = 1 << 5, 			// 确定需要重新计算更新结果
 	PendingComputed = 1 << 6,	// 可能需要重新计算的 computed
 	PendingEffect = 1 << 7,		// 可能需要重新计算的 effect
-	Propagated = Dirty | PendingComputed | PendingEffect, // 方便快速判断
+	Propagated = Dirty | PendingComputed | PendingEffect, // 方便条件判断的组合标记
 }
 ```
 
@@ -190,12 +190,8 @@ function propagate(current: Link): void {
 		if (!(subFlags & (SubscriberFlags.Tracking | SubscriberFlags.Recursed | SubscriberFlags.Propagated))) {
 			sub.flags = subFlags | targetFlag | SubscriberFlags.Notified;
 			shouldNotify = true;
-		} else if ((subFlags & SubscriberFlags.Recursed) && !(subFlags & SubscriberFlags.Tracking)) {
-			sub.flags = (subFlags & ~SubscriberFlags.Recursed) | targetFlag | SubscriberFlags.Notified;
-			shouldNotify = true;
-		} else if (!(subFlags & SubscriberFlags.Propagated) && isValidLink(current, sub)) {
-			sub.flags = subFlags | SubscriberFlags.Recursed | targetFlag | SubscriberFlags.Notified;
-			shouldNotify = (sub as Dependency).subs !== undefined;
+		} else if (..) {
+			// ..
 		}
 
 		// part-2：需要向下 push，模拟递归调用入栈
@@ -211,19 +207,19 @@ function propagate(current: Link): void {
 					next = current.nextSub;
 					targetFlag = SubscriberFlags.PendingComputed;
 				}
-				// ① 递归执行
+				// ① 深度递归执行
 				continue;
 			}
 		} else if (..) {
 			// ..
 		}
 
-		// part-3：广度上向订阅者链表的下一个节点移动（树的兄弟节点）
+		// part-3：同层级在广度上向订阅者链表的下一个节点移动（树的兄弟节点）
 		if ((current = next!) !== undefined) {
-		next = current.nextSub;
+			next = current.nextSub;
 			// 浅层标记 Dirty，深层标记 PendingComputed
 			targetFlag = branchDepth ? SubscriberFlags.PendingComputed : SubscriberFlags.Dirty;
-			// ② 递归执行
+			// ② 切换遍历节点后跳到新的循环
 			continue;
 		}
 
@@ -239,7 +235,7 @@ function propagate(current: Link): void {
 			}
 		}
 
-		break;
+		break; // 终止循环
 	} while (true);
 }
 ```
@@ -276,7 +272,7 @@ class Dep {
 
 然后，如果是 `Dirty` 直接进行重新计算，这个好理解。这里的 `updateComputed` 方法就是进行了重新计算的逻辑，如果计算结果变化，返回 `true`，否则返回 `false` 。如果重计算后结果变化，那么可以再次进行 `push`。这里的 `push` 指的就是 `shallowPropagate` 方法。顾名思义，大家可能已经猜到它的作用了，具体我们后面再分析。
 
-```ts {5,17,19,24,36-37,40}
+```ts {5,17,19,24,36,40}
 function computedGetter<T>(this: Computed<T>): T {
 	const flags = this.flags;
 	if (flags & (SubscriberFlags.Dirty | SubscriberFlags.PendingComputed)) {
@@ -325,7 +321,7 @@ updateComputed(computed: Computed): boolean {
 }
 ```
 
-说句题外话，这里的 `processComputedUpdate` 其实能看出 Vue 3.4 中 `computed.get` 逻辑的影子，毕竟是同一个作者，感兴趣地话可以自行对比看看。
+说句题外话，这里的 `processComputedUpdate` 其实能看出 Vue 3.4 中 `computed.get` 逻辑的影子，毕竟是同一个作者，感兴趣的话可以自行对比看看。
 
 回到正题，`processComputedUpdate` 方法中比较麻烦的是，如果标记为 `PendingComputed`，也就是可能发生了变化，那么需要进一步进行 `checkDirty` 脏值检查，也就是 `pull` 阶段。
 
@@ -334,9 +330,9 @@ updateComputed(computed: Computed): boolean {
 - 整体向上递归 `pull` 拉取变更，和 `propagate` 一样通过 `do-while` + 单向链表 模拟实现 DFS 递归调用栈来代替传统函数递归。可以关注如下代码中的 3 处 `continue` 来把握整体 DFS 结构。
 - 向上递归过程中，遇到标记为 `Dirty` 的 `computed` 节点，直接触发该节点的重计算 `updateComputed` ，如果结果有更新，则触发 `shallowPropagate` 方法进行浅层 `push` 。
 - 向上递归过程中，遇到标记为 `PendingComputed` 的 `computed` 节点，则先入栈继续向上递归，直到遇到标记为 `Dirty` 的 `computed` 节点，重复上一步。
-- 向上递归的回溯阶段，也就是“归”的阶段，需要重新检查下脏标记，因为在“递”阶段的浅层 `push` 中可能会遍历过的节点的脏标记。如果被修正为了 `Dirty`，那么和之前一样，触发重计算和浅层 `push`。
+- 向上递归的回溯阶段，也就是“归”的阶段，需要重新检查脏标记，因为在“递”阶段的浅层 `push` 中可能会遍历修正节点的脏标记。如果被修正为了 `Dirty`，那么和之前一样，触发重计算和浅层 `push`。
 
-前面的 `push` 阶段从树的角度是前序遍历，那这里的 `pull` 阶段可以理解为是树的后序遍历。
+前面的 `push` 阶段从树的角度是前序遍历，那这里的 `pull` 阶段可以理解为树的后序遍历，叶子节点遍历完再检查根节点最终的脏标记。
 
 ```ts
 // current: 当前 computed 的依赖项链表的首节点
@@ -375,15 +371,15 @@ function checkDirty(current: Link): boolean {
 					}
 					current = dep.deps!;
 					++checkDepth;
-					// ① 递归执行
+					// ① 深度递归执行
 					continue;
 				}
 			}
 
-			// part-2：广度上向依赖项链表的下一个节点移动（树的兄弟节点）
+			// part-2：同层级广度上向依赖项链表的下一个节点移动（树的兄弟节点）
 			if (!dirty && current.nextDep !== undefined) {
 				current = current.nextDep;
-				// ② 递归执行
+				// ② 切换遍历节点后跳到新的循环
 				continue;
 			}
 
@@ -401,7 +397,7 @@ function checkDirty(current: Link): boolean {
 							prevLinks = prevLinks!.linked;
 							shallowPropagate(firstSub);
 						}
-						continue;
+						continue; // 内层循环
 					}
 				} else {
 					// 如果不是 dirty，确定不需要重新计算，去掉 PendingComputed 标记
@@ -415,14 +411,13 @@ function checkDirty(current: Link): boolean {
 				}
 				if (current.nextDep !== undefined) {
 					current = current.nextDep;
-					// ③ 回溯执行
+					// ③ 外层循环回溯执行
 					continue top;
 				}
 				dirty = false;
 			}
 
-			// 返回最终 dirty 结果
-			return dirty;
+			return dirty; // 返回最终 dirty 结果
 		} while (true);
 	}
 ```
@@ -440,18 +435,18 @@ function checkDirty(sub: Dependency & Subscriber) {
 			}
 		}
 	}
-	if (sub.falgs & Dirty) {
+	if (sub.flags & Dirty) {
 		if (updateComputed(sub)) { // 如果标记为 Dirty ，重计算更新
 			shallowPropagate(sub); // 结果有更新，触发浅层传播
 		}
 	}
-	sub.falgs &= ~(Dirty | PendingComputed); // 清除脏标记
+	sub.flags &= ~(Dirty | PendingComputed); // 清除脏标记
 }
 ```
 
-### shallowPropagete（浅层 push）
+### shallowPropagate（浅层 push）
 
-`shallowPropagate` 工作相对就简单多了，只需要一次遍历当前节点的订阅者链表，将标记为 `PendingComputed` 的订阅者节点修正为 `Dirty` 。因为只需要遍历直接于当前节点关联的订阅者链表，而不需要向下递归深入，所以叫做“浅层”传播。
+`shallowPropagate` 工作相对就简单多了，只需要一次遍历当前节点的订阅者链表，将标记为 `PendingComputed` 的订阅者节点修正为 `Dirty` 。因为只需要遍历直接与当前节点关联的订阅者链表，而不需要向下递归深入，所以叫做“浅层”传播。
 
 ```ts
 // link: 订阅者链表的首节点点
@@ -469,7 +464,7 @@ function shallowPropagate(link: Link): void {
 }
 ```
 
-可以发现在 `checkDirty` 向上递归的过程中就会触发 `shallowPropagete` ，具体地说，在“递”和“归”的时候都可能会触发 `shallowPropagete`，也就是说在 `pull` 阶段的同时也可能会发生浅层 `push`。所以说 Alien Signals 严格说可以叫 `push-pull-push Model` 。
+可以发现在 `checkDirty` 向上递归的过程中就会触发 `shallowPropagate` ，具体地说，在“递”和“归”的时候都可能会触发 `shallowPropagate`，也就是说在 `pull` 阶段的同时也可能会发生浅层 `push`。所以说 Alien Signals 严格说可以叫 `push-pull-push Model` 。
 
 *代码可能看的比较抽象，下面我们会画图来帮助更好地理解。*
 
@@ -482,14 +477,14 @@ function shallowPropagate(link: Link): void {
 图着色算法原理如下图所示，这里也是想借此图帮大家更好地理解 Alien Signals 的实现原理。
 
 <figure>
-	<img src="/vue-reactivity-3.6-alien-signals/reactivity-graph -coloring.png" alt="Reactively 图着色原理演示图" />
+	<img src="/vue-reactivity-3.6-alien-signals/reactivity-graph-coloring.png" alt="Reactively 图着色原理演示图" />
 	<figcaption>Reactively 图着色原理演示图</figcaption>
 </figure>
 
 - `push` 阶段：如果源信号 `A` 变更，直接将子节点 `B`、`C` 染成“红色”（表示需要重新计算），然后递归向下将深层的后代节点染成“绿色”（表示可能需要重新计算）。*备注：严格说只有后代节点之前是无色才会染为绿色，因为本身绿色也不用染，红色更不用染了。*
 - `pull` 阶段（混合浅层 `push`）：读取 `computed` 时，比如图中的节点 `F`，如果当前节点“无色”，那就直接换回缓存值。如果“红色”就重新计算。如果是“绿色”就向上递归，直到遇到“红色”节点 `B`，则更新 `B`，更新后染成“无色”，然后开始回溯向下，如果结果变化则浅层 `push` 将子节点 `D` 也染成“红色”，然后继续回溯回到 `F`。最后再根据 `F` 的染色（只会是红色 or 无色）判断是否需要重新计算。
 
-备注：上面演示图中最右侧 `F` 染成红色后表示需要重新，然后计算过程中在读取 `E` 时候，会再次触发节点 `E` 的 `pul` 阶段，重复上述逻辑。
+备注：上面演示图中最右侧 `F` 染成红色后表示需要重新，然后计算过程中在读取 `E` 时候，会再次触发节点 `E` 的 `pull` 阶段，重复上述逻辑。
 
 图着色只是一种优雅的解释理论，实际源码实现也是通过枚举的标记位来实现”着色“的。
 
@@ -501,7 +496,7 @@ export const CacheDirty = 2; // 需要重新计算，对应“红色”
 
 ### 相等性问题
 
-在上一篇我们介绍过 Vue 3.4 开始解决了“相等性”问题的历史包袱，在 Alien Signals 中解决自然也是顺手的事儿。上面我们介绍的 `updateComputed` 方法内部针对重计算的结果进行了相等性检查，如果结果没有变化，就不会触发进行一步的 `shallowPropagate`，下游的订阅者们自然就不再受影响了。
+在上一篇我们介绍过 Vue 3.4 开始解决了“相等性”问题的历史包袱，在 Alien Signals 中解决自然也是顺手的事儿。上面我们介绍的 `updateComputed` 方法内部针对重计算的结果进行了相等性检查，如果结果没有变化，就不会触发进一步的 `shallowPropagate`，下游的订阅者们自然就不再受影响了。
 
 如下示例中，`A` 变更后 `B` 会重新计算但结果不变，`C` 不会触发重计算。
 
@@ -521,7 +516,7 @@ console.log(A(), B(), C())
 
 #### 核心算法与 API 解耦
 
-Alien Signals 将 `propagate` 等核心算法封装在 `system.ts`，而对外的 `Signal`、`Computed` 等 API 设计则在 `index.ts` 。这样做是因为 Alien Signals 只关系核心算法实现，不关注表层 API 设计，用户可以基于核心算法自行封装需要的表层 API，`index.ts` 其实也只是一个参考性的 API 设计，而且出发开发体验考虑，也是默认设计的函数式 API。对此，作者还专门实现了一版兼容 TC39 polyfill 标准的 [API 设计](https://github.com/proposal-signals/signal-polyfill/pull/44)。这一个设计一大优点就是可以成本较低的移植到 Vue 3.6 等等其他框架中，不破坏框架面向用户层面的 API 设计。
+Alien Signals 将 `propagate` 等核心算法封装在 `system.ts`，而对外的 `Signal`、`Computed` 等 API 设计则在 `index.ts` 。这样做是因为 Alien Signals 只关心核心算法实现，不关注表层 API 设计，用户可以基于核心算法自行封装需要的表层 API，`index.ts` 其实也只是一个参考性的 API 设计，而且出于对开发体验的考虑，也是默认设计的函数式 API。对此，作者还专门实现了一版兼容 TC39 polyfill 标准的 [API 设计](https://github.com/proposal-signals/signal-polyfill/pull/44)。这一个设计一大优点就是可以成本较低的移植到 Vue 3.6 等等其他框架中，不破坏框架面向用户层面的 API 设计。
 
 #### 性能至上
 
