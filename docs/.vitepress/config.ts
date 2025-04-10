@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
-// import zhihuSVG from './theme/components/icons/zhihu.svg'
-import { i18n, localSearchTranslations } from './const'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
+import { i18n, localSearchTranslations } from './const'
+import juejinSVG from './theme/components/icons/juejin.svg'
 
 const ogUrl = 'https://wangshunnn.github.io/'
 const ogImage = `${ogUrl}logo-origin.jpg`
@@ -99,7 +99,11 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wangshunnn' },
       { icon: 'x', link: 'https://twitter.com/wangshunnn' },
-      { icon: 'bluesky', link: 'https://bsky.app/profile/soonwang.bsky.social' }
+      {
+        icon: { svg: juejinSVG },
+        link: ''
+      }
+      // { icon: 'bluesky', link: 'https://bsky.app/profile/soonwang.bsky.social' }
       // {
       //   icon: { svg: zhihuSVG },
       //   link: 'https://www.zhihu.com/people/wangshunnn'
