@@ -101,7 +101,7 @@ export default defineConfig({
       { icon: 'x', link: 'https://twitter.com/wangshunnn' },
       {
         icon: { svg: juejinSVG },
-        link: ''
+        link: 'https://juejin.cn/user/2129123907471864/posts'
       }
       // { icon: 'bluesky', link: 'https://bsky.app/profile/soonwang.bsky.social' }
       // {
