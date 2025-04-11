@@ -21,11 +21,12 @@ export default defineConfig({
     ],
     ['meta', { name: 'author', content: title }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { name: 'og:title', content: title }],
-    ['meta', { name: 'og:description', content: description }],
+    ['meta', { property: 'og:title', content: title }],
+    ['meta', { property: 'og:description', content: description }],
     ['meta', { property: 'og:image', content: ogImage }],
-    ['meta', { name: 'twitter:title', content: title }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: title }],
+    ['meta', { name: 'twitter:description', content: description }],
     ['meta', { name: 'twitter:image', content: ogImage }],
     ['meta', { name: 'twitter:site', content: '@wangshunnn' }]
   ],
@@ -37,12 +38,12 @@ export default defineConfig({
     const relativePath = pageData.relativePath || 'index'
     const pagePathName = relativePath.split('/').at(-1)?.replace(/\.md$/, '')
     const ogImage = `${ogUrl}og/${pagePathName}.png`
-
     return [
-      ['meta', { name: 'og:title', content: ogTitle }],
-      ['meta', { name: 'og:image', content: ogImage }],
-      ['meta', { name: 'og:description', content: ogDescription }],
+      ['meta', { property: 'og:title', content: ogTitle }],
+      ['meta', { property: 'og:description', content: ogDescription }],
+      ['meta', { property: 'og:image', content: ogImage }],
       ['meta', { name: 'twitter:title', content: ogTitle }],
+      ['meta', { name: 'twitter:description', content: ogDescription }],
       ['meta', { name: 'twitter:image', content: ogImage }]
     ]
   },
@@ -56,27 +57,12 @@ export default defineConfig({
     const ogImage = `${ogUrl}og/${pagePathName}.png`
     pageData.frontmatter.head ??= []
     pageData.frontmatter.head.push(
-      [
-        'meta',
-        {
-          name: 'og:title',
-          content: ogTitle
-        }
-      ],
-      [
-        'meta',
-        {
-          name: 'og:description',
-          content: ogDescription
-        }
-      ],
-      [
-        'meta',
-        {
-          name: 'og:image',
-          content: ogImage
-        }
-      ]
+      ['meta', { property: 'og:title', content: ogTitle }],
+      ['meta', { property: 'og:description', content: ogDescription }],
+      ['meta', { property: 'og:image', content: ogImage }],
+      ['meta', { name: 'twitter:title', content: ogTitle }],
+      ['meta', { name: 'twitter:description', content: ogDescription }],
+      ['meta', { name: 'twitter:image', content: ogImage }]
     )
   },
 
