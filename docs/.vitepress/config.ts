@@ -4,7 +4,7 @@ import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { i18n, localSearchTranslations } from './const'
 import juejinSVG from './theme/components/icons/juejin.svg'
 
-const ogUrl = 'https://wangshunnn.github.io/'
+const ogUrl = 'https://soonwang.me/'
 const ogImage = `${ogUrl}logo-origin.jpg`
 const title = 'Soon Wang'
 const description = 'Welcome to my personal website'
@@ -27,9 +27,58 @@ export default defineConfig({
     ['meta', { name: 'twitter:title', content: title }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:image', content: ogImage }],
-    ['meta', { name: 'twitter:site', content: '@wangshunnn' }],
-    ['meta', { name: 'twitter:url', content: ogUrl }]
+    ['meta', { name: 'twitter:site', content: '@wangshunnn' }]
   ],
+
+  // for prod
+  transformHead({ pageData }) {
+    const ogTitle = pageData.title || title
+    const ogDescription = pageData.description || description
+    const relativePath = pageData.relativePath || 'index'
+    const pagePathName = relativePath.split('/').at(-1)?.replace(/\.md$/, '')
+    const ogImage = `${ogUrl}og/${pagePathName}.png`
+
+    return [
+      ['meta', { name: 'og:title', content: ogTitle }],
+      ['meta', { name: 'og:image', content: ogImage }],
+      ['meta', { name: 'og:description', content: ogDescription }],
+      ['meta', { name: 'twitter:title', content: ogTitle }],
+      ['meta', { name: 'twitter:image', content: ogImage }]
+    ]
+  },
+
+  // for dev
+  transformPageData(pageData) {
+    const ogTitle = pageData.title || title
+    const ogDescription = pageData.description || description
+    const relativePath = pageData.relativePath || 'index'
+    const pagePathName = relativePath.split('/').at(-1)?.replace(/\.md$/, '')
+    const ogImage = `${ogUrl}og/${pagePathName}.png`
+    pageData.frontmatter.head ??= []
+    pageData.frontmatter.head.push(
+      [
+        'meta',
+        {
+          name: 'og:title',
+          content: ogTitle
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'og:description',
+          content: ogDescription
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'og:image',
+          content: ogImage
+        }
+      ]
+    )
+  },
 
   lastUpdated: false,
   cleanUrls: true,
