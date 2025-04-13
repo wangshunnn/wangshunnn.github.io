@@ -1,5 +1,5 @@
 ---
-title: Blog
+title: My Blog
 aside: false
 lastUpdated: false
 ---

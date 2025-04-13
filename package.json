@@ -29,12 +29,15 @@
     "@preact/signals-core": "^1.8.0",
     "@shikijs/vitepress-twoslash": "^3.1.0",
     "@types/dom-view-transitions": "^1.0.6",
+    "@types/fs-extra": "^11.0.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "busuanzi.pure.js": "^1.0.3",
     "eslint": "^8.57.1",
+    "fs-extra": "^11.3.0",
     "lint-staged": "^15.4.3",
     "prettier": "^3.5.3",
+    "sharp": "^0.34.1",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.8.2",
     "unocss": "^0.58.9",
@@ -48,6 +51,9 @@
       "typescript": "$typescript",
       "vite": "$vite",
       "vitepress": "$vitepress"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
   }
 }

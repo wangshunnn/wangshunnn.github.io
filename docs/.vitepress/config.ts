@@ -1,11 +1,14 @@
+import * as path from 'node:path'
+import fse from 'fs-extra'
 import { defineConfig } from 'vitepress'
 import UnoCSS from 'unocss/vite'
+import sharp from 'sharp'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { i18n, localSearchTranslations } from './const'
 import juejinSVG from './theme/components/icons/juejin.svg'
+import { splitTextByWidth } from './utils'
 
 const ogUrl = 'https://soonwang.me/'
-const ogImage = `${ogUrl}logo-origin.jpg`
 const title = 'Soon Wang'
 const description = 'Welcome to my personal website'
 
@@ -23,21 +26,45 @@ export default defineConfig({
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: title }],
     ['meta', { property: 'og:description', content: description }],
-    ['meta', { property: 'og:image', content: ogImage }],
+    [
+      'meta',
+      { property: 'og:image', content: 'https://soonwang.me/og/index.svg' }
+    ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:title', content: title }],
     ['meta', { name: 'twitter:description', content: description }],
-    ['meta', { name: 'twitter:image', content: ogImage }],
+    [
+      'meta',
+      { name: 'twitter:image', content: 'https://soonwang.me/og/index.svg' }
+    ],
     ['meta', { name: 'twitter:site', content: '@wangshunnn' }]
   ],
 
   // for prod
-  transformHead({ pageData }) {
+  async transformHead({ pageData }) {
     const ogTitle = pageData.title || title
-    const ogDescription = pageData.description || description
-    const relativePath = pageData.relativePath || 'index'
-    const pagePathName = relativePath.split('/').at(-1)?.replace(/\.md$/, '')
+    const ogDescription = pageData.description || ''
+    const date = pageData.frontmatter?.date || ''
+    const relativePath = pageData.relativePath
+
+    if (relativePath === 'index.md' || relativePath === '404.md') {
+      return
+    }
+
+    let pagePathName =
+      relativePath.split('/').at(-1)?.replace(/\.md$/, '') || 'index'
+    if (pagePathName === 'index') {
+      pagePathName =
+        relativePath.split('/').at(-2)?.replace(/\.md$/, '') || 'index'
+    }
+
     const ogImage = `${ogUrl}og/${pagePathName}.png`
+    // console.log('relativePath', relativePath, pagePathName, ogTitle)
+    const output = path.resolve(__dirname, `../public/og/${pagePathName}.png`)
+    if (!fse.existsSync(output)) {
+      generateOg(output, { title: ogTitle, description: ogDescription, date })
+    }
+
     return [
       ['meta', { property: 'og:title', content: ogTitle }],
       ['meta', { property: 'og:description', content: ogDescription }],
@@ -161,3 +188,53 @@ export default defineConfig({
     }
   }
 })
+
+async function generateOg(
+  output: string,
+  {
+    title = '',
+    description = '',
+    date = ''
+  }: {
+    title: string
+    description?: string
+    date?: string
+  }
+) {
+  const ogSVg = fse.readFileSync(
+    path.resolve(__dirname, '../public/og/template.svg'),
+    'utf-8'
+  )
+
+  title = title.trim()
+  description = description.trim()
+  let dateText = ''
+  if (date) {
+    dateText = new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
+  const titleLines = splitTextByWidth(title, 28, 2)
+  description = description ? splitTextByWidth(description, 56, 1)[0] : ''
+
+  const data: Record<string, string> = {
+    title_line1: titleLines[0]?.replaceAll('&', '&amp;'),
+    title_line2: titleLines[1]?.replaceAll('&', '&amp;'),
+    description,
+    date: dateText
+  }
+  const svg = ogSVg.replace(/\{\{([^}]+)\}\}/g, (_, name) => data[name] || '')
+
+  console.log(`Generating og image: ${output}`)
+  try {
+    await sharp(Buffer.from(svg))
+      .resize(1200 * 1.1, 630 * 1.1)
+      .png()
+      .toFile(output)
+  } catch (e) {
+    console.error('Failed to generate og image', output, title, description, e)
+  }
+}
