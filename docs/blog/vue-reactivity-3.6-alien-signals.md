@@ -424,14 +424,16 @@ function checkDirty(current: Link): boolean {
 
 同样的，可以用函数递归的形式复写一版上面的核心逻辑。
 
-```ts {5,13}
+```ts {5,15}
 // 函数递归版本（伪代码）
 function checkDirty(sub: Dependency & Subscriber) {
 	if (sub.flags & PendingComputed) {
 		for (let link = sub.deps; link !== undefined; link = link.nextDep) {
 			checkDirty(link.dep); // 递归检查依赖项
 			if (sub.flags & Dirty) {
-				break; // 遇到 Dirty 节点停止递归
+				// 如果父节点（依赖项）`checkDirty` 过程中触发了浅层传播，
+				// 则会修改当前节点的标记为 Dirty，停止递归
+				break;
 			}
 		}
 	}

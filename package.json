@@ -53,7 +53,9 @@
       "vitepress": "$vitepress"
     },
     "onlyBuiltDependencies": [
-      "sharp"
+      "esbuild",
+      "sharp",
+      "simple-git-hooks"
     ]
   }
 }
