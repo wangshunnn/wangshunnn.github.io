@@ -431,7 +431,7 @@ function checkDirty(sub: Dependency & Subscriber) {
 		for (let link = sub.deps; link !== undefined; link = link.nextDep) {
 			checkDirty(link.dep); // 递归检查依赖项
 			if (sub.flags & Dirty) {
-				// 如果父节点（依赖项）`checkDirty` 过程中触发了浅层传播，
+				// 如果某个依赖项 checkDirty 过程中触发了浅层传播，
 				// 则会修改当前节点的标记为 Dirty，停止递归
 				break;
 			}
