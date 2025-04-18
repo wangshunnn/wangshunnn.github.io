@@ -430,7 +430,7 @@ function checkDirty(sub: Dependency & Subscriber) {
 	if (sub.flags & PendingComputed) {
 		for (let link = sub.deps; link !== undefined; link = link.nextDep) {
 			checkDirty(link.dep); // 递归检查依赖项
-			if (this.flags === Dirty) {
+			if (sub.flags & Dirty) {
 				break; // 遇到 Dirty 节点停止递归
 			}
 		}
