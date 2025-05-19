@@ -249,17 +249,17 @@ class Dep {
 		if (value !== this._value) {
 			for (let link = this.subs; link !== undefined; link = link.nextSub) {
 				// 浅层订阅者 push Dirty
-				link.sub.propagete(Dirty);
+				link.sub.propagate(Dirty);
 			}
 			this._value = value;
 		}
 	}
-	propagete(flag) {
+	propagate(flag) {
 		if (!(this.flags & Dirty)) {
 			this.flags = flag;
 			for (let link = this.subs; link !== undefined; link = link.nextSub) {
 				// 深层订阅者递归地 push PendingComputed
-				link.sub.propagete(PendingComputed);
+				link.sub.propagate(PendingComputed);
 			}
 		}
 	}
