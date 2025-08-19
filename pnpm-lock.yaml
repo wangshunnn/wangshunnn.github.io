@@ -13,7 +13,7 @@ importers:
         version: 2.2.368
       '@preact/signals-core':
         specifier: ^1.8.0
-        version: 1.11.0
+        version: 1.12.0
       '@shikijs/vitepress-twoslash':
         specifier: ^3.1.0
         version: 3.9.2(typescript@5.9.2)
@@ -557,8 +557,8 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@preact/signals-core@1.11.0':
-    resolution: {integrity: sha512-jglbibeWHuFRzEWVFY/TT7wB1PppJxmcSfUHcK+2J9vBRtiooMfw6tAPttojNYrrpdGViqAYCbPpmWYlMm+eMQ==}
+  '@preact/signals-core@1.12.0':
+    resolution: {integrity: sha512-etWpENXm469RHMWIZGblgWrapbIGcRcbccEGGaLkFez3PjlI3XkBrUtSiNFsIfV/DN16PxMOxbWAZUIaLFyJDg==}
 
   '@quansync/fs@0.1.4':
     resolution: {integrity: sha512-vy/41FCdnIalPTQCb2Wl0ic1caMdzGus4ktDp+gpZesQNydXcx8nhh8qB3qMPbGkictOTaXgXEUUfQEm8DQYoA==}
@@ -2641,7 +2641,7 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@preact/signals-core@1.11.0': {}
+  '@preact/signals-core@1.12.0': {}
 
   '@quansync/fs@0.1.4':
     dependencies:
