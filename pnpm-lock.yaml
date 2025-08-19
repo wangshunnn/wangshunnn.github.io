@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@iconify/json':
         specifier: ^2.2.314
-        version: 2.2.368
+        version: 2.2.376
       '@preact/signals-core':
         specifier: ^1.8.0
         version: 1.11.0
@@ -398,8 +398,8 @@ packages:
   '@iconify-json/simple-icons@1.2.46':
     resolution: {integrity: sha512-MJfKQDhOMQD5Fc8PcTtCdFX0oBf/nKVfp69ScdEKIXW0JXELX5V2Ld45EsjShi8aJ6DNhdDtSDZvKuDnkDiKnw==}
 
-  '@iconify/json@2.2.368':
-    resolution: {integrity: sha512-gxz87+V5og+kYRc8jp0YTGgImusCpZLFVd+QzIVH5GwA9zQlMe2BvK9dhIHKSWlP1fZ7blKFKVqKKaCNoRCEiA==}
+  '@iconify/json@2.2.376':
+    resolution: {integrity: sha512-2jQ+5zPV7Lva9iuFOvMkcq5XQyRx7xvLuodpDI+yjAxOnB2gpWa4caFz53tyPgCWU50Zd9/JSNZaCNYSTniSrg==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -2507,7 +2507,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify/json@2.2.368':
+  '@iconify/json@2.2.376':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
