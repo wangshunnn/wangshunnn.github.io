@@ -157,3 +157,10 @@
     --enter-stage: 20;
   }
 }
+
+@supports (text-autospace: normal) {
+  :root {
+    /* 启用自动混排间距 */
+    text-autospace: normal;
+  }
+}
