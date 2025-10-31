@@ -147,7 +147,7 @@ function Counter() {
 }
 ```
 
-#### template() 函数实现
+#### template() 函数
 
 template 函数源码简化如下：
 
@@ -327,7 +327,24 @@ function Counter() {
 }
 ```
 
-这里会引入 `insert` 方法，并且传入的是 signal 本身（getter 函数），而不是调用结果。`insert` 方法实现如下，内部会为这个 getter 函数（`accessor`）创建一个响应式的 effect，自动追踪依赖并更新。
+#### insert() 函数
+
+如上所示新增了 `insert` 方法，并且传入的 `count` 是通过 `createSignal(1)` 创建的 `signal`（getter 函数），而不是调用结果。
+
+```js
+import { createSignal } from "solid-js";
+
+const [count, setCount] = createSignal(1);
+//       ^ getter  ^ setter
+
+console.log(count()); // prints "1"
+
+setCount(0); // changes count to 0
+
+console.log(count()); // prints "0"
+```
+
+`insert` 方法实现如下，内部会为这个 `signal`（`accessor`）创建一个响应式的 `effect`，自动追踪依赖并更新。
 
 ```js {7-10}
 function insert(parent, accessor, marker, initial) {
@@ -343,9 +360,13 @@ function insert(parent, accessor, marker, initial) {
 }
 ```
 
-关于 `signal` 和 `effect` 的原理和 Vue 类似，这里不展开赘述。细粒度响应式工作原理如下图所示。
+## 细粒度响应式 Fine-Grained Reactivity
 
-## 运行时响应式绑定
+关于 `signal` 和 `effect` 具体实现原理，其实和 Vue 等其他框架都差不多。感兴趣可直接查看源码或者之前 [Signal 博客](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)，这里不展开赘述。
+
+我这里真正想说的是，在我看来 Solid 真正“独领风骚”的地方并不在于它引入了响应式，因为 Vue、Preact、Svelte 等等也都有，而且 Solid 响应式性能也并不算特别出众。真正出色的其实是“细粒度响应式”中前半部分的“**细粒度**”。
+
+响应式固然重要，但只有结合无虚拟 DOM 的设计和模板编译转换，才能够实现 DOM 级别的细粒度更新。在我看来前者是更偏技术实现，而后者更多是框架层面的设计哲学，画龙点睛。响应式屡见不鲜，但二者结合才是 Solid 的独特之处。
 
 ## Vue 3.6+
 
