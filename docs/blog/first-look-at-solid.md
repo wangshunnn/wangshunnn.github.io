@@ -95,21 +95,26 @@ const count = ref(1)
 
 ## 框架设计哲学
 
-- **React** 设计哲学是「不可变数据」+「声明式 UI」。状态更新后，重新执行组件渲染函数来生成新的虚拟 DOM 树，最后通过虚拟 DOM Diff 更新真实 DOM —— 这一过程也称为协调（Reconciliation）。为了兼顾渲染性能与一致性，React 还引入了 Fiber 架构，实现了可中断的“协调”过程。
+- **React** 设计哲学是「**不可变数据**」+「**声明式 UI**」。状态更新后，重新执行组件渲染函数来生成新的虚拟 DOM 树，最后通过虚拟 DOM Diff 更新真实 DOM —— 这一过程也称为协调（Reconciliation）。为了兼顾渲染性能与一致性，React 后来还引入了 Fiber 架构，实现了可中断的“协调”过程。
 
-- **Vue（\<3.6）** 设计哲学是「响应式系统」+「声明式模板」。编译阶段将模板编译成 render 函数（组件层级 effect 包装）。运行时状态更新后，通过响应式自动追踪依赖，仅重新执行受影响的组件 render 函数，生成新的虚拟 VNode，最后通过虚拟 DOM Diff 更新真实 DOM。相比 React，Vue 实现了更精确地“按需”更新，DOM Diff 范围和复杂度也小很多，而且还引入了静态提升等编译时优化手段。这也是为什么同样都是虚拟 DOM，但 Vue 不需要 React Fiber 架构。
+- **Vue（\<3.6）** 设计哲学是「**响应式系统**」+「**声明式模板**」。编译阶段将模板编译成 render 函数（组件层级 effect 包装）。运行时状态更新后，通过响应式自动追踪依赖，仅重新执行受影响的组件 render 函数，生成新的虚拟 VNode，最后通过虚拟 DOM Diff 更新真实 DOM。
+  
+  _相比 React，Vue 实现了更精确地“按需”更新，DOM Diff 范围和复杂度也小很多，而且还引入了静态提升等编译时优化手段。这也是为什么同样都是虚拟 DOM，但 Vue 不需要 React Fiber 架构。_
 
-- **Solid** 设计哲学是「细粒度响应式」+「无虚拟 DOM」。在编译阶段就建立了更精确的依赖/信号与视图节点之间的依赖关系（DOM 层级 effect 包装）。运行时状态更新后，Solid 不会重新执行整个组件函数，也不会（重新）生成虚拟 DOM 树，而是通过响应式直接更新真实 DOM。相比 Vue 组件层级响应式，Solid 精确到最细粒度的 DOM 层级，实现更极致的性能。
+- **Solid** 设计哲学是「**细粒度响应式**」+「**无虚拟 DOM**」。在编译阶段就建立了更精确的依赖/信号与视图节点之间的依赖关系（DOM 层级 effect 包装）。运行时状态更新后，Solid 不会重新执行整个组件函数，也不会（重新）生成虚拟 DOM 树，而是通过响应式直接更新真实 DOM。
+
+  _相比 Vue 组件层级响应式，Solid 精确到最细粒度的 DOM 层级，实现更极致的性能。_
 
 ## 编译时转换模板
 
-下图是 Solid 编译前后的代码 Diff 可视化：
+下图是 Solid 函数式组件（`Counter`）编译前后的代码 Diff：
 
 <figure>
 	<img src="/solid/solid-sourcemap-visual.png" alt="Solid 组件编译前后代码 Diff 可视化" />
-	<figcaption>Solid 组件编译前后代码 Diff 可视化</figcaption>
+	<figcaption>Solid 组件编译前后代码 Diff</figcaption>
 </figure>
-```
+
+核心的变化有如下三点。
 
 ### 静态模板提取与复用
 
@@ -344,7 +349,7 @@ setCount(0); // changes count to 0
 console.log(count()); // prints "0"
 ```
 
-`insert` 方法实现如下，内部会为这个 `signal`（`accessor`）创建一个响应式的 `effect`，自动追踪依赖并更新。
+`insert` 方法实现如下，运行时内部会为这个 `signal`（`accessor`）创建一个响应式的 `effect`，自动追踪依赖并更新。
 
 ```js {7-10}
 function insert(parent, accessor, marker, initial) {
@@ -360,17 +365,113 @@ function insert(parent, accessor, marker, initial) {
 }
 ```
 
-## 细粒度响应式 Fine-Grained Reactivity
+## 运行时原理
 
-关于 `signal` 和 `effect` 具体实现原理，其实和 Vue 等其他框架都差不多。感兴趣可直接查看源码或者之前 [Signal 博客](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)，这里不展开赘述。
+### Solid Signals
 
-我这里真正想说的是，在我看来 Solid 真正“独领风骚”的地方并不在于它引入了响应式，因为 Vue、Preact、Svelte 等等也都有，而且 Solid 响应式性能也并不算特别出众。真正出色的其实是“细粒度响应式”中前半部分的“**细粒度**”。
+Solid 的 `signal` 和 `effect` 实现原理其实和 Vue 等其他框架差不多，在 API 设计风格以及实现细节上有所差异。比如 Solid 的 `createSignal()` API 设计强调了读/写隔离。信号通过一个只读的 getter 和另一个单独的 setter 暴露，通过函数调用而非 `Proxy` 实现读取拦截。
 
-响应式固然重要，但只有结合无虚拟 DOM 的设计和模板编译转换，才能够实现 DOM 级别的细粒度更新。在我看来前者是更偏技术实现，而后者更多是框架层面的设计哲学，画龙点睛。响应式屡见不鲜，但二者结合才是 Solid 的独特之处。
+```js
+import { createSignal } from "solid-js"
+
+const [count, setCount] = createSignal(0)
+
+count() // 访问值
+setCount(1) // 更新值
+```
+
+正如 Vue 官方文档所述，Vue 同样可以复刻类似 API：
+
+```js
+import { shallowRef, triggerRef } from 'vue'
+
+export function createSignal(value, options) {
+  const r = shallowRef(value)
+  const get = () => r.value
+  const set = (v) => {
+    r.value = typeof v === 'function' ? v(r.value) : v
+    if (options?.equals === false) triggerRef(r)
+  }
+  return [get, set]
+}
+```
+
+关于更多实现细节，感兴趣可直接看源码或者之前写过的 [Vue Signal](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)，这里不展开赘述。
+
+### 细粒度响应式 Fine-Grained Reactivity
+
+前面我们提到在编译时模板的动态内容 `count()` 会被转换成 `insert(_el$, count)`。在运行时，`insert` 方法会为这个 `signal` 创建一个响应式的 `effect`，自动追踪依赖并更新。
+
+```js
+<button type="button">
+  {count()}
+</button>
+
+// ⬇
+insert(_el$, count);
+
+// ⬇
+function insert(parent, count) {
+  createRenderEffect(current => insertExpression(parent, count(), current))
+}
+```
+
+当点击 button 后，`count` 的 setter（`setCount`）方法被调用时，Solid 会触发 `effect` 重新执行 `insertExpression`。
+
+#### insertExpression()
+
+`insertExpression` 源码其实比较复杂，需要满足现实可能的各种渲染场景，这里为方便理解，针对 `Counter` 组件渲染场景简化后的代码如下：
+
+```js
+function insertExpression(parent, value, current) {
+  if (value === current) {
+    // 相等性检查
+    return current
+  }
+
+  const t = typeof value
+  if (t === "string" || t === "number") {
+    if (t === "number") {
+      value = value.toString()
+      if (value === current) return current
+    }
+    if (current !== "" && typeof current === "string") {
+      // 点击更新
+      current = parent.firstChild.data = value
+    } else {
+      // 初次渲染
+      current = parent.textContent = value
+    }
+  }
+  // ..
+
+  return current
+}
+```
+
+#### 初次渲染
+
+初次渲染时，`current` 为空，执行 `parent.textContent = value`，button 内创建一个文本节点，内容为 `"1"`。没有重建任何外层 DOM，只是设置节点 `textContent`。并且在 `effect` 内部会将 `current` 更新为字符串 `"1"`。
+
+#### 点击更新
+
+点击 button 后，`setCount` 被调用，`count()` 变为 `2`，触发 `effect` 重新执行 `insertExpression`。此时 `current` 已经是字符串 `"1"`，执行 `parent.firstChild.data = value`，直接将 button 内部文本节点的内容更新为 `"2"`。没有替换节点和 diff，也不需要重新渲染 `Counter` 函数。
+
+## 一点思考
+
+在我看来 Solid 真正“独领风骚”的地方并不在于它引入了响应式，因为 Vue、Preact、Svelte 等等也都有，而且 Solid 响应式性能也并不是最好的那一档。真正出色的其实是“细粒度响应式”中前半部分的“**细粒度**”三字。
+
+响应式固然重要，但只有结合无虚拟 DOM 的设计和模板编译转换，才能够实现 DOM 级别的细粒度更新。前者更偏通用技术的实现，而后者更多是框架层面的设计哲学。这种能站在架构层面的优化设计是更加难能可贵的。
 
 ## Vue 3.6+
 
+受 Solid 启发的，Vue 其实很早就是探索一种类似的编译策略 —— **Vapor Mode** —— 不依赖于虚拟 DOM，而是更多地利用 Vue 的内置响应性系统。
+
 ## 结语
+
+在文章快写完的时候，我看到最近有一款全新的前端框架面世 —— [_Ripple_](https://www.ripplejs.com/) —— 主打融合 React + Solid + Svelte，老外评论也纷纷表示“学不动了”（_"Why are we still here? Just to suffer?"_）。从前端框架的宏观趋势来看，响应式基本成为标配，重心慢慢从“运行时”向“编译时”倾斜。
+
+作为前端开发者，我对于前端框架还是喜闻乐见的。但在 AI 时代，React 凭借生态累积几乎成为“事实标准”。未来前端框架将何去何从，我不知道。欢迎 [Issue](https://github.com/wangshunnn/wangshunnn.github.io/issues) 留言讨论。
 
 ## 参考
 
