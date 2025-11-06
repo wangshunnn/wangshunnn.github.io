@@ -1,3 +1,4 @@
+.vp-doc a[href^="https://play.vuejs.org"]:before,
 .vp-doc a[href^="https://playground.solidjs.com"]:before
 {
   content: '▶';

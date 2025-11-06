@@ -467,7 +467,77 @@ function insertExpression(parent, value, current) {
 
 ## Vue 3.6+
 
-受 Solid 启发的，Vue 其实很早就开始探索一种类似的编译策略 —— [_Vapor Mode_](https://github.com/vuejs/vue-vapor) —— 不依赖于虚拟 DOM 而是更多地利用 Vue 的内置响应性系统，即将在 Vue 3.6 中落地。引入 Vapor Mode 之后，Vue 并没有完全摒弃虚拟 DOM，而是提供了用户可选的渲染模式，“双引擎”模式也更具灵活性。目前 Vue 3.6 还处于 Alpha 阶段，期待未来 Vapor Mode 体验以及源码之旅。
+受 Solid 启发的，Vue 其实很早就开始探索一种类似的编译策略 —— [_Vapor Mode_](https://github.com/vuejs/vue-vapor) —— 不依赖于虚拟 DOM 而是更多地利用 Vue 的内置响应性系统，即将在 Vue 3.6 中落地。引入 Vapor Mode 之后，Vue 并没有完全摒弃虚拟 DOM，而是提供了用户可选的渲染模式，“双引擎”模式也更具灵活性。
+
+目前已经可以在 Vue Playground 中尝试 Vapor 模式（选择 Vue 3.6-alpha 版本），在 script setup 中使用 `vapor` 语法糖开启 Vapor Mode。同样一个简单的计数器组件示例代码如下所示：
+
+```vue {1}
+<script setup vapor>
+import { ref } from 'vue'
+
+const count = ref(0)
+</script>
+
+<template>
+  <button @click="count++">
+    {{ count }}
+  </button>
+</template>
+```
+
+### VDOM Mode
+
+这段代码如果不加 `vapor` 语法糖，也就是常规的虚拟 DOM 渲染模式，编译输出的代码会是这样的：
+
+```js
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (
+    _openBlock(),
+    _createElementBlock(
+      "button",
+      {
+        onClick: _cache[0] || (_cache[0] = ($event) => $setup.count++),
+      },
+      _toDisplayString($setup.count),
+      1 /* TEXT */
+    )
+  );
+}
+```
+
+`_createElementBlock` 函数会创建一个 `VNode`（虚拟节点）。
+
+### Vapor Mode
+
+而如果加上 `vapor` 语法糖，编译输出的代码会是这样的：
+
+```js
+import {
+  txt as _txt,
+  toDisplayString as _toDisplayString,
+  setText as _setText,
+  renderEffect as _renderEffect,
+  delegateEvents as _delegateEvents,
+  template as _template,
+} from "vue";
+
+const t0 = _template("<button> </button>", true);
+_delegateEvents("click");
+
+function render(_ctx, $props, $emit, $attrs, $slots) {
+  const n0 = t0();
+  const x0 = _txt(n0);
+  n0.$evtclick = () => _ctx.count++;
+  _renderEffect(() => _setText(x0, _toDisplayString(_ctx.count)));
+  return n0;
+}
+```
+
+[在 Vue 演练场中尝试一下](https://play.vuejs.org/#eNp9Uc1OAjEQfpVJL2rAhQTjgSzGn3DQgxr12MSsywAL3bZppyvJZt/daVeQg+HUznw//WbaijtrsyagmIrcl66yBB4pWGgKa9yN1FXNJ0ELDpfQwdKZGs5YcCa11KXRnqA0QRPMIuN8fCF1PuqdWM0FYW1VQcgVQP4ViIyG21JV5XYmRdIOBlIkGKBtf+26LvFHvYDRfHTkJIaCPL++rFbZxhvN8dvIj4a1rRS6F0sVp5NiCgmJWKGU+X5KPXIBh/t+ucZy+09/43exJ8WrQ4+uQSkOGBVuhdTD8/dn3PH9ANZmERSzT4Bv6I0KMWNPuw96wbGPeCntY1p/pVcffr4j1H4/VAwamV3iS8Ff8nBi9L+4k+wq6aTueIufDbroyQucZNfZ+LJQdl1kE9H9AJ82seM=)
+
+Vapor Mode 编译结果和 Solid 十分相似，同样是引入 `template` 函数创建真实 DOM 节点，新增事件委托 `delegateEvents` 方法，并且通过 `renderEffect` 创建细粒度的响应式更新。
+
+> 更多 Vue Vapor 的源码细节且听下回（~~也不一定~~）分解。
 
 ## 结语
 
