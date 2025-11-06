@@ -1,8 +1,8 @@
 ---
 title: Solid 初探：启发 Vue Vapor 的极致框架
-date: 2025-10
+date: 2025-11-6
 lang: zh
-duration: 15 min
+duration: 13 min
 description: 响应式 + 无虚拟 DOM = 未来？
 tag: Solid
 place: 北京
@@ -15,11 +15,11 @@ outline: [2,4]
 
 > **✨ AI 摘要**
 >
-> TODO
+> 本文从示例入手拆解 Solid 的编译期模板转换与运行时信号机制，展示如何以细粒度依赖直达真实 DOM，绕过虚拟 DOM 构造与 Diff。结合 template/insert/全局事件委托等实现，解释其稳定的更新常数与可预测性，并讨论内存与调试取舍。
 
 ## 前言
 
-坦白讲，再准备写这篇文章之前，我其实完全没看过一点 Solid 源码，也完全没有过使用经验。学习的契机其实是源于 Vue 3.6 即将引入的 Vue Vapor 无虚拟 DOM 设计 ———— 正是受 Solid 启发。
+坦白讲，在准备写这篇文章之前，我其实完全没看过一点 Solid 源码，也完全没有过使用经验。学习的契机其实是源于 Vue 3.6 即将引入的 Vue Vapor 无虚拟 DOM 设计 ———— 正是受 Solid 启发。
 
 > Vue 3.6 另一大更新亮点 —— 基于 Alien Signals 的响应式性能重构 —— 可以移步[《Vue Signals 进化论（v3.6）：Alien Signals 终局之战？》](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)。
 
@@ -28,6 +28,8 @@ outline: [2,4]
 让我们先看一个基础的示例，展示了 Solid 如何实现响应式计数器组件。
 
 **示例代码**
+
+`Counter` 组件会渲染一个 button，点击 button 后文本内容会递增。
 
 ```jsx
 import { render } from "solid-js/web"
@@ -239,8 +241,8 @@ delegateEvents(["click"]);
 
 - 编译前：JSX 风格的事件绑定 `onClick={increment}`。
 - 编译后：直接通过属性赋值 `_el$.$$click = increment`。
-- 配合: 插入 `delegateEvents(["click"])` 实现事件委托。
-- 优势: 避免每个元素单独绑定事件，减少内存占用。
+- 配合：插入 `delegateEvents(["click"])` 实现事件委托。
+- 优势：避免每个元素单独绑定事件，减少内存占用。
 
 #### 全局事件委托
 
@@ -259,7 +261,7 @@ function delegateEvents(eventNames, document = window.document) {
 }
 ```
 
-可见，`delegateEvents(eventNames)` 会在 `document` 层级为每个 `eventNames` 中的事件类型调用 `addEventListener`，这样全局只会注册**一个**统一的事件处理器 `eventHandler`。相比为每个元素单独绑定事件处理器，大幅减少了监听器数量和内存开销。。
+可见，`delegateEvents(eventNames)` 会在 `document` 层级为每个 `eventNames` 中的事件类型调用 `addEventListener`，这样全局只会注册**一个**统一的事件处理器 `eventHandler`。相比为每个元素单独绑定事件处理器，大幅减少了监听器数量和内存开销。
 
 `eventHandler` 函数源码简化如下。
 
@@ -396,7 +398,7 @@ export function createSignal(value, options) {
 }
 ```
 
-关于更多实现细节，感兴趣可直接看源码或者之前写过的 [Vue Signal](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)，这里不展开赘述。
+关于更多实现细节，感兴趣可直接看源码或者之前发过的博客，这里不展开赘述。
 
 ### 细粒度响应式 Fine-Grained Reactivity
 
@@ -465,11 +467,11 @@ function insertExpression(parent, value, current) {
 
 ## Vue 3.6+
 
-受 Solid 启发的，Vue 其实很早就是探索一种类似的编译策略 —— **Vapor Mode** —— 不依赖于虚拟 DOM，而是更多地利用 Vue 的内置响应性系统。
+受 Solid 启发的，Vue 其实很早就开始探索一种类似的编译策略 —— [_Vapor Mode_](https://github.com/vuejs/vue-vapor) —— 不依赖于虚拟 DOM 而是更多地利用 Vue 的内置响应性系统，即将在 Vue 3.6 中落地。引入 Vapor Mode 之后，Vue 并没有完全摒弃虚拟 DOM，而是提供了用户可选的渲染模式，“双引擎”模式也更具灵活性。目前 Vue 3.6 还处于 Alpha 阶段，期待未来 Vapor Mode 体验以及源码之旅。
 
 ## 结语
 
-在文章快写完的时候，我看到最近有一款全新的前端框架面世 —— [_Ripple_](https://www.ripplejs.com/) —— 主打融合 React + Solid + Svelte，老外评论也纷纷表示“学不动了”（_"Why are we still here? Just to suffer?"_）。从前端框架的宏观趋势来看，响应式基本成为标配，重心慢慢从“运行时”向“编译时”倾斜。
+近期有一款全新的前端框架面世 —— [_Ripple_](https://www.ripplejs.com/) —— 主打融合 React + Solid + Svelte，老外评论也纷纷表示“学不动了”（_"Why are we still here? Just to suffer?"_）。从前端框架的宏观趋势来看，响应式基本成为标配，重心慢慢从“运行时”向“编译时”倾斜。
 
 作为前端开发者，我对于前端框架还是喜闻乐见的。但在 AI 时代，React 凭借生态累积几乎成为“事实标准”。未来前端框架将何去何从，我不知道。欢迎 [Issue](https://github.com/wangshunnn/wangshunnn.github.io/issues) 留言讨论。
 
