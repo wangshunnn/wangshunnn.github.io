@@ -535,15 +535,13 @@ function render(_ctx, $props, $emit, $attrs, $slots) {
 
 [在 Vue 演练场中尝试一下](https://play.vuejs.org/#eNp9Uc1OAjEQfpVJL2rAhQTjgSzGn3DQgxr12MSsywAL3bZppyvJZt/daVeQg+HUznw//WbaijtrsyagmIrcl66yBB4pWGgKa9yN1FXNJ0ELDpfQwdKZGs5YcCa11KXRnqA0QRPMIuN8fCF1PuqdWM0FYW1VQcgVQP4ViIyG21JV5XYmRdIOBlIkGKBtf+26LvFHvYDRfHTkJIaCPL++rFbZxhvN8dvIj4a1rRS6F0sVp5NiCgmJWKGU+X5KPXIBh/t+ucZy+09/43exJ8WrQ4+uQSkOGBVuhdTD8/dn3PH9ANZmERSzT4Bv6I0KMWNPuw96wbGPeCntY1p/pVcffr4j1H4/VAwamV3iS8Ff8nBi9L+4k+wq6aTueIufDbroyQucZNfZ+LJQdl1kE9H9AJ82seM=)
 
-Vapor Mode 编译结果和 Solid 十分相似，同样是引入 `template` 函数创建真实 DOM 节点，新增事件委托 `delegateEvents` 方法，并且通过 `renderEffect` 创建细粒度的响应式更新。
-
-> 更多 Vue Vapor 的源码细节且听下回（~~也不一定~~）分解。
+Vapor Mode 编译结果和 Solid 十分相似，同样是引入 `template` 函数创建真实 DOM 节点，新增事件委托 `delegateEvents` 方法，并且通过 `renderEffect` 创建细粒度的响应式更新。后面有机会我们再研究 Vue Vapor 源码（~~挖坑~~）。
 
 ## 结语
 
 近期有一款全新的前端框架面世 —— [_Ripple_](https://www.ripplejs.com/) —— 主打融合 React + Solid + Svelte，老外评论也纷纷表示“学不动了”（_"Why are we still here? Just to suffer?"_）。从前端框架的宏观趋势来看，响应式基本成为标配，重心慢慢从“运行时”向“编译时”倾斜。
 
-作为前端开发者，我对于前端框架还是喜闻乐见的。但在 AI 时代，React 凭借生态累积几乎成为“事实标准”。未来前端框架将何去何从，我不知道。欢迎 [Issue](https://github.com/wangshunnn/wangshunnn.github.io/issues) 留言讨论。
+作为前端开发者，我对于前端框架还是喜闻乐见的。但在 AI 时代，React 凭借生态累积几乎成为“事实标准”。未来前端框架又将何去何从呢？我不知道。
 
 ## 参考
 
