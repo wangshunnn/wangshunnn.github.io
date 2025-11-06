@@ -2,7 +2,7 @@
 import { data as blog, type Blog } from '../blog.data'
 
 const getYear = (a: Date | string | number) => new Date(a).getFullYear()
-const isFuture = (a?: Date | string | number) => a && new Date(a) > new Date()
+const isFuture = (a?: Date | string | number) => a === 'soon' || (a && new Date(a) > new Date())
 const isSameYear = (a?: Date | string | number, b?: Date | string | number) =>
   a && b && getYear(a) === getYear(b)
 
@@ -32,7 +32,7 @@ function getGroupName(p: Blog) {
       </div>
 
       <div>
-        <a :href="route.url" class="item !color-inherit !no-underline" font-normal block mb-8 op85 transition-transform-op
+        <a :href="isFuture(route.date.time) ? undefined : route.url" class="item !color-inherit !no-underline" font-normal block mb-8 op85 transition-transform-op
           hover="scale-101 op100">
           <li class="!no-underline" flex="~ col md:row gap-2 md:items-center">
             <div class="text-lg leading-1.2em title" flex="~ gap-2 wrap">
@@ -40,7 +40,7 @@ function getGroupName(p: Blog) {
             </div>
           </li>
 
-          <div mt-1.5 flex="~ gap-2 items-center">
+          <div v-if="!isFuture(route.date.time)" mt-1.5 flex="~ gap-2 items-center">
             <span text-sm op60 ws-nowrap>
               <span class="i-lets-icons:date-range-light"></span>
               {{ route.date.string }}
@@ -60,7 +60,7 @@ function getGroupName(p: Blog) {
             </span>
           </div>
 
-          <div v-if="route.tag" op60 text-sm mt-1.5 flex="~ gap-2 items-center" md:hidden>
+          <div v-if="route.tag && !isFuture(route.date.time)" op60 text-sm mt-1.5 flex="~ gap-2 items-center" md:hidden>
             <span rounded my-auto bg-zinc:50 text-xs pl-1.5 pr-2 py-0.4 rounded-full>
               <span class="i-mdi:tag-multiple-outline" mb-0.2 />
               {{ route.tag }}
