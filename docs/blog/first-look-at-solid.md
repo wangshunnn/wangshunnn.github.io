@@ -187,6 +187,8 @@ function template(html) {
 
 #### 返回真实 DOM
 
+React 组件返回的是虚拟 DOM（`React.createElement`），而且每次状态更新都会重新创建虚拟 DOM，最终通过 VDOM Diff 算法更新真实 DOM。Solid 组件只执行一次，直接返回真实 DOM（`_tmpl$()`），即使多次渲染组件实例也会通过克隆模板复用。
+
 ```jsx {4,11}
 // React（Virtual DOM）
 function Counter() {
