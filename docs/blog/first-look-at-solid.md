@@ -23,6 +23,15 @@ outline: [2,4]
 
 > Vue 3.6 另一大更新亮点 —— 基于 Alien Signals 的响应式性能重构 —— 可以移步[《Vue Signals 进化论（v3.6）：Alien Signals 终局之战？》](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)。
 
+## “最满意”框架
+
+下图是前端框架用户满意度统计数据，可见 [Solid](https://docs.solidjs.com/) 自 2021 年正式发布以来一直蝉联满意度榜首，紧随其后的是同为后浪但出道更早的 [Svelte](https://svelte.dev/)，大胆预测 Solid 今年继续卫冕。
+
+<figure>
+	<img src="/solid/front-framework-2024.png" alt="前端框架用户满意度统计" />
+	<figcaption>前端框架历年用户满意度统计</figcaption>
+</figure>
+
 ## 初见 Solid
 
 让我们先看一个基础的示例，展示了 Solid 如何实现响应式计数器组件。
