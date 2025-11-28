@@ -253,11 +253,44 @@ delegateEvents(["click"]);
 - 编译前：JSX 风格的事件绑定 `onClick={increment}`。
 - 编译后：直接通过属性赋值 `_el$.$$click = increment`。
 - 配合：插入 `delegateEvents(["click"])` 实现事件委托。
-- 优势：避免每个元素单独绑定事件，减少内存占用。
 
-#### 全局事件委托
+#### 事件绑定
 
-编译后顶层多了一行 `delegateEvents(["click"])`。我们先看看 `delegateEvents` 函数源码：
+事件处理器会直接绑定到 DOM 属性上，这样在前面的 `eventHandler` 中就能通过 `node[key]` 访问到。
+
+```js
+_el$.$$click = increment;
+```
+
+另外，当需要传入自定义数据时，Solid 支持数组语法糖来优化性能。如下所示，数组第二个元素将作为事件处理函数的第一个参数。
+
+```jsx
+const handler = (data, event) => {
+  console.log("Data:", data, "Event:", event);
+};
+
+// [!code ++] Solid 语法糖
+<button onClick={[handler, "Hello!"]}> Click </button>;
+// [!code --] 等效写法1
+<button onClick={handler.bind(null, "Hello!")}> Click </button>
+// [!code --] 等效写法2
+<button onClick={() => handler("Hello!")}> Click </button>
+```
+
+编译后会得到：
+
+```js
+_el$.$$click = increment;
+_el$.$$clickData = 'Hello!';
+```
+
+这样就避免了使用 `bind` 或箭头函数的额外开销。
+
+#### 合成事件委托
+
+Solid 并不会为每个元素单独注册事件监听器，而是采用**合成事件委托**（Synthetic Event Delegation）机制。
+
+你可能已经注意到，前面编译后代码顶层会多一行 `delegateEvents(["click"])`，事件处理秘密就藏在这个方法里。其源码如下：
 
 ```js {7}
 function delegateEvents(eventNames, document = window.document) {
@@ -272,9 +305,11 @@ function delegateEvents(eventNames, document = window.document) {
 }
 ```
 
-可见，`delegateEvents(eventNames)` 会在 `document` 层级为每个 `eventNames` 中的事件类型调用 `addEventListener`，这样全局只会注册**一个**统一的事件处理器 `eventHandler`。相比为每个元素单独绑定事件处理器，大幅减少了监听器数量和内存开销。
+可见，`delegateEvents(eventNames)` 会在 `document` 层级为每个 `eventNames` 中的事件类型仅注册一次事件监听，比如只有一个 `document.addEventListener('click', eventHandler)`。
 
-`eventHandler` 函数源码简化如下。
+那么问题来了，Solid 怎么定位具体哪个元素的事件绑定呢？
+
+让我们再看看 `eventHandler` 函数的源码（简化）：
 
 ```js {3,6,8,11}
 function eventHandler(e) {
@@ -299,17 +334,20 @@ function eventHandler(e) {
 
 核心思想：通过事件冒泡机制，从事件目标节点开始，沿着 DOM 树向上遍历查找绑定了对应事件处理器属性（例如 `.$$click`）的节点并执行。
 
-#### 事件处理器绑定
+通过「事件处理器绑定」+「合成事件委托」，Solid 实现了高效的事件处理机制，减少运行时的监听器和开销。
 
-事件处理器会直接绑定到 DOM 属性上，这样在前面的 `eventHandler` 中就能通过 `node[key]` 访问到。
+#### 原生事件
 
-```js
-_el$.$$click = increment;
-// 如果有自定义参数，会绑定到 `.$$clickData` 属性
-_el$.$$clickData = data;
+有些场景下使用原生事件绑定更合适，Solid 也支持通过 `on:xxx` 语法糖（多了个冒号）在具体元素上绑定原生事件监听器。
+
+```jsx
+<div on:customEvent={handleCustomEvent} />
 ```
 
-通过「事件处理器绑定」+「全局事件委托」，Solid 实现了高效的事件处理机制，减少运行时监听器和开销。
+主要应用在以下使用场景：
+
+1. 针对 Solid 内置不支持的自定义事件类型。
+2. 需要使用 `event.stopPropagation()` 来阻止事件冒泡。因为合成事件委托是绑定到了 `document`，所以 `event.stopPropagation()` 不会按预期在具体元素上生效。
 
 ### 响应式内容插入
 
