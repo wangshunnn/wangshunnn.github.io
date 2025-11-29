@@ -116,7 +116,7 @@ const count = ref(1)
 
   _相比 Vue 组件层级响应式，Solid 精确到最细粒度的 DOM 层级，实现更极致的性能。_
 
-## 编译时转换模板
+## 编译时转换
 
 下图是 Solid 函数式组件（`Counter`）编译前后的代码 Diff：
 
