@@ -19,9 +19,9 @@ outline: [2,4]
 
 ## 前言
 
-坦白讲，在准备写这篇文章之前，我其实完全没看过一点 Solid 源码，也完全没有过使用经验。学习的契机其实是源于 Vue 3.6 即将引入的 Vue Vapor 无虚拟 DOM 设计 ———— 正是受 Solid 启发。
+坦白讲，在准备写这篇文章之前，我其实完全没看过一点 Solid 源码，也完全没有过使用经验。学习的契机其实源于 Vue 3.6 即将引入的 Vue Vapor Mode —— 正是受 Solid 启发。
 
-> Vue 3.6 另一大更新亮点 —— 基于 Alien Signals 的响应式性能重构 —— 可以移步[《Vue Signals 进化论（v3.6）：Alien Signals 终局之战？》](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)。
+> _Vue 3.6 另一大更新亮点 —— 基于 Alien Signals 的响应式重构 —— 可以移步[《Vue Signals 进化论（v3.6）：Alien Signals 终局之战？》](https://soonwang.me/blog/vue-reactivity-3.6-alien-signals)。_
 
 ## “最满意”框架
 
