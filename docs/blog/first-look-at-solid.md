@@ -25,7 +25,7 @@ outline: [2,4]
 
 ## “最满意”框架
 
-下图是前端框架用户满意度统计数据，可见 [Solid](https://docs.solidjs.com/) 自 2021 年正式发布以来一直蝉联满意度榜首，紧随其后的是同为后浪但出道更早的 [Svelte](https://svelte.dev/)，大胆预测 Solid 今年继续卫冕。
+下图是前端框架用户满意度统计数据（[来源](https://2024.stateofjs.com/en-US/libraries/front-end-frameworks/)），可见 [Solid](https://docs.solidjs.com/) 自 2021 年正式发布以来一直蝉联满意度榜首，紧随其后的是同为后浪但出道更早的 [Svelte](https://svelte.dev/)，大胆预测 Solid 今年继续卫冕。
 
 <figure>
 	<img src="/solid/front-framework-2024.png" alt="前端框架用户满意度统计" />
