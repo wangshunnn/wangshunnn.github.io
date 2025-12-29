@@ -1,6 +1,5 @@
-.vp-doc a[href^="https://play.vuejs.org"]:before,
-.vp-doc a[href^="https://playground.solidjs.com"]:before
-{
+.vp-doc a[href^='https://play.vuejs.org']:before,
+.vp-doc a[href^='https://playground.solidjs.com']:before {
   content: '▶';
   width: 20px;
   height: 20px;
