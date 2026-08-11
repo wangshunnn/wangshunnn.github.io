@@ -1,9 +1,32 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, provide } from 'vue'
+import { nextTick, onMounted, onUnmounted, provide, watch } from 'vue'
 import { useData } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 
-const { isDark } = useData()
+const { isDark, page } = useData()
+
+const articleEnterClass = 'article-enter-content'
+
+async function updateArticleTransition() {
+  if (typeof document === 'undefined')
+    return
+
+  await nextTick()
+
+  const content = document.querySelector<HTMLElement>('.vp-doc')
+  if (!content)
+    return
+
+  content.classList.remove(articleEnterClass)
+  if (!page.value.relativePath.startsWith('blog/'))
+    return
+
+  // Force a reflow so the animation restarts after client-side navigation.
+  void content.offsetWidth
+  content.classList.add(articleEnterClass)
+}
+
+watch(() => page.value.relativePath, updateArticleTransition)
 
 function enableTransitions() {
   return 'startViewTransition' in document
@@ -68,6 +91,8 @@ const handleScroll = function () {
 const shouldListen = typeof window !== 'undefined' && window.innerWidth >= 960
 
 onMounted(() => {
+  updateArticleTransition()
+
   if (shouldListen) {
     nav = document.querySelector('.VPNav')
     localNav = document.querySelector('.VPLocalNav')

@@ -36,33 +36,30 @@ function getGroupName(p: Blog) {
           hover="scale-101 op100">
           <li class="!no-underline" flex="~ col md:row gap-2 md:items-center">
             <div class="text-lg leading-1.2em title" flex="~ gap-2 wrap">
-              <span align-middle text-rainbow>{{ route.title }}</span>
+              <span class="blog-title" align-middle>{{ route.title }}</span>
             </div>
           </li>
 
-          <div v-if="!isFuture(route.date.time)" mt-1.5 flex="~ gap-2 items-center">
+          <div v-if="!isFuture(route.date.time)" mt-1.5 flex="~ items-center wrap">
             <span text-sm op60 ws-nowrap>
-              <span class="i-lets-icons:date-range-light"></span>
               {{ route.date.string }}
             </span>
             <span v-if="route.duration" text-sm op50 ws-nowrap>
-              <span class="i-icon-park-outline:tea-drink"></span>
+              <span aria-hidden="true" mx-1.5 op60>·</span>
               {{ route.duration }}
             </span>
             <span v-if="route.place" text-sm op50 ws-nowrap>
-              <span class="i-ic:outline-place"></span>
+              <span aria-hidden="true" mx-1.5 op60>·</span>
               {{ route.place }}
             </span>
-            <span v-if="route.tag" text-sm op50 ws-nowrap hidden md:block bg-zinc:50 text-xs pl-1.5 pr-2 py-0.4
+            <span v-if="route.tag" text-sm op50 ws-nowrap hidden md:block bg-zinc:50 text-xs ml-2 px-2 py-0.4
               rounded-full>
-              <span class="i-mdi:tag-multiple-outline" />
               {{ route.tag }}
             </span>
           </div>
 
           <div v-if="route.tag && !isFuture(route.date.time)" op60 text-sm mt-1.5 flex="~ gap-2 items-center" md:hidden>
-            <span rounded my-auto bg-zinc:50 text-xs pl-1.5 pr-2 py-0.4 rounded-full>
-              <span class="i-mdi:tag-multiple-outline" mb-0.2 />
+            <span rounded my-auto bg-zinc:50 text-xs px-2 py-0.4 rounded-full>
               {{ route.tag }}
             </span>
           </div>
