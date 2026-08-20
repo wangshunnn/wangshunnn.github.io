@@ -38,15 +38,17 @@ aside: false
 <span left-29 absolute font-monospace italic color-gray-500>2023.07</span >
 <span left-58 absolute >[<IconMeituan w4.5 h4.5 inline-block align-sub op75 pb-0.2 /> 美团](https://www.meituan.com/)</span><br>
 
-Web 端、PC 桌面端、小程序工作经验 <br>
-技术栈：JS, TS, Vue, React, Node, Electron
-
-<!-- 热爱开源，热爱生活<br> -->
-编程之外，喜欢音乐、动漫、FPS 游戏 ..
-
 <br>
 
---- 
+AI 时代坚持手写博客。<br>
 
-[<span i-simple-icons-github w4 h4 pb-5 op75 />](https://github.com/wangshunnn/)&nbsp;&nbsp;[<span i-simple-icons-juejin w4 h4 pb-5 op80 />](https://juejin.cn/user/2129123907471864/posts)&nbsp;&nbsp;[<span i-simple-icons-leetcode w4 h4 pb-5 op75 />](https://leetcode.cn/u/soon-8)&nbsp;&nbsp;[<span i-simple-icons-zhihu w4 h4 pb-5 op70 />](https://www.zhihu.com/people/wangshunnn)&nbsp;&nbsp;[<span i-simple-icons-x w4 h4 pb-5 op75 />](https://twitter.com/wangshunnn)
+<Typewriter prefix="编程之外，喜欢 " :items="['音乐', '动漫', 'FPS 游戏']" />
+
+<br>
+<br>
+<br>
+
+---
+
+[<span i-simple-icons-github w4 h4 pb-5 op75 />](https://github.com/wangshunnn/)&nbsp;&nbsp;[<span i-simple-icons-juejin w4 h4 pb-5 op80 />](https://juejin.cn/user/2129123907471864/posts)&nbsp;&nbsp;[<span i-simple-icons-zhihu w4 h4 pb-5 op70 />](https://www.zhihu.com/people/wangshunnn)&nbsp;&nbsp;[<span i-simple-icons-x w4 h4 pb-5 op75 />](https://twitter.com/wangshunnn)
 </div>

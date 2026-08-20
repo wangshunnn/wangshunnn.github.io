@@ -6,6 +6,7 @@ import busuanzi from 'busuanzi.pure.js'
 import TwoslashFloatingVue from '@shikijs/vitepress-twoslash/client'
 import CustomLayout from './components/CustomLayout.vue'
 import BlogHome from './components/BlogHome.vue'
+import Typewriter from './components/Typewriter.vue'
 import IconMeituan from './components/icons/IconMeituan.vue'
 
 import './styles/index.css'
@@ -20,6 +21,7 @@ export default {
   enhanceApp({ app, router }) {
     app.use(TwoslashFloatingVue)
     app.component('BlogHome', BlogHome)
+    app.component('Typewriter', Typewriter)
     app.component('IconMeituan', IconMeituan)
     if (inBrowser) {
       router.onAfterRouteChange = () => {
