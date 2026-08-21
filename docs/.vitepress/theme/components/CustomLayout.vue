@@ -43,47 +43,69 @@ provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
     return
   }
 
-  const clipPath = [
-    `circle(0px at ${x}px ${y}px)`,
-    `circle(${Math.hypot(
-      Math.max(x, innerWidth - x),
-      Math.max(y, innerHeight - y),
-    )}px at ${x}px ${y}px)`,
-  ]
-
-  await (document as Document).startViewTransition(async () => {
-    isDark.value = !isDark.value
-    await nextTick()
-  }).ready
-
-  document.documentElement.animate(
-    { clipPath: isDark.value ? clipPath.reverse() : clipPath },
-    {
-      duration: 300,
-      easing: 'ease-in',
-      fill: 'forwards',
-      pseudoElement: `::view-transition-${isDark.value ? 'old' : 'new'}(root)`,
-    },
+  const root = document.documentElement
+  const nextIsDark = !isDark.value
+  const radius = Math.hypot(
+    Math.max(x, innerWidth - x),
+    Math.max(y, innerHeight - y),
   )
-})
 
-// slideObeserver.run()
-// onUnmounted(()=>{
-//   slideObeserver.stop()
-// })
+  root.dataset.themeTransition = nextIsDark ? 'to-dark' : 'to-light'
+  root.style.setProperty('--theme-transition-x', `${x}px`)
+  root.style.setProperty('--theme-transition-y', `${y}px`)
+  root.style.setProperty('--theme-transition-radius', `${radius}px`)
+
+  const transition = (document as Document).startViewTransition(async () => {
+    isDark.value = nextIsDark
+    await nextTick()
+  })
+  let animation: Animation | undefined
+
+  try {
+    await transition.ready
+
+    animation = root.animate(
+      {
+        clipPath: nextIsDark
+          ? [
+            `circle(${radius}px at ${x}px ${y}px)`,
+            `circle(0px at ${x}px ${y}px)`,
+          ]
+          : [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${radius}px at ${x}px ${y}px)`,
+          ],
+      },
+      {
+        duration: 300,
+        easing: 'ease-in',
+        fill: 'forwards',
+        pseudoElement: `::view-transition-${nextIsDark ? 'old' : 'new'}(root)`,
+      },
+    )
+
+    await animation.finished
+  } finally {
+    await transition.finished.catch(() => {})
+    animation?.cancel()
+    delete root.dataset.themeTransition
+    root.style.removeProperty('--theme-transition-x')
+    root.style.removeProperty('--theme-transition-y')
+    root.style.removeProperty('--theme-transition-radius')
+  }
+})
 
 let nav: Element | null
 let localNav: Element | null
 let prevScrollY = 0
 const handleScroll = function () {
-  let currentScrollY = window.scrollY
-  if (currentScrollY > prevScrollY) {
+  const currentScrollY = window.scrollY
+  if (currentScrollY > prevScrollY && currentScrollY > 80) {
     nav?.classList?.add('nav-hidden')
     localNav?.classList?.add('local-nav-hidden')
   } else {
     nav?.classList?.remove('nav-hidden')
     localNav?.classList?.remove('local-nav-hidden')
-
   }
   prevScrollY = currentScrollY
 }

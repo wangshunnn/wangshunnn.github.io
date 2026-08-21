@@ -15,6 +15,17 @@
   z-index: 9999;
 }
 
+:root[data-theme-transition='to-light']::view-transition-new(root) {
+  clip-path: circle(0 at var(--theme-transition-x) var(--theme-transition-y));
+}
+
+:root.dark[data-theme-transition='to-dark']::view-transition-old(root) {
+  clip-path: circle(
+    var(--theme-transition-radius) at var(--theme-transition-x)
+      var(--theme-transition-y)
+  );
+}
+
 .VPSwitchAppearance {
   width: 22px !important;
 }
