@@ -14,7 +14,6 @@
   --paper-edge: #ece8de;
   --paper-grain-opacity: 0.035;
   --paper-grain-blend: multiply;
-  --paper-footer-text: rgba(53, 52, 49, 0.56);
 
   --vp-c-bg: var(--paper-surface);
   --vp-c-bg-alt: var(--paper-surface-alt);
@@ -32,7 +31,6 @@
   --paper-edge: #181817;
   --paper-grain-opacity: 0.055;
   --paper-grain-blend: soft-light;
-  --paper-footer-text: rgba(235, 235, 235, 0.52);
 }
 
 html {
@@ -91,7 +89,7 @@ body {
 }
 
 .VPFooter .copyright {
-  color: var(--paper-footer-text) !important;
+  color: var(--site-ink-faint) !important;
   font-size: 12px !important;
   font-weight: 400 !important;
   line-height: 20px !important;

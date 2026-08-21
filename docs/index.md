@@ -1,6 +1,7 @@
 ---
 title: My Blog
 aside: false
+outline: false
 lastUpdated: false
 ---
 

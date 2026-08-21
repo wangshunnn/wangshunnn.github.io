@@ -1,0 +1,55 @@
+/* Semantic design tokens and their VitePress mappings. */
+
+:root {
+  --site-ink: #353431;
+  --site-ink-muted: #6b6861;
+  --site-ink-faint: #817d75;
+  --site-accent: #7a6848;
+  --site-accent-hover: #5f5138;
+  --site-accent-strong: #4b402e;
+  --site-accent-soft: rgba(122, 104, 72, 0.11);
+  --site-rule: rgba(53, 52, 49, 0.14);
+  --site-rule-soft: rgba(53, 52, 49, 0.08);
+  --site-code: #765a4d;
+  --site-code-bg: rgba(122, 104, 72, 0.09);
+  --site-chip-bg: rgba(53, 52, 49, 0.055);
+  --site-chip-border: rgba(53, 52, 49, 0.08);
+  --site-year-stroke: rgba(92, 84, 70, 0.32);
+
+  --vp-font-family-base:
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --vp-font-family-mono:
+    'SFMono-Regular', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+
+  --vp-c-text-1: var(--site-ink);
+  --vp-c-text-2: var(--site-ink-muted);
+  --vp-c-text-3: var(--site-ink-faint);
+  --vp-c-brand-1: var(--site-accent);
+  --vp-c-brand-2: var(--site-accent-hover);
+  --vp-c-brand-3: var(--site-accent-strong);
+  --vp-c-brand-soft: var(--site-accent-soft);
+  --vp-c-divider: var(--site-rule);
+  --vp-c-gutter: var(--site-rule);
+  --vp-code-color: var(--site-code);
+  --vp-code-bg: var(--site-code-bg);
+  --vp-code-link-color: var(--site-accent);
+  --vp-code-link-hover-color: var(--site-accent-hover);
+}
+
+.dark {
+  --site-ink: #dfddd4;
+  --site-ink-muted: #aaa69c;
+  --site-ink-faint: #858179;
+  --site-accent: #b7a17a;
+  --site-accent-hover: #d0bd94;
+  --site-accent-strong: #e0d0ac;
+  --site-accent-soft: rgba(183, 161, 122, 0.13);
+  --site-rule: rgba(223, 221, 212, 0.13);
+  --site-rule-soft: rgba(223, 221, 212, 0.075);
+  --site-code: #c3a99e;
+  --site-code-bg: rgba(195, 169, 158, 0.1);
+  --site-chip-bg: rgba(223, 221, 212, 0.065);
+  --site-chip-border: rgba(223, 221, 212, 0.09);
+  --site-year-stroke: rgba(207, 198, 181, 0.28);
+}
