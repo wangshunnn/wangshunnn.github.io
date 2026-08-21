@@ -173,8 +173,7 @@ export default defineConfig({
     ],
 
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: `Copyright © 2023-${new Date().getFullYear()} Soon Wang`
+      copyright: `© 2023–${new Date().getFullYear()} Soon Wang · <a href="https://github.com/wangshunnn/wangshunnn.github.io/blob/main/LICENSE">MIT License</a>`
     },
 
     // i18n

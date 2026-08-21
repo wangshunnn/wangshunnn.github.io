@@ -1,0 +1,138 @@
+/*
+ * A quiet paper-like backdrop inspired by Earendil's reading surface.
+ * The gradients provide depth while the static grain keeps the page from
+ * feeling digitally flat. Both layers stay behind the VitePress layout.
+ */
+
+:root {
+  --paper-surface: #faf9f6;
+  --paper-surface-alt: #f3f0e9;
+  --paper-surface-elv: #fffefa;
+  --paper-surface-soft: #f1eee7;
+  --paper-center: #faf9f6;
+  --paper-middle: #f6f3ec;
+  --paper-edge: #ece8de;
+  --paper-grain-opacity: 0.035;
+  --paper-grain-blend: multiply;
+  --paper-footer-text: rgba(53, 52, 49, 0.56);
+
+  --vp-c-bg: var(--paper-surface);
+  --vp-c-bg-alt: var(--paper-surface-alt);
+  --vp-c-bg-elv: var(--paper-surface-elv);
+  --vp-c-bg-soft: var(--paper-surface-soft);
+}
+
+.dark {
+  --paper-surface: #232321;
+  --paper-surface-alt: #191918;
+  --paper-surface-elv: #2a2927;
+  --paper-surface-soft: #2a2927;
+  --paper-center: #2e2d2b;
+  --paper-middle: #242321;
+  --paper-edge: #181817;
+  --paper-grain-opacity: 0.055;
+  --paper-grain-blend: soft-light;
+  --paper-footer-text: rgba(235, 235, 235, 0.52);
+}
+
+html {
+  background-color: var(--paper-edge);
+}
+
+body {
+  background-color: transparent;
+}
+
+#app {
+  position: relative;
+  z-index: 0;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+#app::before,
+#app::after {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+}
+
+#app::before {
+  z-index: -2;
+  background:
+    radial-gradient(
+      ellipse 82% 118% at 50% 42%,
+      var(--paper-center) 0%,
+      var(--paper-center) 42%,
+      var(--paper-middle) 68%,
+      var(--paper-edge) 100%
+    ),
+    var(--paper-edge);
+}
+
+#app::after {
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.55'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  mix-blend-mode: var(--paper-grain-blend);
+  opacity: var(--paper-grain-opacity);
+}
+
+.VPFooter {
+  border-top: 0 !important;
+  padding: 28px 24px 32px !important;
+  background-color: transparent !important;
+}
+
+.VPFooter .container {
+  max-width: 760px !important;
+}
+
+.VPFooter .copyright {
+  color: var(--paper-footer-text) !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  letter-spacing: 0.025em;
+}
+
+.VPFooter .copyright a {
+  color: inherit;
+  text-decoration-line: underline !important;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.2em !important;
+  transition: color 0.2s ease;
+}
+
+.VPFooter .copyright a:hover {
+  color: var(--vp-c-text-1);
+}
+
+@media (max-width: 640px) {
+  #app::before {
+    background:
+      radial-gradient(
+        ellipse 120% 105% at 50% 38%,
+        var(--paper-center) 0%,
+        var(--paper-center) 45%,
+        var(--paper-middle) 72%,
+        var(--paper-edge) 100%
+      ),
+      var(--paper-edge);
+  }
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  #app::before,
+  #app::after {
+    display: none;
+  }
+}

@@ -22,9 +22,33 @@ aside: false
     width: 13% !important
   }
 }
+
+.about-name {
+  position: relative;
+  display: inline-block;
+  color: var(--vp-c-text-1);
+  letter-spacing: -0.025em;
+}
+
+.about-name::after {
+  position: absolute;
+  bottom: -0.18em;
+  left: 0.04em;
+  width: 2.25rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--vt-c-brand);
+  opacity: 0.72;
+  content: '';
+}
+
+.dark .about-name::after {
+  background: var(--vt-c-brand-light);
+  opacity: 0.62;
+}
 </style>
 
-<H1><span text-rainbow>Soon Wang</span></H1>
+<h1><span class="about-name">Soon Wang</span></h1>
 
 <br>
 <div class='soon'>
