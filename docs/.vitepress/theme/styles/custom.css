@@ -32,10 +32,56 @@
 /*
   导航栏粘附效果
 */
+.VPNav .VPNavBar,
+.VPNav .VPNavBar .content-body {
+  background-color: transparent !important;
+}
+
+.VPNavBar .divider {
+  display: none;
+}
+
+.VPNav .VPNavBar {
+  border-bottom: 0 !important;
+}
+
+.VPNav .VPNavBar.screen-open {
+  border-bottom: 0 !important;
+  background-color: var(--paper-surface) !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.VPLocalNav {
+  border-bottom: 0 !important;
+}
+
+.DocSearch-Button .DocSearch-Button-Placeholder,
+.DocSearch-Button .DocSearch-Button-Keys {
+  display: none !important;
+}
+
+.VPSocialLink[aria-label='x'] > .vpi-social-x {
+  width: 17px;
+  height: 17px;
+}
+
+@media (min-width: 768px) {
+  .DocSearch-Button .DocSearch-Search-Icon {
+    margin-right: 0;
+  }
+}
+
 @media (min-width: 960px) {
   .VPNav {
     position: sticky !important;
   }
+
+  .VPLocalNav {
+    background-color: transparent !important;
+    transition: top 0.2s ease;
+  }
+
   .nav-hidden {
     transform: translate3d(0, calc(-100% - 2px), 0);
   }

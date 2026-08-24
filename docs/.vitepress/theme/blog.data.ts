@@ -38,10 +38,10 @@ function formatDate(raw: string): Blog['date'] {
   const date = new Date(raw)
   return {
     time: +date,
-    string: date.toLocaleDateString('en-US', {
-      // year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
+    string: [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0')
+    ].join('-')
   }
 }

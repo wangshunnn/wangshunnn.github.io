@@ -110,12 +110,9 @@ export default defineConfig({
   themeConfig: {
     siteTitle: '',
 
-    logo: { src: '/logo.png', width: 24, height: 24 },
+    logo: { src: '/logo.png', alt: '首页', width: 24, height: 24 },
 
-    nav: [
-      { text: '博客', activeMatch: '^/($|blog/)', link: '/index' },
-      { text: '关于', activeMatch: '^/about/', link: '/about/index' }
-    ],
+    nav: [{ text: '关于', activeMatch: '^/about/', link: '/about/index' }],
 
     search: {
       // provider: 'algolia',
