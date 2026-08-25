@@ -67,8 +67,6 @@ const readingTime = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0 0 2rem;
-  padding-top: 0.375rem;
   color: var(--site-ink-faint);
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
@@ -87,8 +85,6 @@ const readingTime = computed(() => {
 
 @media (max-width: 640px) {
   .article-meta {
-    margin-bottom: 1.75rem;
-    padding-top: 0.25rem;
     font-size: 0.6875rem;
   }
 }
