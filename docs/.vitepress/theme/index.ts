@@ -7,6 +7,7 @@ import TwoslashFloatingVue from '@shikijs/vitepress-twoslash/client'
 import CustomLayout from './components/CustomLayout.vue'
 import BlogHome from './components/BlogHome.vue'
 import Typewriter from './components/Typewriter.vue'
+import ArticleMeta from './components/ArticleMeta.vue'
 import IconMeituan from './components/icons/IconMeituan.vue'
 
 import './styles/index.css'
@@ -22,6 +23,7 @@ export default {
     app.use(TwoslashFloatingVue)
     app.component('BlogHome', BlogHome)
     app.component('Typewriter', Typewriter)
+    app.component('ArticleMeta', ArticleMeta)
     app.component('IconMeituan', IconMeituan)
     if (inBrowser) {
       router.onAfterRouteChange = () => {

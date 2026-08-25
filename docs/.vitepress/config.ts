@@ -99,7 +99,26 @@ export default defineConfig({
   markdown: {
     theme: { light: 'github-light', dark: 'github-dark' },
     // @ts-expect-error ignore
-    codeTransformers: [transformerTwoslash()]
+    codeTransformers: [transformerTwoslash()],
+    config(md) {
+      const renderHeadingClose = md.renderer.rules.heading_close
+
+      md.renderer.rules.heading_close = (tokens, index, options, env, self) => {
+        const rendered = renderHeadingClose
+          ? renderHeadingClose(tokens, index, options, env, self)
+          : self.renderToken(tokens, index, options)
+
+        const isArticleTitle =
+          tokens[index].tag === 'h1' &&
+          env.relativePath?.startsWith('blog/') &&
+          !env.articleMetaInjected
+
+        if (!isArticleTitle) return rendered
+
+        env.articleMetaInjected = true
+        return `${rendered}<ArticleMeta />\n`
+      }
+    }
   },
 
   vite: {
