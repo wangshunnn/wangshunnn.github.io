@@ -6,11 +6,28 @@ import sharp from 'sharp'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { i18n, localSearchTranslations } from './const'
 import juejinSVG from './theme/components/icons/juejin.svg'
-import { splitTextByWidth } from './utils'
 
 const ogUrl = 'https://soonwang.me/'
+const ogWidth = 1200
+const ogHeight = 630
 const title = 'Soon Wang'
 const description = 'Welcome to my personal website'
+
+interface OgImageOptions {
+  title: string
+  description: string
+  watermark: string
+  footerNote: string
+}
+
+interface OgPageData {
+  title: string
+  description?: string
+  relativePath: string
+  frontmatter?: Record<string, unknown>
+}
+
+const ogImageJobs = new Map<string, { signature: string; job: Promise<void> }>()
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -23,74 +40,27 @@ export default defineConfig({
       { rel: 'icon', href: '/logo.png', type: 'image/png', sizes: '16x16' }
     ],
     ['meta', { name: 'author', content: title }],
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: title }],
-    ['meta', { property: 'og:description', content: description }],
-    [
-      'meta',
-      { property: 'og:image', content: 'https://soonwang.me/og/index.png' }
-    ],
-    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:title', content: title }],
-    ['meta', { name: 'twitter:description', content: description }],
-    [
-      'meta',
-      { name: 'twitter:image', content: 'https://soonwang.me/og/index.png' }
-    ],
-    ['meta', { name: 'twitter:site', content: '@wangshunnn' }]
+    ['meta', { name: 'twitter:site', content: '@wangshunnn' }],
+    ['meta', { name: 'twitter:creator', content: '@wangshunnn' }]
   ],
 
   // for prod
   async transformHead({ pageData }) {
-    const ogTitle = pageData.title || title
-    const ogDescription = pageData.description || ''
-    const date = pageData.frontmatter?.date || ''
-    const relativePath = pageData.relativePath
+    const pageOg = getPageOg(pageData)
+    if (!pageOg) return
 
-    if (relativePath === 'index.md' || relativePath === '404.md') {
-      return
-    }
-
-    let pagePathName =
-      relativePath.split('/').at(-1)?.replace(/\.md$/, '') || 'index'
-    if (pagePathName === 'index') {
-      pagePathName =
-        relativePath.split('/').at(-2)?.replace(/\.md$/, '') || 'index'
-    }
-
-    const ogImage = `${ogUrl}og/${pagePathName}.png`
-    // console.log('relativePath', relativePath, pagePathName, ogTitle)
-    const output = path.resolve(__dirname, `../public/og/${pagePathName}.png`)
-    if (!fse.existsSync(output)) {
-      generateOg(output, { title: ogTitle, description: ogDescription, date })
-    }
-
-    return [
-      ['meta', { property: 'og:title', content: ogTitle }],
-      ['meta', { property: 'og:description', content: ogDescription }],
-      ['meta', { property: 'og:image', content: ogImage }],
-      ['meta', { name: 'twitter:title', content: ogTitle }],
-      ['meta', { name: 'twitter:description', content: ogDescription }],
-      ['meta', { name: 'twitter:image', content: ogImage }]
-    ]
+    await ensureOgImage(pageOg.output, pageOg.imageOptions)
+    return createSocialHead(pageOg)
   },
 
   // for dev
-  transformPageData(pageData) {
-    const ogTitle = pageData.title || title
-    const ogDescription = pageData.description || description
-    const relativePath = pageData.relativePath || 'index'
-    const pagePathName = relativePath.split('/').at(-1)?.replace(/\.md$/, '')
-    const ogImage = `${ogUrl}og/${pagePathName}.png`
+  async transformPageData(pageData) {
+    const pageOg = getPageOg(pageData)
+    if (!pageOg) return
+
+    await ensureOgImage(pageOg.output, pageOg.imageOptions)
     pageData.frontmatter.head ??= []
-    pageData.frontmatter.head.push(
-      ['meta', { property: 'og:title', content: ogTitle }],
-      ['meta', { property: 'og:description', content: ogDescription }],
-      ['meta', { property: 'og:image', content: ogImage }],
-      ['meta', { name: 'twitter:title', content: ogTitle }],
-      ['meta', { name: 'twitter:description', content: ogDescription }],
-      ['meta', { name: 'twitter:image', content: ogImage }]
-    )
+    pageData.frontmatter.head.push(...createSocialHead(pageOg))
   },
 
   lastUpdated: false,
@@ -204,52 +174,170 @@ export default defineConfig({
   }
 })
 
+function getPageOg(pageData: OgPageData) {
+  const relativePath = pageData.relativePath || 'index.md'
+  if (relativePath === '404.md') return
+
+  const isHome = relativePath === 'index.md'
+  const isArticle = relativePath.startsWith('blog/')
+  const pageTitle = isHome ? title : pageData.title || title
+  const pageDescription = pageData.description || (isHome ? description : '')
+  const date = String(pageData.frontmatter?.date || '')
+  const pagePathName = getOgFileName(relativePath)
+  const image = `${ogUrl}og/${pagePathName}.png`
+  const watermark = getDateYear(date) || 'BLOG'
+  const footerNote = date ? formatOgDate(date).toUpperCase() : ''
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    image,
+    imageAlt: `${pageTitle} — ${pageDescription || 'Soon Wang'}`,
+    pageUrl: getPageUrl(relativePath),
+    type: isArticle ? 'article' : 'website',
+    output: path.resolve(__dirname, `../public/og/${pagePathName}.png`),
+    imageOptions: {
+      title: pageTitle,
+      description: pageDescription,
+      watermark,
+      footerNote
+    } satisfies OgImageOptions
+  }
+}
+
+function getOgFileName(relativePath: string) {
+  const segments = relativePath.replace(/\.md$/, '').split('/')
+  const name = segments.at(-1) === 'index' ? segments.at(-2) : segments.at(-1)
+  return name || 'index'
+}
+
+function getPageUrl(relativePath: string) {
+  if (relativePath === 'index.md') return ogUrl
+
+  const route = relativePath.replace(/\.md$/, '').replace(/(^|\/)index$/, '$1')
+  return new URL(route, ogUrl).toString()
+}
+
+function createSocialHead({
+  title: pageTitle,
+  description: pageDescription,
+  image,
+  imageAlt,
+  pageUrl,
+  type
+}: NonNullable<ReturnType<typeof getPageOg>>) {
+  return [
+    ['meta', { property: 'og:type', content: type }],
+    ['meta', { property: 'og:site_name', content: title }],
+    ['meta', { property: 'og:title', content: pageTitle }],
+    ['meta', { property: 'og:description', content: pageDescription }],
+    ['meta', { property: 'og:url', content: pageUrl }],
+    ['meta', { property: 'og:image', content: image }],
+    ['meta', { property: 'og:image:width', content: String(ogWidth) }],
+    ['meta', { property: 'og:image:height', content: String(ogHeight) }],
+    ['meta', { property: 'og:image:alt', content: imageAlt }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: pageTitle }],
+    ['meta', { name: 'twitter:description', content: pageDescription }],
+    ['meta', { name: 'twitter:image', content: image }],
+    ['meta', { name: 'twitter:image:alt', content: imageAlt }]
+  ]
+}
+
+async function ensureOgImage(output: string, options: OgImageOptions) {
+  const signature = JSON.stringify(options)
+  const previous = ogImageJobs.get(output)
+
+  if (previous?.signature === signature && fse.existsSync(output)) {
+    await previous.job
+    return
+  }
+
+  const job = (async () => {
+    await previous?.job
+    await generateOg(output, options)
+  })()
+  ogImageJobs.set(output, { signature, job })
+  await job
+}
+
 async function generateOg(
   output: string,
-  {
-    title = '',
-    description = '',
-    date = ''
-  }: {
-    title: string
-    description?: string
-    date?: string
-  }
+  { title, description, watermark, footerNote }: OgImageOptions
 ) {
-  const ogSVg = fse.readFileSync(
+  const ogSvg = fse.readFileSync(
     path.resolve(__dirname, '../public/og/template.svg'),
     'utf-8'
   )
-
   title = title.trim()
   description = description.trim()
-  let dateText = ''
-  if (date) {
-    dateText = new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
-
-  const titleLines = splitTextByWidth(title, 28, 2)
-  description = description ? splitTextByWidth(description, 56, 1)[0] : ''
+  const titleWidth = Math.max(getTextEmWidth(title), 1)
+  const titleFontSize = Math.min(52, Math.max(24, Math.floor(980 / titleWidth)))
 
   const data: Record<string, string> = {
-    title_line1: titleLines[0]?.replaceAll('&', '&amp;'),
-    title_line2: titleLines[1]?.replaceAll('&', '&amp;'),
-    description,
-    date: dateText
+    title: escapeXml(title),
+    title_font_size: String(titleFontSize),
+    watermark: escapeXml(watermark),
+    footer_note: escapeXml(footerNote)
   }
-  const svg = ogSVg.replace(/\{\{([^}]+)\}\}/g, (_, name) => data[name] || '')
+  const svg = ogSvg.replace(
+    /\{\{([^}]+)\}\}/g,
+    (_, name: string) => data[name] || ''
+  )
 
   console.log(`Generating og image: ${output}`)
   try {
     await sharp(Buffer.from(svg))
-      .resize(1200 * 1.1, 630 * 1.1)
-      .png()
+      .png({ compressionLevel: 9, adaptiveFiltering: true })
       .toFile(output)
   } catch (e) {
     console.error('Failed to generate og image', output, title, description, e)
+    throw e
   }
+}
+
+function getTextEmWidth(text: string) {
+  return [...text].reduce((width, char) => {
+    if (/[^\u0000-\u00ff]/.test(char)) return width + 1
+    if (char === ' ') return width + 0.32
+    if (/[A-Z0-9]/.test(char)) return width + 0.64
+    if (/[a-z]/.test(char)) return width + 0.53
+    return width + 0.5
+  }, 0)
+}
+
+function getDateYear(date: string) {
+  return date.match(/^(\d{4})/)?.[1] || ''
+}
+
+function formatOgDate(date: string) {
+  const match = date.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/)
+  if (!match) return date
+
+  const [, year, month, day] = match
+  const monthLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ]
+  const monthLabel = monthLabels[Number(month) - 1]
+  return monthLabel ? `${monthLabel} ${Number(day)}, ${year}` : date
+}
+
+function escapeXml(value = '') {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll(/'/g, '&apos;')
 }
