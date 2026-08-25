@@ -61,6 +61,10 @@
   display: none !important;
 }
 
+.DocSearch-Button:hover {
+  border-color: transparent;
+}
+
 .VPSocialLink[aria-label='x'] > .vpi-social-x {
   width: 17px;
   height: 17px;
