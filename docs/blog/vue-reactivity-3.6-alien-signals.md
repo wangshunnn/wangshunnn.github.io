@@ -13,10 +13,6 @@ outline: [2,3]
 
 <br/>
 
-> **✨ AI 摘要**
->
-> Vue 3.6 响应式系统将引入 Alien Signals 进一步优化性能。文章深入分析了响应式传播算法模型（Push、Pull、Push-pull），对比了 Preact Signals（Vue 3.5）与 Alien Signals 的实现差异。Alien Signals 延续优化的双向链表结构，实现了类似 Reactively 的 push-pull-push 混合模型。这种设计大幅提升了性能，使其在信号框架性能测试中登顶榜首，为 Vue 响应式系统带来新的突破。
-
 ## 序言
 
 书接上回 ——《 [Vue Signals 进化论（v3.5）：Preact 重构启示录](https://soonwang.me/blog/vue-reactivity-3.5-preact-signals) 》。
