@@ -1,0 +1,7 @@
+# GitHub treats docs/ as documentation by default. Count the site's TypeScript
+# sources; articles, Vue templates and styles remain outside the language bar.
+docs/.vitepress/**/*.ts linguist-documentation=false
+
+# Generated output and caches are not source code, even if committed later.
+docs/.vitepress/dist/** linguist-generated=true
+docs/.vitepress/cache/** linguist-generated=true
