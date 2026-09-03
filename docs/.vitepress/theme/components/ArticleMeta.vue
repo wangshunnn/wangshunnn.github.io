@@ -67,6 +67,7 @@ const readingTime = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin: 1rem 0 2rem;
   color: var(--site-ink-faint);
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
