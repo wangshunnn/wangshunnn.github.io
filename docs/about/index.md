@@ -4,6 +4,18 @@ aside: false
 ---
 
 <style>
+.about-profile {
+  max-width: 43rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .about-profile {
+    /* Align with the homepage titles after the date column and its gap. */
+    padding-inline-start: calc(3rem + 1.75rem);
+  }
+}
+
 .about-name {
   position: relative;
   display: inline-block;
@@ -141,6 +153,8 @@ aside: false
 }
 </style>
 
+<div class="about-profile">
+
 <h1><span class="about-name">Soon Wang</span></h1>
 
 <div class="about-content">
@@ -184,4 +198,6 @@ aside: false
       <span class="about-social-icon i-simple-icons-x" aria-hidden="true"></span>
     </a>
   </nav>
+</div>
+
 </div>
