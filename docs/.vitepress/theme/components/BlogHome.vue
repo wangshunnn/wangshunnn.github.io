@@ -82,27 +82,9 @@ const groups = blog.reduce<BlogGroup[]>((result, post) => {
 .blog-index {
   --blog-date-width: 3rem;
   --blog-date-gap: 1.75rem;
-  --blog-date-rail: calc(var(--blog-date-width) + var(--blog-date-gap));
 
-  margin-inline-start: calc(2.5rem - var(--blog-date-rail));
-  padding-inline-start: var(--blog-date-rail);
-}
-
-@media (min-width: 960px) {
-  :global(.VPDoc:not(.has-sidebar) .content:has(.blog-index)) {
-    max-width: 47.5rem;
-    padding-inline: 0 2.25rem;
-  }
-
-  .blog-index {
-    margin-inline-start: 0;
-  }
-}
-
-@media (min-width: 1440px) {
-  :global(.VPDoc:not(.has-sidebar) .content:has(.blog-index)) {
-    max-width: 49.5rem;
-  }
+  max-width: 43rem;
+  margin-inline: auto;
 }
 
 .blog-empty {
@@ -123,7 +105,7 @@ const groups = blog.reduce<BlogGroup[]>((result, post) => {
 .blog-year {
   position: absolute;
   top: 0.25rem;
-  right: 1rem;
+  right: 0rem;
   z-index: 0;
   margin: 0;
   border-top: 0;
@@ -174,7 +156,6 @@ const groups = blog.reduce<BlogGroup[]>((result, post) => {
   display: grid;
   grid-template-columns: var(--blog-date-width) minmax(0, 1fr);
   column-gap: var(--blog-date-gap);
-  margin-inline-start: calc(0rem - var(--blog-date-rail));
 }
 
 .blog-entry-date {
@@ -211,11 +192,6 @@ const groups = blog.reduce<BlogGroup[]>((result, post) => {
 }
 
 @media (max-width: 767px) {
-  .blog-index {
-    margin-inline-start: 0;
-    padding-inline-start: 0;
-  }
-
   .blog-group {
     padding-top: 3.25rem;
   }
@@ -238,7 +214,6 @@ const groups = blog.reduce<BlogGroup[]>((result, post) => {
 
   .blog-entry article {
     display: block;
-    margin-inline-start: 0;
   }
 
   .blog-entry-date {
