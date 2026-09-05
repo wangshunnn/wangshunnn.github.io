@@ -61,8 +61,16 @@
   display: none !important;
 }
 
-.DocSearch-Button:hover {
+.VPNavBarSearch .DocSearch-Button {
   border-color: transparent;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .VPNavBarSearch .DocSearch-Button:hover {
+    background-color: var(--site-chip-bg);
+  }
 }
 
 .VPSocialLink[aria-label='x'] > .vpi-social-x {
