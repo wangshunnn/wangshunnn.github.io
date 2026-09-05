@@ -5,7 +5,6 @@ import UnoCSS from 'unocss/vite'
 import sharp from 'sharp'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
 import { i18n, localSearchTranslations } from './const'
-import juejinSVG from './theme/components/icons/juejin.svg'
 
 const ogUrl = 'https://soonwang.me/'
 const ogWidth = 1200
@@ -145,12 +144,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/wangshunnn' },
-      { icon: 'x', link: 'https://twitter.com/wangshunnn' },
-      {
-        icon: { svg: juejinSVG },
-        link: 'https://juejin.cn/user/2129123907471864/posts'
-      }
+      { icon: 'github', link: 'https://github.com/wangshunnn' }
       // { icon: 'bluesky', link: 'https://bsky.app/profile/soonwang.bsky.social' }
       // {
       //   icon: { svg: zhihuSVG },
