@@ -1,1 +1,1 @@
-[<img src='./docs/public/og/index.svg' />](https://soonwang.me)
+[<img src='./docs/public/og/index.png' />](https://soonwang.me)
