@@ -175,39 +175,56 @@ Session Cache hit = 所有请求的缓存读取 tokens 之和 / 所有请求的�
 
 理解这些统计口径后，我们便可以观察上下文变化对缓存复用的影响。接下来，我们一起看看 Harness 在优化 Prompt Caching 时的一些实践经验，其中有些做法可能并不符合直觉。
 
-### 前缀稳定的 System Prompt
+### 前缀稳定
 
-- 举例 运行时动态的 context
-- Tool 与 Skill 加载
+Prompt caching 的核心是**前缀匹配**（prefix match），因此，在 Harness 可以控制的 System Prompt 内容中，应尽量将稳定、复用范围较大的信息放在前面，将会话相关或频繁变化的信息放在后面。工具定义（Tools）通常通过 API 的独立参数传入，其在最终模型输入中的位置由服务端决定。比如，Claude 明确按 `tools → system → messages` 组织缓存前缀。OpenAI 的官方文档中，工具定义同样位于应用侧系统指令和对话历史之前。以 Pi 默认结构为例，其 harness context 结构如下图所示：
 
-openclaw 时间设计 https://docs.openclaw.ai/zh-CN/concepts/system-prompt#%E6%97%B6%E9%97%B4%E5%A4%84%E7%90%86
+<figure>
+	<img src="/prompt-caching-in-agent-harnesses/harness-context-architecture.png" alt="Harness 上下文各部分与请求结构的对应关系" />
+	<figcaption>Harness 上下文各部分与请求结构的对应关系（以 Pi 默认结构为例）</figcaption>
+</figure>
 
-比如，在会话过程中，不要中途切换 Model 或者思考程度/推理强度。也不要在会话中途新增或者删除 Tool 或 Skill。因为这些操作会导致上下文的前缀发生变化，从而影响缓存的命中率。
+一个典型的例子是，Harness 为了让 Agent 感知当前时间，在每次请求时更新 System Prompt 中的时间戳。如果精确到分钟甚至秒钟，那时间戳内容就很容易在请求之间发生变化。看似只改了几个字符，却会让时间戳之后的内容无法匹配原有缓存前缀，即使后面的上下文完全没有变化，也可能需要重新处理。
+
+[OpenClaw 的时间处理](https://docs.openclaw.ai/zh-CN/concepts/system-prompt#时间处理)提供了一种“最佳实践”：系统提示词的时间部分只包含时区，需要获取当前时间时，再由模型调用名为 `session_status` 的 tool。这样，时间信息通过**工具结果**进入对话，既能保留已有前缀，也能让模型在需要时获取准确时间。
+
+除了内容本身，**排列顺序和序列化结果也需要保持稳定**。Manus 团队曾在博客中强调过确定性序列化的重要性：除了避免主动修改历史，在将结构化数据转换成模型上下文时，也应保持相同内容的表示一致，避免因字段顺序等差异意外破坏缓存前缀。
+
+当然，随着任务推进，项目文件、任务状态和环境信息仍然会发生变化。如何让模型及时获得这些更新，同时保留已经建立的缓存前缀，就需要进一步考虑上下文的更新方式。
 
 ### Append-only Context
 
-Append-only 是指上下文**仅追加**。 也就是说，Agent 在运行时尽量不会直接修改已有的上下文内容，而是将新的信息追加到现有上下文的末尾。这样做的好处是可以保持上下文的完整性和一致性，避免因删除或修改导致 prefix 不一致。
+Append-only 是指上下文**仅追加**。 也就是说，对于已经发送给模型的历史内容，Harness 尽量保持原样，将新消息、工具结果和状态更新追加到末尾。这里关注的是实际模型请求中的上下文，而不仅是会话日志的写入方式。
 
-有时，您输入到提示中的信息可能会过时，比如涉及时间或用户修改了文件的情况。您可能会想直接更新提示，但这会导致缓存未命中，最终可能会让用户付出高昂的代价。
+比如，Agent 读取了一份配置文件，并根据当时的内容进行了分析。随后，用户手动修改了这个文件。如果 Harness 直接把历史工具结果替换成最新文件内容，就会改变已有前缀。更合适的方式是追加一条文件变更提醒，让模型在需要时重新读取文件，再将新的读取结果加入上下文。这样，旧结果记录的是模型当时看到的信息，新结果则反映当前状态。Claude Code 就采用了类似的方式：当通过工具读取过的普通代码或配置文件发生变化时，它会追加包含 `<system-reminder>` 的[提醒消息](https://code.claude.com/docs/en/prompt-caching#editing-files-in-your-repository)，再由模型按需重新读取文件。
 
-请考虑是否可以在代理的下一轮对话中通过消息传递这些信息。在 Claude Code 中，我们会在下一条用户消息或工具结果中添加一个 `<system-reminder>` 标签，为模型提供更新后的信息，这有助于保持缓存。
+Append-only 也可以用于 Harness 工作模式的切换。比如，进入 Plan Mode 时，一种直观的做法是将工具集合替换为只读工具，但这会改变工具定义部分，破坏请求前缀的一致性。Claude Code 团队在[博客](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything)中介绍，他们会保持工具定义不变，通过新的消息告诉模型当前处于计划模式，应先探索和分析，在计划完成后调用 `ExitPlanMode`。这样，Agent 的工作方式发生了变化，已有上下文前缀却可以继续保留。
+
+Skills 常见的渐进式加载机制，其实也与这一思路不谋而合。先在初始上下文中提供 skills 元信息，需要时再通过工具读取完整说明，并将正文随工具结果追加到后续上下文。只要不改写已有前缀，Agent 就可以持续获取新的信息，同时保留缓存复用的机会。
+
+甚至，skills 目录本身也可以通过追加消息更新。比如，[DSH](https://github.com/deepseek-ai/deepseek-harness/blob/5dda764ed3aa172535a7967b06ff95d9cbfe536a/packages/skill/tool-skill/README.md#catalog-lifecycle) 在发现技能目录变化后，会追加一份完整的新目录快照，明确说明以新目录为准，同时保留已经发送过的历史消息。追加完整状态快照同样符合 Append-only 的思路。DSH 这点确实做得很细。
 
 ### Compaction 压缩与缓存
 
-压缩其实是件很 tricky 的工作，完全可以单开一篇文章来讲，如果大家感兴趣的话。
+当然，仅追加会让上下文不断增长。当上下文接近窗口上限，或大量历史信息已经不再有用时，Harness 仍需要通过裁剪或压缩控制长度。如何在缩短上下文的同时利用已有缓存，便是接下来要讨论的取舍。
 
-## Pi Agent 中的 Prompt Caching
+从缓存复用的角度看，摘要式 Compaction 大致可以分成两个阶段：**生成摘要**，以及**用摘要替换部分历史、继续对话**。前者关注摘要请求能否利用旧缓存，后者关注上下文改变后，哪些前缀仍然可以复用。
 
-### 缓存统计与展示
+先看第一阶段的生成摘要。不同 Harness 的默认实现，在请求组织上会存在一些差异：
 
-### Cache Miss 提醒
+| Agent Harness | 默认摘要请求的组织方式 |
+|---|---|
+| [Claude Code](https://code.claude.com/docs/en/prompt-caching#compacting-the-conversation) | 沿用主会话的系统提示词、工具定义和历史消息，在末尾追加总结指令 |
+| [DSH](https://github.com/deepseek-ai/deepseek-harness/blob/5dda764ed3aa172535a7967b06ff95d9cbfe536a/packages/compaction/compaction-basic/README.md#summarization-mechanics) | 重放原有系统指令、工具定义和待压缩的历史前缀，再追加总结指令 |
+| [Pi](https://github.com/earendil-works/pi/blob/6160683a4a8012f0d1cd30c145df18b4ca6f5176/packages/coding-agent/src/core/compaction/compaction.ts#L642) | 使用专门的摘要 System Prompt，将历史消息转换成文本传入，不携带主会话的工具定义 |
 
-### Pi 能观察到什么
+从上表可见，Claude Code 和 DSH 都是沿用 Append-only 的方式追加历史消息总结指令，尽量让摘要请求与主会话共享前缀，这样能最大化缓存复用。而 Pi 则是重新组织了系统提示词和历史内容，因此，即使默认仍使用当前会话模型，摘要请求通常也无法直接复用主会话的长缓存前缀。
 
-## 常见失效场景
+进入第二阶段后，摘要会替换部分旧历史，从替换位置开始的请求前缀也随之改变。在压缩后的第一次请求中，摘要及其后的内容通常需要重新处理，并在满足缓存条件时写入缓存。从第二次请求开始，后续请求便可以在这份压缩后的上下文上继续追加消息，复用新建立的缓存。
 
-- Tool 与 Skill 变化
-- 切换 Model 或 Provider
-- 长时间闲置
-- Branching 与 Rewind
-- Context Compaction
+<figure>
+	<img src="/prompt-caching-in-agent-harnesses/harness-compaction-cache.png" alt="压缩后的首次请求建立新的缓存前缀，后续请求在此基础上继续复用" />
+	<figcaption>压缩后的首次请求建立新的缓存前缀，后续请求在此基础上继续复用</figcaption>
+</figure>
+
+当然，以上只是站在缓存角度来分析。压缩本身其实是件很 tricky 的任务，之后也许可以单开一篇。
