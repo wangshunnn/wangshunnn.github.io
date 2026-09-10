@@ -2,7 +2,7 @@
 title: vue-tsc 源码解析
 date: 2024-3-22
 lang: zh
-duration: 15 min
+duration: 20 min
 description: vue-tsc 如何在 vue 文件中实现 ts 类型检查？
 tag: TypeScript, Vue
 place: 北京
