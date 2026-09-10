@@ -2,7 +2,7 @@
 title: Solid 初探：启发 Vue Vapor 的极致框架
 date: 2025-11-6
 lang: zh
-duration: 13 min
+duration: 15 min
 description: 响应式 + 无虚拟 DOM = 未来？
 tag: Solid
 place: 北京

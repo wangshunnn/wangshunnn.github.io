@@ -2,7 +2,7 @@
 title: Vue Signals 进化论（v3.6）：Alien Signals 终局之战？
 date: 2025-4-10
 lang: zh
-duration: 17 min
+duration: 20 min
 description: Vue 3.6 响应式重构的背后是 Alien Signals 的推拉哲学
 tag: Vue, Signals
 place: 北京

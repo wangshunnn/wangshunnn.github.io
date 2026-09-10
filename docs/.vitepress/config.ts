@@ -66,6 +66,7 @@ export default defineConfig({
   cleanUrls: true,
 
   markdown: {
+    math: true,
     theme: { light: 'github-light', dark: 'github-dark' },
     // @ts-expect-error ignore
     codeTransformers: [transformerTwoslash()],
