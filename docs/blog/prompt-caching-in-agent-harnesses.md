@@ -1,6 +1,6 @@
 ---
 title: Prompt Caching in Agent Harnesses
-date: 2026-09-06
+date: 2026-09-10
 lang: zh
 duration: 15 min
 description: 深入 Agents 中的 Prompt Caching 原理和实践
