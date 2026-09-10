@@ -2,7 +2,7 @@
 title: Prompt Caching in Agent Harnesses
 date: 2026-09-06
 lang: zh
-duration:
+duration: 15 min
 description: 深入 Agents 中的 Prompt Caching 原理和实践
 tag: Agent
 place: 北京
@@ -16,7 +16,7 @@ place: 北京
 
 ## 从 KV Cache 说起
 
-通常在一次 [Transformer](https://arxiv.org/abs/1706.03762) 模型的推理请求中，输入的所有 tokens 会经过一次前向计算，这个过程叫做 **Prefill**。之后，它会根据前序的计算结果逐步输出新的 token，这个过程叫做 **Decode**。
+通常在一次 Transformer 模型的推理请求中，输入的所有 tokens 会经过一次前向计算，这个过程叫做 **Prefill**。之后，它会根据前序的计算结果逐步输出新的 token，这个过程叫做 **Decode**。
 
 为了避免在 Decode 阶段重复计算前面已经处理过的 tokens，模型会将 Prefill 阶段产生的 Key(K) / Value(V) 中间状态缓存下来，这就是 [KV-cache](https://medium.com/@joaolages/kv-caching-explained-276520203249)。在后续生成过程中，Decode 会持续复用已有的 KV-cache，并将新生成 token 对应的 K/V 追加到其中。
 
@@ -44,7 +44,7 @@ place: 北京
 	<figcaption>将相同前缀的后续请求路由到持有对应 KV-cache 的 Worker，提高缓存命中率。</figcaption>
 </figure>
 
-除了将请求路由到持有缓存的实例，推理服务还可以构建**分布式 KV-cache**（Distributed KV Cache），实现跨实例的缓存共享与传输。比如，Request N 在实例 A 上生成的 KV-cache，可以被写入多个实例能够访问的存储。当 Request N+1 被分配到实例 B 时，B 便有机会加载已有前缀的 KV-cache，再对未命中的部分执行 Prefill。这样，即使执行请求的实例发生变化，也仍然可能复用此前的计算结果。
+除了将请求路由到持有缓存的实例，推理服务还可以构建**分布式 KV-cache**（Distributed KV-Cache），实现跨实例的缓存共享与传输。比如，Request N 在实例 A 上生成的 KV-cache，可以被写入多个实例能够访问的存储。当 Request N+1 被分配到实例 B 时，B 便有机会加载已有前缀的 KV-cache，再对未命中的部分执行 Prefill。这样，即使执行请求的实例发生变化，也仍然可能复用此前的计算结果。
 
 比如，SGLang 的 [HiCache](https://docs.sglang.io/docs/advanced_features/hicache_design) 在 GPU 显存、主机内存和外部存储之间分层管理 KV-cache，并可通过共享存储后端支持跨实例复用。而用于 Kimi 推理服务的 [Mooncake](https://kvcache-ai.github.io/Mooncake/) 采用以 KV-cache 为中心的分离式架构（Disaggregated Architecture），并利用集群中的内存与 SSD 等资源组织分布式 KV-cache 池，支持跨实例复用。这些机制扩大了缓存容量与共享范围，同时也带来了**额外的缓存管理和数据传输开销**。
 
@@ -145,7 +145,7 @@ const response = await client.responses.create({
 
 ## Harness 最佳实践
 
-缓存的复用情况，也逐渐成为 Agent Harness 向用户展示的运行指标。如下图所示，[Pi](https://pi.dev/) 和 [DSH](https://www.deepseek.com/harness/) 的界面都展示了缓存命中率，让用户在对话过程中直观地了解缓存的利用情况。
+缓存的复用情况，也逐渐成为 Agent Harness 向用户展示的运行指标。如下图所示，Pi 和 DSH（DeepSeek Harness）的界面都展示了缓存命中率，让用户在对话过程中直观地了解缓存的利用情况。
 
 Pi 默认底部状态栏的 `CH` 采用单次请求口径，如下图所示，计算**最近一次模型请求**的缓存读取 tokens 占完整输入 tokens 的比例。需要注意，旁边的输入、输出和缓存读写 token 数是会话累计值，`CH` 却只反映最近一次请求。
 
@@ -194,7 +194,7 @@ Prompt caching 的核心是**前缀匹配**（prefix match），因此，在 Har
 
 ### Append-only Context
 
-Append-only 是指上下文**仅追加**。 也就是说，对于已经发送给模型的历史内容，Harness 尽量保持原样，将新消息、工具结果和状态更新追加到末尾。这里关注的是实际模型请求中的上下文，而不仅是会话日志的写入方式。
+Append-only 是指上下文**仅追加**。也就是说，对于已经发送给模型的历史内容，Harness 尽量保持原样，将新消息、工具结果和状态更新追加到末尾。这里关注的是实际模型请求中的上下文，而不仅是会话日志的写入方式。
 
 比如，Agent 读取了一份配置文件，并根据当时的内容进行了分析。随后，用户手动修改了这个文件。如果 Harness 直接把历史工具结果替换成最新文件内容，就会改变已有前缀。更合适的方式是追加一条文件变更提醒，让模型在需要时重新读取文件，再将新的读取结果加入上下文。这样，旧结果记录的是模型当时看到的信息，新结果则反映当前状态。Claude Code 就采用了类似的方式：当通过工具读取过的普通代码或配置文件发生变化时，它会追加包含 `<system-reminder>` 的[提醒消息](https://code.claude.com/docs/en/prompt-caching#editing-files-in-your-repository)，再由模型按需重新读取文件。
 
@@ -228,3 +228,35 @@ Skills 常见的渐进式加载机制，其实也与这一思路不谋而合。�
 </figure>
 
 当然，以上只是站在缓存角度来分析。压缩本身其实是件很 tricky 的任务，之后也许可以单开一篇。
+
+## 模型配置切换
+
+### 模型
+
+Transformer 的 KV-cache 保存的是模型处理历史 tokens 时产生的注意力中间状态。我们可以将其与模型、输入的关系简化表示为：
+
+$$
+\mathrm{KV}=f_{\mathrm{model}}(x_{\mathrm{prefix}})
+$$
+
+其中，$\mathrm{model}$ 表示具体模型，包含其结构与权重，$x_{\mathrm{prefix}}$ 表示输入前缀的 token 序列。即使输入前缀完全相同，不同模型计算出的中间状态也通常不能直接复用。因此，从缓存复用的角度看，应尽量避免在会话中途进行不必要的模型切换。
+
+### 推理强度
+
+除了切换模型，调整推理强度（reasoning effort）也可能影响缓存复用。Effort 通常不会改变模型权重，但可能改变模型实际接收的输入前缀。比如，在 Codex、Claude Code 等 Harness 中调整推理强度时，配置变化可能进一步改变模型服务内部的系统指令，因此，即使对话内容保持不变，原有缓存前缀也可能无法继续匹配。所以，在会话中途也尽量不要直接修改推理强度配置。
+
+不过好消息是，部分模型及其 API 已经开始优化 effort 的缓存机制。调用方可以保持顶层配置不变，将新的 effort 配置追加到上下文末尾。比如 Claude 的 `per-message effort` 和 OpenAI 的 `configuration_update` 都采用了这一思路，但各有模型与接口限制。Harness 接入相应机制后，就可以在调整推理强度的同时保留已有缓存前缀。这也再次 callback 了前面讨论的 Append-only：配置发生变化，并不一定需要改写已经发送过的上下文。
+
+### Fast 模式
+
+Codex 和 Claude Code 都提供了 Fast 模式。在当前模型支持的情况下，开启后仍使用相同模型，通过更快的推理配置提高生成速度，但通常需要付出更高的调用成本。同时也需要注意，Fast 模式也可能影响缓存复用。
+
+Claude Code 在会话中首次启用 Fast 模式时，会增加一个参与缓存键计算的请求头。因此，启用后的首次请求无法命中此前的缓存，需要按 Fast 模式的费率重新处理历史输入。会话积累的上下文越长，这次额外开销就越大。首次启用后，会继续保留这个请求头，后续关闭或再次开启 Fast 模式时，仅调整速度设置，不会再影响缓存重建。
+
+Codex 的 Fast 模式通过 `service_tier` 切换服务等级，这类变化同样可能影响已有缓存的复用。
+
+因此，在长上下文会话中首次开启 Fast 模式时，除了更高的调用费率，还应考虑可能发生的缓存重建成本。
+
+## 写在最后
+
+到这里，相信你和我一样，更能体会 “Prompt caching is everything” 这句话的含金量。了解 Prompt Caching 的机制和实践，不管是自己构建 Harness，还是日常使用各种 Agents，都大有裨益。
